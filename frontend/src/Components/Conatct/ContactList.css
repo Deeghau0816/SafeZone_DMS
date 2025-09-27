@@ -1,0 +1,288 @@
+.contact-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 20px;
+  background-color: #ffffff;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.contact-list-container h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #00bfff;
+  margin-bottom: 20px;
+  text-align: center;
+  position: relative;
+}
+
+.contact-list-container h2::after {
+  content: "";
+  display: block;
+  width: 70px;
+  height: 3px;
+  background: #00bfff;
+  margin: 8px auto 0;
+  border-radius: 5px;
+}
+
+.back-btn {
+  align-self: flex-start;
+  background: transparent;
+  border: none;
+  color: #00bfff;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: color 0.3s ease;
+}
+
+.back-btn:hover {
+  color: #00bfff96;
+}
+
+.download-all-btn {
+  background-color: #00bfff;
+  color: #fff;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 25px;
+  transition: background 0.3s ease;
+}
+
+.download-all-btn:hover {
+  background-color: #00bfff96;
+}
+
+.contact-list {
+  list-style: none;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 20px;
+}
+
+.contact-item {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(200, 200, 200, 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 15px rgba(0, 191, 255, 0.2);
+}
+
+.contact-item p {
+  margin: 6px 0;
+  font-size: 15px;
+}
+
+.contact-item small {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.actions {
+  margin-top: 12px;
+}
+
+.download-btn {
+  background-color: transparent;
+  border: 1px solid #00bfff;
+  color: #00bfff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.download-btn:hover {
+  background-color: #00bfff;
+  color: #fff;
+}
+
+.whatsapp-btn {
+  background-color: #25D366;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.whatsapp-btn:hover {
+  background-color: #1ebd5a;
+}
+
+.gmail-btn {
+  background-color: #ea4335;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-left: 10px;
+  display: inline-block;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.gmail-btn:hover {
+  background-color: #d33b2c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(234, 67, 53, 0.3);
+}
+
+.call-btn {
+  background-color: #28a745;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-left: 10px;
+  display: inline-block;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.call-btn:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+
+/* Print button */
+
+.print-btn {
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.print-btn:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .contact-list-container {
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .contact-list-container h2 {
+    font-size: 24px;
+  }
+
+  .contact-item {
+    padding: 15px;
+  }
+
+  .contact-item p {
+    font-size: 14px;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .download-btn,
+  .whatsapp-btn,
+  .gmail-btn,
+  .call-btn,
+  .print-btn,
+  .delete-btn {
+    margin-left: 0;
+    text-align: center;
+    padding: 10px 14px;
+  }
+
+  .download-all-btn {
+    width: 100%;
+    padding: 14px 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-list-container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .contact-list-container h2 {
+    font-size: 20px;
+  }
+
+  .contact-item {
+    padding: 12px;
+  }
+
+  .contact-item p {
+    font-size: 13px;
+  }
+
+  .download-btn,
+  .whatsapp-btn,
+  .gmail-btn,
+  .call-btn,
+  .print-btn,
+  .delete-btn {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
+  .download-all-btn {
+    font-size: 14px;
+    padding: 12px 16px;
+  }
+}
