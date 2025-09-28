@@ -8,6 +8,7 @@ import NearbyDisasters from '../map/NearbyDisasters';
 import List from '../Conatct/ContactList';
 import ContactForm from '../Conatct/ContactForm';
 import DisasterSearch from '../search/DisasterSearch';
+import WeatherWidget from './WeatherWidget';
 import './SafeZoneHomePage.css';
 import Map from '../map/map';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
@@ -61,15 +62,20 @@ const SafeZoneHomePage = () => {
 
       {/* Hero Section */}
       <section className="hero-section">
-        <div>
-          <h1>Stay Safe, Stay Informed</h1>
-          <p>Real-time disaster alerts, safety resources, and community support at your fingertips</p>
+        <div className="hero-content">
+          <div className="hero-left">
+            <h1>Stay Safe, Stay Informed</h1>
+            <p>Real-time disaster alerts, safety resources, and community support at your fingertips</p>
 
-          {/* Integrated Disaster Search */}
-          <DisasterSearch 
-            onSearchResults={handleSearchResults}
-            onLocationSelect={handleLocationSelect}
-          />
+            {/* Integrated Disaster Search */}
+            <DisasterSearch 
+              onSearchResults={handleSearchResults}
+              onLocationSelect={handleLocationSelect}
+            />
+          </div>
+          <div className="hero-right">
+            <WeatherWidget />
+          </div>
         </div>
       </section>
 
