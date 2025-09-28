@@ -10,6 +10,8 @@ import ContactForm from '../Conatct/ContactForm';
 import DisasterSearch from '../search/DisasterSearch';
 import './SafeZoneHomePage.css';
 import Map from '../map/map';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+
 
 const SafeZoneHomePage = () => {
   const [searchResults, setSearchResults] = useState([]);
@@ -80,7 +82,7 @@ const SafeZoneHomePage = () => {
           <div className="map-tags">
             <div className="map-tag red">📍Near By Disasters</div>
             <div className="map-tag orange">⚠️ All Disasters</div>
-            <div className="map-tag green">🏠 Near By Shelters</div>
+            <div className="map-tag green"><HealthAndSafetyIcon style={{ color : 'blue' }} /> Near By Shelters</div>
           </div>
         </div>
       </section>
@@ -146,7 +148,7 @@ const SafeZoneHomePage = () => {
 
           <div className="action-card">
             <BarChart3 size={48} style={{ color: '#00bfff', marginBottom: '1rem' }} />
-            <h3>Admin Dashboards</h3>
+            <h3>Admin Dashboard</h3>
             <p>Access comprehensive disaster management tools, view reports, and manage emergency responses.</p>
             <button 
               onClick={() => navigate('/dashboard')}

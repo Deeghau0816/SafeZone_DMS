@@ -315,7 +315,7 @@ const ContactList = () => {
                   className="delete-btn"
                   title="Delete this contact"
                 >
-                  Delete
+                  Slove
                 </button>
               </div>
             </li>

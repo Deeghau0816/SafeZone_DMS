@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../HeaderFotter/Header';
 import Footer from '../../HeaderFotter/Footer';
 import Map from '../map/map';
+import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import ContactList from '../Conatct/ContactList';
 import ShelterManagement from '../Shelter/ShelterManagement';
 import './SimpleDashboard.css';
@@ -16,12 +17,29 @@ const SimpleDashboard = () => {
   const [disasters, setDisasters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingDisaster, setEditingDisaster] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [editFormData, setEditFormData] = useState({
     disaster: '',
     info: '',
     place: '',
     severity: ''
   });
+
+  // Auto-refresh disasters when refreshTrigger changes
+  useEffect(() => {
+    if (refreshTrigger > 0) {
+      fetchDisasters();
+    }
+  }, [refreshTrigger]);
+
+  // Periodic refresh every 30 seconds to catch new disasters
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchDisasters();
+    }, 30000); // Refresh every 30 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Fetch disasters from API
   const fetchDisasters = async () => {
@@ -428,14 +446,14 @@ const SimpleDashboard = () => {
                                 onClick={() => handleEditDisaster(disaster)}
                                 title="Edit Disaster"
                               >
-                                ✏️
+                                <EditIcon />
                               </button>
                               <button 
                                 className="delete-btn"
                                 onClick={() => handleDeleteDisaster(disaster._id)}
                                 title="Delete Disaster"
                               >
-                                🗑️
+                                <DeleteIcon />
                               </button>
                             </div>
                           </div>
@@ -454,7 +472,7 @@ const SimpleDashboard = () => {
                 <div className="disaster-map">
                   <h3>Disaster Locations</h3>
                   <div className="map-container">
-                    <Map />
+                    <Map key={`${disasterCount}-${refreshTrigger}`} />
                   </div>
                 </div>
               </div>
