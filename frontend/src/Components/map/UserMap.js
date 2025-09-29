@@ -24,7 +24,7 @@ function UserMap() {
   const [directions, setDirections] = useState(null);
   const [selectedShelterId, setSelectedShelterId] = useState(null);
 
-  const navigate = useNavigate(); // ✅ hook for navigation
+  const navigate = useNavigate(); 
 
   // Fetch location + pins
   useEffect(() => {

@@ -236,7 +236,7 @@ function Map() {
     // File validation
     if (files.images && files.images.length > 0) {
       files.images.forEach((file, index) => {
-        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        if (file.size > 1 * 1024 * 1024) { // 1MB limit
           errors[`image_${index}`] = `Image ${index + 1} is too large (max 1MB)`;
         }
         if (!file.type.startsWith('image/')) {
@@ -250,7 +250,7 @@ function Map() {
 
     if (files.videos && files.videos.length > 0) {
       files.videos.forEach((file, index) => {
-        if (file.size > 50 * 1024 * 1024) { 
+        if (file.size > 15 * 1024 * 1024) { 
           errors[`video_${index}`] = `Video ${index + 1} is too large (max 15MB)`;
         }
         if (!file.type.startsWith('video/')) {
@@ -309,7 +309,10 @@ function Map() {
     setEditErrors((prev) => ({ ...prev, ...errors }));
   };
 
-  // Handle form submit (create new pin)
+
+
+
+  // Handle form submit (Add new pin)
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
     
@@ -362,7 +365,14 @@ function Map() {
           "Content-Type": "multipart/form-data",
         },
       });
-      // Validate the new pin data before adding to state
+
+
+
+
+
+
+
+      //after add the pin ... Validate the new pin data before adding to state
       const newPin = res.data.data;
       if (newPin && newPin._id && 
           typeof newPin.longitude === 'number' && 
@@ -372,7 +382,7 @@ function Map() {
         setPins([...pins, newPin]);
       } else {
         console.warn("Invalid new pin data:", newPin);
-        // Refresh the pins list as fallback
+        // Refresh the pins 
         const refreshPins = async () => {
           try {
             const res = await axios.get("http://localhost:5000/pins");
@@ -380,6 +390,7 @@ function Map() {
             const validPins = pinsData.filter((pin) => {
               if (!pin || !pin._id) return false;
               if (!pin.place || !pin.disaster || !pin.info || !pin.createdBy) return false;
+
               const hasValidCoords = 
                 typeof pin.longitude === 'number' && 
                 typeof pin.latitude === 'number' && 
@@ -411,6 +422,10 @@ function Map() {
     }
   };
 
+
+
+
+
   // Handle delete pin
   const handleDelete = async (pinId) => {
     if (!window.confirm("Are you sure you want to delete this pin?")) return;
@@ -434,6 +449,8 @@ function Map() {
       
       console.log("File deletion response:", res.data);
       
+
+
       // Validate the updated pin data before updating state
       const updatedPin = res.data.data;
       if (updatedPin && updatedPin._id && 
@@ -480,6 +497,12 @@ function Map() {
     }
   };
 
+
+
+
+
+
+
   // Handle update pin
   const handleUpdate = async (e, pinId) => {
     e.preventDefault();
@@ -523,6 +546,8 @@ function Map() {
           },
         }
       );
+
+
 
       // Validate the updated pin data before updating state
       const updatedPin = res.data.data;
@@ -577,6 +602,8 @@ function Map() {
       setIsSubmitting(false);
     }
   };
+
+
 
   // Render media gallery
   const renderMediaGallery = (pin) => {
@@ -642,9 +669,9 @@ function Map() {
     );
   };
 
-  // Calculate distance between two points using Haversine formula
+  // Calculate distance between two points 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; // Radius of the Earth in kilometers
+    const R = 6371; // Radius in kilometers
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
     const a = 
@@ -655,6 +682,9 @@ function Map() {
     const distance = R * c; // Distance in kilometers
     return distance;
   };
+
+
+
 
   // Find nearest shelter to user location
   const findNearestShelter = () => {
@@ -1044,6 +1074,11 @@ function Map() {
               </Popup>
             );
           })()}
+
+
+
+
+
 
         {/* New Pin Form */}
         {newPlace && (
