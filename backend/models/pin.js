@@ -16,7 +16,6 @@ const PinSchema = new mongoose.Schema({
   
 
 
-  // Media stored directly in MongoDB as binary buffers
   images: [{
     data: Buffer,
     contentType: String,

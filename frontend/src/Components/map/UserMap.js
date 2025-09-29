@@ -7,7 +7,7 @@ import LocationPinIcon from "@mui/icons-material/LocationOn";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import DirectionsIcon from "@mui/icons-material/Directions";
-import { useNavigate } from "react-router-dom"; // ✅ import navigation
+import { useNavigate } from "react-router-dom"; 
 
 
 function UserMap() {
@@ -23,6 +23,7 @@ function UserMap() {
   const [showDirections, setShowDirections] = useState(false);
   const [directions, setDirections] = useState(null);
   const [selectedShelterId, setSelectedShelterId] = useState(null);
+
 
   const navigate = useNavigate(); 
 
@@ -269,10 +270,13 @@ function UserMap() {
     }
   };
 
+
+
   return (
     <div>
       {/* Map */}
       <div style={{ position: "relative", width: 1850, height:800  }}>
+
         <MapboxMap
           mapboxAccessToken="pk.eyJ1IjoibmF2b2RhMTIzIiwiYSI6ImNtZTdhMDdsaTAyY3QycXBtNWQwdHpxc2IifQ.jNfJr5DmTfwet02F2tQC1w"
           initialViewState={{

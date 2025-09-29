@@ -26,6 +26,11 @@ function Map() {
   const [showDirections, setShowDirections] = useState(false);
   const [directions, setDirections] = useState(null);
   const [selectedShelterId, setSelectedShelterId] = useState(null);
+  
+  // Google Maps URL input state
+  const [showUrlInput, setShowUrlInput] = useState(false);
+  const [googleMapsUrl, setGoogleMapsUrl] = useState("");
+  const [urlError, setUrlError] = useState("");
 
   // form data for creating a pin
   const [createFormData, setCreateFormData] = useState({
@@ -754,8 +759,206 @@ function Map() {
     }
   };
 
+  // Parse Google Maps URL to extract coordinates
+  const parseGoogleMapsUrl = (url) => {
+    try {
+      // Remove any whitespace
+      url = url.trim();
+      
+      // Handle different Google Maps URL formats
+      let lat, lng;
+      
+      // Format 1: https://www.google.com/maps/@lat,lng,zoom
+      const coordMatch = url.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+      if (coordMatch) {
+        lat = parseFloat(coordMatch[1]);
+        lng = parseFloat(coordMatch[2]);
+      }
+      
+      // Format 2: https://www.google.com/maps/place/name/@lat,lng,zoom
+      if (!lat || !lng) {
+        const placeMatch = url.match(/place\/[^/]*\/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+        if (placeMatch) {
+          lat = parseFloat(placeMatch[1]);
+          lng = parseFloat(placeMatch[2]);
+        }
+      }
+      
+      // Format 3: https://maps.google.com/maps?q=lat,lng
+      if (!lat || !lng) {
+        const queryMatch = url.match(/[?&]q=(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+        if (queryMatch) {
+          lat = parseFloat(queryMatch[1]);
+          lng = parseFloat(queryMatch[2]);
+        }
+      }
+      
+      // Format 4: https://www.google.com/maps/search/query/@lat,lng,zoom
+      if (!lat || !lng) {
+        const searchMatch = url.match(/search\/[^/]*\/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+        if (searchMatch) {
+          lat = parseFloat(searchMatch[1]);
+          lng = parseFloat(searchMatch[2]);
+        }
+      }
+      
+      // Validate coordinates
+      if (lat && lng && 
+          lat >= -90 && lat <= 90 && 
+          lng >= -180 && lng <= 180 &&
+          !isNaN(lat) && !isNaN(lng)) {
+        return { latitude: lat, longitude: lng };
+      }
+      
+      return null;
+    } catch (error) {
+      console.error("Error parsing Google Maps URL:", error);
+      return null;
+    }
+  };
+
+  // Handle Google Maps URL input
+  const handleUrlInput = () => {
+    if (!googleMapsUrl.trim()) {
+      setUrlError("Please enter a Google Maps URL");
+      return;
+    }
+    
+    const coords = parseGoogleMapsUrl(googleMapsUrl);
+    if (coords) {
+      // Set the new place coordinates to show the pin creation form
+      setNewPlace({
+        longitude: coords.longitude,
+        latitude: coords.latitude,
+      });
+      setShowUrlInput(false);
+      setGoogleMapsUrl("");
+      setUrlError("");
+    } else {
+      setUrlError("Invalid Google Maps URL format. Please check the URL and try again.");
+    }
+  };
+
   return (
     <div style={{ position: "relative", width: 900, height: 900 }}>
+      {/* Google Maps URL Input Controls */}
+      <div style={{
+        position: "absolute",
+        top: "10px",
+        right: "10px",
+        zIndex: 1000,
+        display: "flex",
+        flexDirection: "column",
+        gap: "8px"
+      }}>
+        {/* Add Pin from URL Button */}
+        <button
+          onClick={() => setShowUrlInput(!showUrlInput)}
+          style={{
+            background: "#4285f4",
+            color: "white",
+            border: "none",
+            padding: "10px 15px",
+            borderRadius: "8px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            fontSize: "14px",
+            fontWeight: "500",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+            transition: "all 0.3s ease"
+          }}
+          onMouseOver={(e) => {
+            e.target.style.background = "#3367d6";
+            e.target.style.transform = "translateY(-1px)";
+          }}
+          onMouseOut={(e) => {
+            e.target.style.background = "#4285f4";
+            e.target.style.transform = "translateY(0)";
+          }}
+        >
+          📍 Add Pin from Google Maps
+        </button>
+
+        {/* URL Input Form */}
+        {showUrlInput && (
+          <div style={{
+            background: "white",
+            padding: "15px",
+            borderRadius: "8px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            minWidth: "300px"
+          }}>
+            <h4 style={{ margin: "0 0 10px 0", color: "#333" }}>Paste Google Maps URL</h4>
+            <input
+              type="text"
+              placeholder="https://www.google.com/maps/@lat,lng,zoom"
+              value={googleMapsUrl}
+              onChange={(e) => {
+                setGoogleMapsUrl(e.target.value);
+                setUrlError("");
+              }}
+              style={{
+                width: "100%",
+                padding: "8px 12px",
+                border: "1px solid #ddd",
+                borderRadius: "4px",
+                fontSize: "14px",
+                marginBottom: "8px"
+              }}
+            />
+            {urlError && (
+              <div style={{
+                color: "#f44336",
+                fontSize: "12px",
+                marginBottom: "8px"
+              }}>
+                {urlError}
+              </div>
+            )}
+            <div style={{
+              display: "flex",
+              gap: "8px",
+              justifyContent: "flex-end"
+            }}>
+              <button
+                onClick={() => {
+                  setShowUrlInput(false);
+                  setGoogleMapsUrl("");
+                  setUrlError("");
+                }}
+                style={{
+                  background: "#f44336",
+                  color: "white",
+                  border: "none",
+                  padding: "6px 12px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "12px"
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUrlInput}
+                style={{
+                  background: "#4caf50",
+                  color: "white",
+                  border: "none",
+                  padding: "6px 12px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "12px"
+                }}
+              >
+                Add Pin
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
       <MapboxMap
         mapboxAccessToken="pk.eyJ1IjoibmF2b2RhMTIzIiwiYSI6ImNtZTdhMDdsaTAyY3QycXBtNWQwdHpxc2IifQ.jNfJr5DmTfwet02F2tQC1w"
         initialViewState={{

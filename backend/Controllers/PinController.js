@@ -1,7 +1,9 @@
 const Pin = require("../models/pin");
 
 class PinController {
-  // Helper function to validate required pin data
+
+
+  //function to validate required pin data 1 validdation)
   static validatePinData(place, disaster, info, createdBy, latitude, longitude) {
     const errors = [];
     
@@ -18,7 +20,9 @@ class PinController {
     return errors;
   }
 
-  // Helper function to validate image file sizes
+
+  
+  //  function to validate image file sizes
   static validateImageSizes(files) {
     const errors = [];
     if (!files || !Array.isArray(files)) return errors;
@@ -32,7 +36,8 @@ class PinController {
     return errors;
   }
 
-  // Helper function to validate video file sizes
+  // 3 validdation)
+  //  function to validate video file sizes
   static validateVideoSizes(files) {
     const errors = [];
     if (!files || !Array.isArray(files)) return errors;
@@ -46,7 +51,18 @@ class PinController {
     return errors;
   }
 
-  // Helper function to format files for storage
+ 
+
+
+
+
+
+
+
+
+
+  
+  //  to format files for storage
   static formatFiles(files) {
     if (!files || !Array.isArray(files)) return [];
     return files.map((file) => ({
@@ -57,7 +73,8 @@ class PinController {
     }));
   }
 
-  // Helper function to build pagination response
+  // 5 validdation)
+  //  function to build pagination response
   static buildPagination(currentPage, limit, total, data) {
     const totalPages = Math.ceil(total / parseInt(limit));
     const skip = (parseInt(currentPage) - 1) * parseInt(limit);
