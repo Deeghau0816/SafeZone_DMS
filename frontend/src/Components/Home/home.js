@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, AlertTriangle, Users, Home, BarChart3, MapPin, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../HeaderFotter/Header';
-import Footer from '../../HeaderFotter/Footer';
 import UserMap from '../map/UserMap';
 import NearbyDisasters from '../map/NearbyDisasters';
 import List from '../Conatct/ContactList';
@@ -58,7 +56,6 @@ const SafeZoneHomePage = () => {
 
   return (
     <div className="safezone-container">
-      <Header />
 
       {/* Hero Section */}
       <section className="hero-section">
@@ -133,9 +130,14 @@ const SafeZoneHomePage = () => {
         <div className="action-grid">
           <div className="action-card">
             <AlertTriangle size={48} style={{ color: '#e74c3c', marginBottom: '1rem' }} />
-            <h3>Report an Incident</h3>
-            <p>Quickly report emergencies or disasters in your area to help others stay informed and safe.</p>
-            <button style={{ backgroundColor: '#e74c3c' }}>Report Now</button>
+            <h3>Disaster Services Portal</h3>
+            <p>Report incidents, request aid, and file damage claims quickly and easily.</p>
+            <button 
+              onClick={() => navigate('/victim/dashboard')}
+              style={{ backgroundColor: '#e74c3c' }}
+            >
+              Report Now
+            </button>
           </div>
 
           <div className="action-card">
@@ -258,7 +260,6 @@ const SafeZoneHomePage = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };
