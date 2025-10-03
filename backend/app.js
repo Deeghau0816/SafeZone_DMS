@@ -5,6 +5,7 @@ const path = require("path");
 const pinRouter = require("./Router/pins");
 const contactRoutes = require("./Router/contact");
 const shelterRoutes = require("./Router/shelters");
+const urlResolverRoutes = require("./Router/urlResolver");
 const multer = require("multer");
 
 const app = express();
@@ -20,6 +21,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/pins", pinRouter);
 app.use("/api/contact", contactRoutes);
 app.use("/api/shelters", shelterRoutes);
+app.use("/api", urlResolverRoutes);
 
 // Error handling middleware
 app.use((error, req, res, next) => {

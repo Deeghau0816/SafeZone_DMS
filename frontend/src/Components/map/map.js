@@ -760,7 +760,7 @@ function Map() {
   };
 
   // Parse Google Maps URL to extract coordinates
-  const parseGoogleMapsUrl = (url) => {
+  const parseGoogleMapsUrl = async (url) => {
     try {
       // Remove any whitespace
       url = url.trim();
@@ -802,6 +802,35 @@ function Map() {
         }
       }
       
+      // Format 5: Google Maps short links (maps.app.goo.gl, goo.gl/maps, etc.)
+      if (!lat || !lng) {
+        const shortLinkPatterns = [
+          /maps\.app\.goo\.gl\//,
+          /goo\.gl\/maps\//,
+          /maps\.google\.com\/maps\/d\/\w+/
+        ];
+        
+        const isShortLink = shortLinkPatterns.some(pattern => pattern.test(url));
+        
+        if (isShortLink) {
+          // Resolve short link using backend service
+          try {
+            const response = await axios.post('http://localhost:5000/api/resolve-url', {
+              url: url
+            });
+            
+            if (response.data.success && response.data.data.coordinates) {
+              return response.data.data.coordinates;
+            } else {
+              throw new Error('Failed to resolve short link');
+            }
+          } catch (error) {
+            console.error('Error resolving short link:', error);
+            throw new Error(`Failed to resolve short link: ${error.response?.data?.message || error.message}`);
+          }
+        }
+      }
+      
       // Validate coordinates
       if (lat && lng && 
           lat >= -90 && lat <= 90 && 
@@ -818,24 +847,28 @@ function Map() {
   };
 
   // Handle Google Maps URL input
-  const handleUrlInput = () => {
+  const handleUrlInput = async () => {
     if (!googleMapsUrl.trim()) {
       setUrlError("Please enter a Google Maps URL");
       return;
     }
     
-    const coords = parseGoogleMapsUrl(googleMapsUrl);
-    if (coords) {
-      // Set the new place coordinates to show the pin creation form
-      setNewPlace({
-        longitude: coords.longitude,
-        latitude: coords.latitude,
-      });
-      setShowUrlInput(false);
-      setGoogleMapsUrl("");
-      setUrlError("");
-    } else {
-      setUrlError("Invalid Google Maps URL format. Please check the URL and try again.");
+    try {
+      const coords = await parseGoogleMapsUrl(googleMapsUrl);
+      if (coords) {
+        // Set the new place coordinates to show the pin creation form
+        setNewPlace({
+          longitude: coords.longitude,
+          latitude: coords.latitude,
+        });
+        setShowUrlInput(false);
+        setGoogleMapsUrl("");
+        setUrlError("");
+      } else {
+        setUrlError("Invalid Google Maps URL format. Please check the URL and try again.");
+      }
+    } catch (error) {
+      setUrlError(error.message || "Error processing the URL. Please try again.");
     }
   };
 
