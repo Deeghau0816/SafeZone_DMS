@@ -1,4 +1,4 @@
-const DistributionRecord = require('../Model/DistributionrecordModel');
+const DistributionRecord = require('../models/DistributionrecordModel');
 
 // ================== CREATE ==================
 const createDistributionRecord = async (req, res) => {

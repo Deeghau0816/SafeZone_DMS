@@ -1,5 +1,5 @@
 // backend/Controllers/CentersController.js
-const Center = require("../Model/CentersModel");
+const Center = require("../models/CentersModel");
 
 // Add a new center
 exports.addCenter = async (req, res) => {

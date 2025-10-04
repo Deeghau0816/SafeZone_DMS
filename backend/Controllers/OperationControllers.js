@@ -1,5 +1,5 @@
 // backend/Controllers/OperationControllers.js
-const OperationModel = require("../Model/OperationModel");
+const OperationModel = require("../models/OperationModel");
 
 const ALLOWED_STATUS = ["pending", "active", "completed", "cancelled"];
 const TL_KEYS = [

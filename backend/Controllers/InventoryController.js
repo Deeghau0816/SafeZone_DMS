@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Inventory = require("../Model/InventoryModel");
+const Inventory = require("../models/InventoryModel");
 
 const isObjectId = (v) => mongoose.Types.ObjectId.isValid(v);
 

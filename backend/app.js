@@ -33,15 +33,16 @@ const { listAids } = require("./Controllers/AidController");
 const damageCtrl = require("./Controllers/DamageController");
 
 // ---- NGO Routes & Controllers ----
-const volunteerRoutes = require("./Routes/VolunteerRoutes");
-const operationRoutes = require("./Routes/OperationRoutes");
-const distributionRecordRoutes = require("./Routes/DistributionrecordRoutes");
-const targetInventoryRoutes = require("./Routes/TargetinventoryRoutes");
-const centersRoutes = require("./Routes/CentersRoutes");
-const inventoryRoutes = require("./Routes/InventoryRoutes");
-const donationRoutes = require("./Routes/DonationRoutes");
-const activeDisasterRoutes = require("./Routes/ActiveDisasterRoutes");
-const ngopastRoutes = require("./Routes/NgopastRoutes");
+const volunteerRoutes = require("./Router/VolunteerRoutes");
+const operationRoutes = require("./Router/OperationRoutes");
+const distributionRecordRoutes = require("./Router/DistributionrecordRoutes");
+const targetInventoryRoutes = require("./Router/TargetinventoryRoutes");
+const centersRoutes = require("./Router/CentersRoutes");
+const inventoryRoutes = require("./Router/InventoryRoutes");
+const donationRoutes = require("./Router/DonationRoutes");
+const activeDisasterRoutes = require("./Router/ActiveDisasterRoutes");
+const ngopastRoutes = require("./Router/NgopastRoutes");
+const uploadRoutes = require("./Router/UploadRoutes");
 
 // ---- Config ----
 const PORT = Number(process.env.PORT || 5000);
@@ -158,6 +159,7 @@ app.use("/api/inventory", inventoryRoutes);
 app.use("/api/donations", donationRoutes);
 app.use("/api/activedisasters", activeDisasterRoutes);
 app.use("/api/ngopast", ngopastRoutes);
+app.use("/api/uploads", uploadRoutes);
 
 // Aliases
 app.get("/aids", listAids);

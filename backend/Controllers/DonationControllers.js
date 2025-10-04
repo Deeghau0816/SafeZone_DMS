@@ -1,4 +1,4 @@
-const Donation = require("../Model/DonationModel");
+const Donation = require("../models/DonationModel");
 
 /* ------------------------------ helpers ------------------------------ */
 const toBool = (v) => v === true || v === "true" || v === "1" || v === 1 || v === "on";

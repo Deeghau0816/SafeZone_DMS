@@ -1,4 +1,4 @@
-const Ngopast = require("../Model/NgopastModel");
+const Ngopast = require("../models/NgopastModel");
 const fs = require("fs");
 const path = require("path");
 

@@ -1,4 +1,4 @@
-const Volunteer = require("../Model/VolunteerModel");
+const Volunteer = require("../models/VolunteerModel");
 
 const toArray = (v) => Array.isArray(v) ? v : (typeof v === "string" && v.length ? [v] : []);
 const coerceAvailableTime = (v) => {

@@ -1,5 +1,5 @@
 // backend/Controllers/TargetinventoryController.js
-const TargetInventory = require("../Model/TargetinventoryModel");
+const TargetInventory = require("../models/TargetinventoryModel");
 
 /**
  * GET current targets
