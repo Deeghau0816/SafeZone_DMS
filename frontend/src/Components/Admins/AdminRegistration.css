@@ -1,0 +1,255 @@
+/* ===== Layout safety: never overflow the card ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* borders/padding included in width */
+}
+
+/* ===== Page background ===== */
+.ar-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(900px 650px at 15% -10%, #eef4ff 0%, transparent 60%),
+    radial-gradient(900px 700px at 110% 110%, #ecfff7 0%, transparent 55%),
+    linear-gradient(180deg, #f6f8fb 0%, #ffffff 100%);
+  color: #0f172a;
+}
+
+/* ===== Card ===== */
+.ar-card {
+  width: min(500px, 94vw);
+  background: #ffffff;
+  border: 1px solid #e6eaf0;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(20, 40, 80, 0.08);
+  padding: 28px;
+  animation: ar-pop 360ms cubic-bezier(.16,1,.3,1);
+}
+
+/* ===== Title ===== */
+.ar-title {
+  margin-bottom: 18px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+  color: #0f172a;
+}
+
+/* ===== Alerts ===== */
+.ar-error {
+  margin: 8px 0 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #7f1d1d;
+  font-weight: 600;
+}
+.ar-success {
+  margin: 8px 0 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #ecfdf5;
+  border: 1px solid #bbf7d0;
+  color: #065f46;
+  font-weight: 600;
+}
+
+/* ===== Form layout (lock widths to container) ===== */
+.ar-form {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+  max-width: 100%;
+}
+.ar-field {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* ===== Input/select (full-width, never overflow) ===== */
+.ar-input,
+.ar-select {
+  height: 52px;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #0f172a;
+  padding: 0 14px 0 42px; /* left icon space */
+  outline: none;
+  transition: box-shadow .2s ease, border-color .2s ease, background .2s ease;
+  /* keep content clipped within border radius */
+  background-clip: padding-box;
+}
+
+/* Hide placeholder text (we use floating label) */
+.ar-input::placeholder { color: transparent; }
+
+.ar-input:hover,
+.ar-select:hover { border-color: #b8c4d6; }
+.ar-input:focus,
+.ar-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .18);
+}
+
+/* ===== Icons inside field (stay inside width) ===== */
+.ar-input-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+}
+.ar-left {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #64748b;
+  pointer-events: none;
+}
+.ar-input-wrap svg { width: 18px; height: 18px; }
+.ar-right {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== Floating label (inside, then floats) ===== */
+.ar-float {
+  position: absolute;
+  left: 42px;            /* aligns after icon */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.96rem;
+  color: #64748b;
+  background: transparent;
+  padding: 0 3px;
+  pointer-events: none;
+  transition: transform .15s ease, color .15s ease, font-size .15s ease, top .15s ease;
+}
+
+/* Inputs float when not empty or focused */
+.ar-input:not(:placeholder-shown) + .ar-float,
+.ar-input:focus + .ar-float {
+  top: 0;
+  transform: translateY(-55%) scale(.88);
+  font-size: 0.78rem;
+  color: #2563eb;
+  background: #fff;
+}
+
+/* Selects float when focused or when a value is present */
+.ar-select.has-value + .ar-float,
+.ar-select:focus + .ar-float {
+  top: 0;
+  transform: translateY(-55%) scale(.88);
+  font-size: 0.78rem;
+  color: #2563eb;
+  background: #fff;
+}
+
+/* ===== Help / error text ===== */
+.ar-help {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 8px;
+}
+.ar-error-text {
+  font-size: 0.85rem;
+  color: #b91c1c;
+  margin-top: 6px;
+}
+
+/* ===== Error / success borders ===== */
+.ar-field.error .ar-input,
+.ar-field.error .ar-select {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, .12);
+}
+.ar-field.success .ar-input,
+.ar-field.success .ar-select {
+  border-color: #10b981;
+}
+
+/* ===== Password strength ===== */
+.ar-strength {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+  width: 100%;
+  max-width: 100%;
+}
+.ar-strength span {
+  height: 6px;
+  border-radius: 4px;
+  background: #e2e8f0;
+  transition: background .25s ease;
+}
+.ar-strength[data-score="1"] span:nth-child(-n+1) { background: #ef4444; }
+.ar-strength[data-score="2"] span:nth-child(-n+2) { background: #f59e0b; }
+.ar-strength[data-score="3"] span:nth-child(-n+3) { background: #10b981; }
+.ar-strength[data-score="4"] span:nth-child(-n+4) { background: #059669; }
+
+/* ===== Primary button (full width like inputs) ===== */
+.ar-btn {
+  height: 46px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #2563eb, #3b82f6);
+  color: white;
+  font-weight: 700;
+  letter-spacing: .2px;
+  cursor: pointer;
+  transition: transform .08s ease, box-shadow .2s ease, filter .2s ease;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+  width: 100%;
+  max-width: 100%;
+}
+.ar-btn:hover {
+  filter: brightness(1.03);
+  box-shadow: 0 16px 40px rgba(20, 40, 80, 0.12);
+}
+.ar-btn:active { transform: translateY(1px) scale(.99); }
+.ar-btn[disabled] {
+  opacity: .6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Small inline button (Show/Hide) */
+.ar-icon-btn {
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: .9rem;
+}
+.ar-icon-btn:hover { background: #f1f5f9; }
+
+/* ===== Card pop animation ===== */
+@keyframes ar-pop {
+  0% { transform: translateY(8px) scale(.98); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ar-card, .ar-input, .ar-btn { animation: none !important; transition: none !important; }
+}
+
+/* Small screens */
+@media (max-width: 400px) {
+  .ar-card { padding: 22px; }
+  .ar-input, .ar-select { height: 50px; }
+}

@@ -1,0 +1,69 @@
+.ah-page { min-height: 100vh; display: flex; flex-direction: column; background: #f8fafc; color: #0f172a; font-family: "Segoe UI", Roboto, sans-serif; }
+.ah-wrap { width: min(1200px, 94vw); margin: 0 auto; padding: 20px; }
+
+/* ===== KPI Section (top, under navbar) ===== */
+.ah-kpi-section { margin-top: 4px; }
+.ah-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 18px; }
+.ah-kpi { background: #fff; border-radius: 14px; padding: 16px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform .2s, box-shadow .2s; }
+.ah-kpi:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+.ah-v { font-size: 1.8rem; font-weight: 700; }
+.ah-l { color: #64748b; font-size: .9rem; }
+.ah-danger { border-top: 4px solid #ef4444; }
+.ah-good { border-top: 4px solid #22c55e; }
+.ah-warn { border-top: 4px solid #f59e0b; }
+.ah-kpi-err { margin-top: 10px; }
+
+/* ===== Controls ===== */
+.ah-controls { margin-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.ah-filter { display: flex; align-items: center; gap: 8px; }
+.ah-filter select { padding: 6px 10px; border-radius: 10px; border: 1px solid #e2e8f0; background: #fff; }
+.ah-actions { display: flex; align-items: center; gap: 12px; }
+.ah-btn { padding: 8px 12px; border: 1px solid #e2e8f0; background: #fff; border-radius: 10px; font-weight: 600; }
+.ah-btn:disabled { opacity: .6; cursor: not-allowed; }
+.ah-toggle { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: #334155; }
+
+/* ===== Dashboard Layout ===== */
+.ah-dash { margin-top: 22px; display: grid; grid-template-columns: 2fr 1.2fr; gap: 20px; }
+.ah-leftcol, .ah-rightcol { display: grid; gap: 20px; }
+
+/* ===== Cards ===== */
+.ah-card { background: #fff; border-radius: 14px; padding: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 12px; }
+.ah-ct { font-weight: 700; font-size: 1.05rem; margin-bottom: 6px; }
+.ah-sm { font-size: .95rem; color: #475569; }
+.ah-a { color: #2563eb; text-decoration: none; font-weight: 700; margin-top: auto; align-self: flex-end; }
+.ah-a:hover { text-decoration: underline; }
+.ah-hero { margin: 4px 0 2px; }
+
+/* ===== Recent Alerts Table ===== */
+.ah-tbl table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.ah-tbl th, .ah-tbl td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+.ah-tbl th { background: #f9fafb; font-weight: 600; color: #374151; }
+.ah-tbl tr:hover td { background: #f3f4f6; }
+.ah-cut { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Severity badges */
+.ah-sev { padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: .78rem; letter-spacing: .02em; }
+.ah-sev-red { background: #fee2e2; color: #b91c1c; }
+.ah-sev-green { background: #dcfce7; color: #166534; }
+.ah-sev-yellow { background: #fef9c3; color: #92400e; }
+.ah-sev-orange { background: #ffedd5; color: #9a3412; }
+
+/* Skeleton */
+.ah-skeleton { display: grid; gap: 10px; }
+.ah-skel-row { height: 36px; border-radius: 10px; background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%); background-size: 200% 100%; animation: ah-shimmer 1.2s infinite linear; }
+@keyframes ah-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ===== Quick Actions ===== */
+.ah-qa { display: flex; flex-wrap: wrap; gap: 10px; }
+.ah-q { padding: 10px 14px; border-radius: 10px; background: #f1f5f9; color: #1e293b; font-size: .9rem; text-decoration: none; font-weight: 700; transition: background .2s, transform .05s; border: 1px solid #e2e8f0; }
+.ah-q:hover { background: #e2e8f0; }
+.ah-q:active { transform: scale(.98); }
+.ah-ok { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+
+/* ===== Misc ===== */
+.ah-muted { color: #94a3b8; font-size: .92rem; }
+.ah-err { color: #dc2626; font-weight: 700; font-size: .85rem; }
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) { .ah-dash { grid-template-columns: 1fr; } .ah-cut { max-width: 180px; } }
+@media (max-width: 640px) { .ah-wrap { padding: 16px; } .ah-kpis { gap: 12px; } .ah-q { padding: 8px 12px; font-size: .86rem; } }

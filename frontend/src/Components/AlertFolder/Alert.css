@@ -1,0 +1,88 @@
+/* ===== Page wrapper ===== */
+.alerts-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 12px;
+}
+
+/* ===== Header row ===== */
+.alerts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 8px 0 18px;
+}
+
+.alerts-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.alerts-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* ===== Back button (always visible) ===== */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-weight: 700;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #f1f5f9;
+  color: #1e293b;
+  cursor: pointer;
+  transition: background .2s, transform .05s;
+}
+
+.back-btn:hover {
+  background: #e2e8f0;
+  transform: translateY(-1px);
+}
+
+.back-arrow {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.back-text {
+  display: inline-block;
+}
+
+/* ===== Add Alert button (right) ===== */
+.add-alert-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  background: #0f766e;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: 700;
+  transition: filter .2s, transform .05s;
+}
+
+.add-alert-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+/* ===== Empty state ===== */
+.alert-empty {
+  padding: 14px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  color: #64748b;
+  text-align: center;
+  background: #f8fafc;
+}
+
+/* ===== (Your existing card/button styles remain below) ===== */
