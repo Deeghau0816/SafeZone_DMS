@@ -47,6 +47,10 @@ import Claim from "./Component/VictimDashboard/DisasterClaim/Claim";
 import ReadClaim from "./Component/VictimDashboard/DisasterClaim/Read";
 import ReportsHub from "./Component/VictimDashboard/ReportsHub/ReportsHub";
 import Records from "./Component/VictimDashboard/Records/Records";
+import DMODashboard from "./Components/DMODashboard/DMODashboard";
+import ResponseDashboard from "./Components/ResponseDashboard/ResponseDashboard";
+import Deployments from "./Components/DMODashboard/Reports/Deployments";
+
 
 export default function App() {
   return (
@@ -106,6 +110,10 @@ export default function App() {
 
         {/* Fallback → root */}
         <Route path="*" element={<Navigate to="/" replace />} />
+        {/* DMO and Response Dashboard Routes */}
+        <Route path="/dmo" element={<DMODashboard />} />
+        <Route path="/deployments" element={<Deployments />} />
+        <Route path="/response" element={<ResponseDashboard />} />
       </Routes>
       <Footer />
     </>

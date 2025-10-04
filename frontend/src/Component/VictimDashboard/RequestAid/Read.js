@@ -55,7 +55,7 @@ function MapPreview({ location }) {
   return <span>{location}</span>;
 }
 
-export default function ReadAid() {
+export default function ReadAid({ hideActions, hideReview, hideDelete, showFulfill, onFulfill }) {
   /* ---- Component State Management ---- */
   const [rows, setRows] = useState([]);        // Array of aid request data
   const [q, setQ] = useState("");              // Search query string
@@ -165,9 +165,11 @@ export default function ReadAid() {
             disabled={loading}
           />
           {/* Back Navigation Button */}
-          <button className="ra-btn ra-btn--ghost ra-btn--back" onClick={() => navigate("/victim/reports")}>
-            Back
-          </button>
+          {!hideActions && (
+            <button className="ra-btn ra-btn--ghost ra-btn--back" onClick={() => navigate("/victim/reports")}>
+              Back
+            </button>
+          )}
         </div>
       </header>
 
@@ -228,18 +230,31 @@ export default function ReadAid() {
                 <td className="td-sub">{r.description || "—"}</td>
                 {/* Action Buttons */}
                 <td className="ra-td-actions">
+                  {/* Fulfill Button */}
+                  {showFulfill && (
+                    <button
+                      className="ra-btn ra-btn--primary"
+                      onClick={() => (typeof onFulfill === 'function' ? onFulfill(r) : null)}
+                    >
+                      Fulfill
+                    </button>
+                  )}
                   {/* Review Button */}
-                  <button
-                    className="ra-btn ra-btn--success"
-                    onClick={() => onReview(r._id)}
-                    disabled={r.reviewed}
-                  >
-                    {r.reviewed ? "Reviewed" : "Review"}
-                  </button>
+                  {!hideReview && (
+                    <button
+                      className="ra-btn ra-btn--success"
+                      onClick={() => onReview(r._id)}
+                      disabled={r.reviewed}
+                    >
+                      {r.reviewed ? "Reviewed" : "Review"}
+                    </button>
+                  )}
                   {/* Delete Button */}
-                  <button className="ra-btn ra-btn--danger" onClick={() => onDelete(r._id)}>
-                    Delete
-                  </button>
+                  {!hideActions && !hideDelete && (
+                    <button className="ra-btn ra-btn--danger" onClick={() => onDelete(r._id)}>
+                      Delete
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
@@ -249,3 +264,6 @@ export default function ReadAid() {
     </main>
   );
 }
+
+
+

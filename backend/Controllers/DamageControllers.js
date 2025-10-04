@@ -16,7 +16,7 @@ const isHex24     = (s) => /^[0-9a-fA-F]{24}$/.test(s);
 /** Build absolute URL for an attachment filename */
 function attachmentUrl(req, filename) {
   if (!filename) return null;
-  return ${req.protocol}://${req.get('host')}/uploads/damage/${encodeURIComponent(filename)};
+  return `${req.protocol}://${req.get('host')}/uploads/damage/${encodeURIComponent(filename)}`;
 }
 
 /** Map attachments (stored) to an object with url */

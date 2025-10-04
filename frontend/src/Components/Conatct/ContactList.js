@@ -6,6 +6,9 @@ import "./ContactList.css";
 
 const ContactList = () => {
   const [contacts, setContacts] = useState([]);
+  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [selectedContact, setSelectedContact] = useState(null);
+  const [message, setMessage] = useState("");
   
 
   useEffect(() => {
@@ -35,6 +38,33 @@ const ContactList = () => {
     }
 
     return digits;
+  };
+
+  // Handle WhatsApp message form
+  const handleWhatsAppClick = (contact) => {
+    setSelectedContact(contact);
+    setMessage(`Hello ${contact.name}, I'm contacting you regarding your inquiry about: ${contact.problem}`);
+    setShowMessageForm(true);
+  };
+
+  // Send WhatsApp message
+  const sendWhatsAppMessage = () => {
+    if (selectedContact && message.trim()) {
+      const encodedMessage = encodeURIComponent(message);
+      const phoneNumber = normalizePhone(selectedContact.phone);
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+      window.open(whatsappUrl, '_blank');
+      setShowMessageForm(false);
+      setMessage("");
+      setSelectedContact(null);
+    }
+  };
+
+  // Close message form
+  const closeMessageForm = () => {
+    setShowMessageForm(false);
+    setMessage("");
+    setSelectedContact(null);
   };
 
   // Download all contacts as PDF
@@ -239,11 +269,13 @@ const ContactList = () => {
         <ul className="contact-list">
           {contacts.map((c) => (
             <li key={c._id} className="contact-item">
-              <p><b>Name:</b> {c.name}</p>
-              <p><b>Email:</b> {c.email}</p>
-              <p><b>Phone:</b> {c.phone}</p>
-              <p><b>Problem:</b> {c.problem}</p>
-              <small>Submitted: {new Date(c.createdAt).toLocaleString()}</small>
+              <div className="contact-details">
+                <p><b>Name:</b> {c.name}</p>
+                <p><b>Email:</b> {c.email}</p>
+                <p><b>Phone:</b> {c.phone}</p>
+                <p><b>Problem:</b> {c.problem}</p>
+                <small>Submitted: {new Date(c.createdAt).toLocaleString()}</small>
+              </div>
 
               <div className="actions">
                 <button
@@ -265,15 +297,13 @@ const ContactList = () => {
 
                 {/* WhatsApp button */}
                 {c.phone && (
-                  <a
-                    href={`https://wa.me/${normalizePhone(c.phone)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    onClick={() => handleWhatsAppClick(c)}
                     className="whatsapp-btn"
-                    title="Chat on WhatsApp"
+                    title="Send WhatsApp message"
                   >
                     WhatsApp
-                  </a>
+                  </button>
                 )}
 
                 
@@ -321,6 +351,98 @@ const ContactList = () => {
             </li>
           ))}
         </ul>
+      )}
+
+      {/* WhatsApp Message Form Modal */}
+      {showMessageForm && selectedContact && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "rgba(0, 0, 0, 0.5)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: "white",
+            padding: "30px",
+            borderRadius: "12px",
+            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
+            maxWidth: "500px",
+            width: "90%",
+            maxHeight: "80vh",
+            overflow: "auto"
+          }}>
+            <h3 style={{ margin: "0 0 20px 0", color: "#333" }}>
+              Send WhatsApp Message
+            </h3>
+            
+            <div style={{ marginBottom: "15px" }}>
+              <strong>To:</strong> {selectedContact.name} ({selectedContact.phone})
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ display: "block", marginBottom: "8px", fontWeight: "500" }}>
+                Message:
+              </label>
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Type your message here..."
+                style={{
+                  width: "100%",
+                  height: "120px",
+                  padding: "12px",
+                  border: "1px solid #ddd",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  resize: "vertical",
+                  fontFamily: "inherit"
+                }}
+              />
+            </div>
+            
+            <div style={{
+              display: "flex",
+              gap: "10px",
+              justifyContent: "flex-end"
+            }}>
+              <button
+                onClick={closeMessageForm}
+                style={{
+                  background: "#f44336",
+                  color: "white",
+                  border: "none",
+                  padding: "10px 20px",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  fontSize: "14px"
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={sendWhatsAppMessage}
+                disabled={!message.trim()}
+                style={{
+                  background: message.trim() ? "#25D366" : "#ccc",
+                  color: "white",
+                  border: "none",
+                  padding: "10px 20px",
+                  borderRadius: "6px",
+                  cursor: message.trim() ? "pointer" : "not-allowed",
+                  fontSize: "14px"
+                }}
+              >
+                Send via WhatsApp
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -80,8 +80,17 @@ function fmt(dt) {
   }
 }
 
-export default function Read({ victim, onDelete }) {
+export default function Read({ victim, onDelete, hideActions, compact, showAssign, onAssign }) {
   const navigate = useNavigate();
+  const [reportStatus, setReportStatus] = React.useState('');
+  
+  React.useEffect(() => {
+    // Load saved status from localStorage when component mounts
+    const savedStatus = localStorage.getItem(`report_status_${victim?._id || victim?.id}`);
+    if (savedStatus) {
+      setReportStatus(savedStatus);
+    }
+  }, [victim]);
   
   // Use victim ID to create unique localStorage key
   const vid = victim?._id || victim?.id;
@@ -136,7 +145,7 @@ export default function Read({ victim, onDelete }) {
   const reportedAtStr = fmt(createdAt || date || null);
 
   return (
-    <article className="r-card">
+    <article className="r-card" style={compact ? { transform: "scale(0.92)", transformOrigin: "top left" } : undefined}>
       {/* Card header with name, ID, and actions */}
       <header className="r-head">
         <div>
@@ -144,9 +153,11 @@ export default function Read({ victim, onDelete }) {
           <div className="r-sub">#{vid}</div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <button className="r-btn ghost" onClick={() => navigate("/victim/reports")}>
-            Back
-          </button>
+          {!hideActions && (
+            <button className="r-btn ghost" onClick={() => navigate("/victim/reports")}>
+              ← Back
+            </button>
+          )}
           <span className={`r-badge ${badge}`}>{rawStatus}</span>
         </div>
       </header>
@@ -175,24 +186,65 @@ export default function Read({ victim, onDelete }) {
           </section>
 
           {/* Action buttons */}
-          <footer className="r-actions">
-            <button 
-              className={`r-btn ${isViewed ? 'viewed' : 'view'}`} 
-              onClick={() => {
-                alert("Report is viewing");
-                setIsViewed(true);
-                localStorage.setItem(storageKey, 'true');
-              }}
-            >
-              {isViewed ? 'Viewed' : 'View'}
-            </button>
-            <Link to={`/victim/report/${vid}/edit`} className="r-btn edit" target="_blank">
-              Edit
-            </Link>
-            <button className="r-btn danger" onClick={() => onDelete(vid)}>
-              Delete
-            </button>
-          </footer>
+          {!hideActions && (
+            <footer className="r-actions">
+              <button 
+                className={`r-btn ${isViewed ? 'viewed' : 'view'}`} 
+                onClick={() => {
+                  alert("Report is viewing");
+                  setIsViewed(true);
+                  localStorage.setItem(storageKey, 'true');
+                }}
+              >
+                {isViewed ? 'Viewed' : 'View'}
+              </button>
+              <Link to={`/victim/report/${vid}/edit`} className="r-btn edit" target="_blank">
+                Edit
+              </Link>
+              <button className="r-btn danger" onClick={() => onDelete(vid)}>
+                Delete
+              </button>
+            </footer>
+          )}
+          {showAssign && (
+            <footer className="r-actions">
+              {reportStatus === 'Approved' ? (
+                <>
+                  <span className="r-badge ok">Approved</span>
+                  <button
+                    className="r-btn success"
+                    onClick={() => (typeof onAssign === 'function' ? onAssign(vid, victim) : alert('Assigned'))}
+                  >
+                    Assign
+                  </button>
+                </>
+              ) : reportStatus === 'Rejected' ? (
+                <span className="r-badge bad">Rejected</span>
+              ) : (
+                <>
+                  <span className="r-badge" style={{ backgroundColor: "#fef3c7", color: "#92400e", padding: "4px 12px", borderRadius: "16px", fontSize: "14px", fontWeight: "500" }}>Pending</span>
+                  <button
+                    className="r-btn ok"
+                    onClick={() => {
+                      setReportStatus('Approved');
+                      localStorage.setItem(`report_status_${vid}`, 'Approved');
+                    }}
+                  >
+                    Approve
+                  </button>
+                  <button
+                    className="r-btn danger"
+                    onClick={() => {
+                      setReportStatus('Rejected');
+                      localStorage.setItem(`report_status_${vid}`, 'Rejected');
+                    }}
+                  >
+                    Reject
+                  </button>
+                </>
+              )}
+            </footer>
+          )}
         </div>
 
         {/* Right side: Map and media gallery */}
@@ -219,3 +271,6 @@ export default function Read({ victim, onDelete }) {
     </article>
   );
 }
+
+
+

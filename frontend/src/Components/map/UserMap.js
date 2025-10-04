@@ -263,10 +263,20 @@ function UserMap() {
     setSelectedShelterId(selectedShelterId === shelterId ? null : shelterId);
   };
 
-  // Handle get directions button click
+  // Handle get directions button click - Open Google Maps
   const handleGetDirections = () => {
-    if (nearestShelter) {
-      getDirectionsToShelter(nearestShelter);
+    if (nearestShelter && userLocation) {
+      // Create Google Maps URL with directions
+      const startLat = userLocation.latitude;
+      const startLng = userLocation.longitude;
+      const endLat = nearestShelter.latitude;
+      const endLng = nearestShelter.longitude;
+      
+      // Google Maps directions URL
+      const googleMapsUrl = `https://www.google.com/maps/dir/${startLat},${startLng}/${endLat},${endLng}`;
+      
+      // Open in new tab
+      window.open(googleMapsUrl, '_blank');
     }
   };
 
@@ -527,7 +537,7 @@ function UserMap() {
                 }}
               >
                 <DirectionsIcon style={{ fontSize: "16px", marginRight: "4px" }} />
-                Get Directions
+                Open in Google Maps
               </button>
             </div>
           )}

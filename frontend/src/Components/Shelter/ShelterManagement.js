@@ -27,6 +27,11 @@ const ShelterManagement = () => {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Google Maps URL input state
+  const [showUrlInput, setShowUrlInput] = useState(false);
+  const [googleMapsUrl, setGoogleMapsUrl] = useState("");
+  const [urlError, setUrlError] = useState("");
 
   // Fetch shelters from API
   useEffect(() => {
@@ -212,6 +217,127 @@ const ShelterManagement = () => {
     }));
   };
 
+  // Parse Google Maps URL to extract coordinates
+  const parseGoogleMapsUrl = async (url) => {
+    try {
+      // Remove any whitespace
+      url = url.trim();
+      
+      // Handle different Google Maps URL formats
+      let lat, lng;
+      
+      // Format 1: https://www.google.com/maps/@lat,lng,zoom
+      const coordMatch = url.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+      if (coordMatch) {
+        lat = parseFloat(coordMatch[1]);
+        lng = parseFloat(coordMatch[2]);
+      }
+      
+      // Format 2: https://www.google.com/maps/place/name/@lat,lng,zoom
+      if (!lat || !lng) {
+        const placeMatch = url.match(/place\/[^/]*\/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+        if (placeMatch) {
+          lat = parseFloat(placeMatch[1]);
+          lng = parseFloat(placeMatch[2]);
+        }
+      }
+      
+      // Format 3: https://maps.google.com/maps?q=lat,lng
+      if (!lat || !lng) {
+        const queryMatch = url.match(/[?&]q=(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+        if (queryMatch) {
+          lat = parseFloat(queryMatch[1]);
+          lng = parseFloat(queryMatch[2]);
+        }
+      }
+      
+      // Format 4: https://www.google.com/maps/search/query/@lat,lng,zoom
+      if (!lat || !lng) {
+        const searchMatch = url.match(/search\/[^/]*\/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+        if (searchMatch) {
+          lat = parseFloat(searchMatch[1]);
+          lng = parseFloat(searchMatch[2]);
+        }
+      }
+      
+      // Format 5: Google Maps short links (maps.app.goo.gl, goo.gl/maps, etc.)
+      if (!lat || !lng) {
+        const shortLinkPatterns = [
+          /maps\.app\.goo\.gl\//,
+          /goo\.gl\/maps\//,
+          /maps\.google\.com\/maps\/d\/\w+/
+        ];
+        
+        const isShortLink = shortLinkPatterns.some(pattern => pattern.test(url));
+        
+        if (isShortLink) {
+          // Resolve short link using backend service
+          try {
+            const response = await axios.post('http://localhost:5000/api/resolve-url', {
+              url: url
+            });
+            
+            if (response.data.success && response.data.data.coordinates) {
+              return response.data.data.coordinates;
+            } else {
+              throw new Error('Failed to resolve short link');
+            }
+          } catch (error) {
+            console.error('Error resolving short link:', error);
+            throw new Error(`Failed to resolve short link: ${error.response?.data?.message || error.message}`);
+          }
+        }
+      }
+      
+      // Validate coordinates
+      if (lat && lng && 
+          lat >= -90 && lat <= 90 && 
+          lng >= -180 && lng <= 180 &&
+          !isNaN(lat) && !isNaN(lng)) {
+        return { latitude: lat, longitude: lng };
+      }
+      
+      return null;
+    } catch (error) {
+      console.error("Error parsing Google Maps URL:", error);
+      return null;
+    }
+  };
+
+  // Handle Google Maps URL input
+  const handleUrlInput = async () => {
+    if (!googleMapsUrl.trim()) {
+      setUrlError("Please enter a Google Maps URL");
+      return;
+    }
+    
+    try {
+      const coords = await parseGoogleMapsUrl(googleMapsUrl);
+      if (coords) {
+        // Set the coordinates in the form
+        setFormData(prev => ({
+          ...prev,
+          latitude: coords.latitude.toString(),
+          longitude: coords.longitude.toString()
+        }));
+        
+        // Set the location for the map marker
+        setNewShelterLocation({
+          latitude: coords.latitude,
+          longitude: coords.longitude
+        });
+        
+        setShowUrlInput(false);
+        setGoogleMapsUrl("");
+        setUrlError("");
+      } else {
+        setUrlError("Invalid Google Maps URL format. Please check the URL and try again.");
+      }
+    } catch (error) {
+      setUrlError(error.message || "Error processing the URL. Please try again.");
+    }
+  };
+
   // Reset form
   const resetForm = () => {
     setFormData({
@@ -286,7 +412,126 @@ const ShelterManagement = () => {
         {/* Map */}
         <div className="shelter-map">
           <h3>Shelter Locations</h3>
-          <div className="map-container">
+          <div className="map-container" style={{ position: "relative" }}>
+            {/* Google Maps URL Input Controls */}
+            <div style={{
+              position: "absolute",
+              top: "10px",
+              right: "10px",
+              zIndex: 1000,
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px"
+            }}>
+              {/* Check Location from URL Button */}
+              <button
+                onClick={() => setShowUrlInput(!showUrlInput)}
+                style={{
+                  background: "#4285f4",
+                  color: "white",
+                  border: "none",
+                  padding: "10px 15px",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                  transition: "all 0.3s ease"
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.background = "#3367d6";
+                  e.target.style.transform = "translateY(-1px)";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.background = "#4285f4";
+                  e.target.style.transform = "translateY(0)";
+                }}
+              >
+                🔍 Add Shelter from Google Maps
+              </button>
+
+              {/* URL Input Form */}
+              {showUrlInput && (
+                <div style={{
+                  background: "white",
+                  padding: "15px",
+                  borderRadius: "8px",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                  minWidth: "300px"
+                }}>
+                  <h4 style={{ margin: "0 0 10px 0", color: "#333" }}>Paste Google Maps URL</h4>
+                  <input
+                    type="text"
+                    placeholder="https://www.google.com/maps/@lat,lng,zoom or https://maps.app.goo.gl/..."
+                    value={googleMapsUrl}
+                    onChange={(e) => {
+                      setGoogleMapsUrl(e.target.value);
+                      setUrlError("");
+                    }}
+                    style={{
+                      width: "100%",
+                      padding: "8px 12px",
+                      border: "1px solid #ddd",
+                      borderRadius: "4px",
+                      fontSize: "14px",
+                      marginBottom: "8px"
+                    }}
+                  />
+                  {urlError && (
+                    <div style={{
+                      color: "#f44336",
+                      fontSize: "12px",
+                      marginBottom: "8px",
+                      whiteSpace: "pre-line"
+                    }}>
+                      {urlError}
+                    </div>
+                  )}
+                  <div style={{
+                    display: "flex",
+                    gap: "8px",
+                    justifyContent: "flex-end"
+                  }}>
+                    <button
+                      onClick={() => {
+                        setShowUrlInput(false);
+                        setGoogleMapsUrl("");
+                        setUrlError("");
+                      }}
+                      style={{
+                        background: "#f44336",
+                        color: "white",
+                        border: "none",
+                        padding: "6px 12px",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        fontSize: "12px"
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleUrlInput}
+                      style={{
+                        background: "#4caf50",
+                        color: "white",
+                        border: "none",
+                        padding: "6px 12px",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        fontSize: "12px"
+                      }}
+                    >
+                      Add Shelter
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <MapboxMap
               mapboxAccessToken="pk.eyJ1IjoibmF2b2RhMTIzIiwiYSI6ImNtZTdhMDdsaTAyY3QycXBtNWQwdHpxc2IifQ.jNfJr5DmTfwet02F2tQC1w"
               initialViewState={{
@@ -556,6 +801,124 @@ const ShelterManagement = () => {
                   rows="3"
                 />
                 {errors.description && <span className="error-message">{errors.description}</span>}
+              </div>
+
+              {/* Google Maps URL Input */}
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Location from Google Maps</label>
+                  <button
+                    type="button"
+                    onClick={() => setShowUrlInput(!showUrlInput)}
+                    style={{
+                      background: "#4285f4",
+                      color: "white",
+                      border: "none",
+                      padding: "10px 15px",
+                      borderRadius: "8px",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                      transition: "all 0.3s ease",
+                      marginBottom: "10px"
+                    }}
+                    onMouseOver={(e) => {
+                      e.target.style.background = "#3367d6";
+                      e.target.style.transform = "translateY(-1px)";
+                    }}
+                    onMouseOut={(e) => {
+                      e.target.style.background = "#4285f4";
+                      e.target.style.transform = "translateY(0)";
+                    }}
+                  >
+                    🔍 Get Location from Google Maps
+                  </button>
+
+                  {/* URL Input Form */}
+                  {showUrlInput && (
+                    <div style={{
+                      background: "white",
+                      padding: "15px",
+                      borderRadius: "8px",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                      marginTop: "10px",
+                      border: "1px solid #ddd"
+                    }}>
+                      <h4 style={{ margin: "0 0 10px 0", color: "#333" }}>Paste Google Maps URL</h4>
+                      <input
+                        type="text"
+                        placeholder="https://www.google.com/maps/@lat,lng,zoom or https://maps.app.goo.gl/..."
+                        value={googleMapsUrl}
+                        onChange={(e) => {
+                          setGoogleMapsUrl(e.target.value);
+                          setUrlError("");
+                        }}
+                        style={{
+                          width: "100%",
+                          padding: "8px 12px",
+                          border: "1px solid #ddd",
+                          borderRadius: "4px",
+                          fontSize: "14px",
+                          marginBottom: "8px"
+                        }}
+                      />
+                      {urlError && (
+                        <div style={{
+                          color: "#f44336",
+                          fontSize: "12px",
+                          marginBottom: "8px",
+                          whiteSpace: "pre-line"
+                        }}>
+                          {urlError}
+                        </div>
+                      )}
+                      <div style={{
+                        display: "flex",
+                        gap: "8px",
+                        justifyContent: "flex-end"
+                      }}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowUrlInput(false);
+                            setGoogleMapsUrl("");
+                            setUrlError("");
+                          }}
+                          style={{
+                            background: "#f44336",
+                            color: "white",
+                            border: "none",
+                            padding: "6px 12px",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            fontSize: "12px"
+                          }}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleUrlInput}
+                          style={{
+                            background: "#4caf50",
+                            color: "white",
+                            border: "none",
+                            padding: "6px 12px",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            fontSize: "12px"
+                          }}
+                        >
+                          Get Location
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="form-row">
