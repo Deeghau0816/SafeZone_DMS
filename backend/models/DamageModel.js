@@ -5,7 +5,7 @@ const AttachmentSchema = new mongoose.Schema({
   filename: { type: String, required: true },      // stored filename on disk
   originalName: { type: String, required: true },  // original client filename
   mimeType: { type: String, required: true },
-  size: { type: Number, required: true },          // bytes
+  size: { type: Number, required: true },          // bytesssss
   uploadedAt: { type: Date, default: Date.now },
 }, { _id: false });
 
