@@ -53,7 +53,7 @@ function adaptVictim(v) {
  * 
  * @returns {JSX.Element} The rendered reports interface
  */
-export default function ReadReport() {
+export default function ReadReport({ hideActions, compact, severity, showAssign, onAssign }) {
   // ========================================
   // State Management
   // ========================================
@@ -150,9 +150,20 @@ export default function ReadReport() {
    */
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
-    if (!term) return victims;
-    
-    return victims.filter((v) =>
+    // Optional severity filter: 'high' | 'medium' | 'low'
+    const base = !severity
+      ? victims
+      : victims.filter((v) => {
+          const raw = String(v.status || v.Status || "medium").toLowerCase();
+          if (severity === "high") return /high/.test(raw);
+          if (severity === "low") return /low/.test(raw);
+          // default medium: not high and not low
+          return !/high/.test(raw) && !/low/.test(raw);
+        });
+
+    if (!term) return base;
+
+    return base.filter((v) =>
       [
         v.name,
         v.victimName,
@@ -169,7 +180,7 @@ export default function ReadReport() {
         .filter(Boolean)
         .some((val) => String(val).toLowerCase().includes(term))
     );
-  }, [victims, q]);
+  }, [victims, q, severity]);
 
   // ========================================
   // Render
@@ -227,9 +238,20 @@ export default function ReadReport() {
       {/* Reports grid - displays filtered results */}
       <section className="read-grid">
         {filtered.map((v) => (
-          <Read key={v._id || v.id} victim={v} onDelete={handleDelete} />
+          <Read
+            key={v._id || v.id}
+            victim={v}
+            onDelete={handleDelete}
+            hideActions={hideActions}
+            compact={compact}
+            showAssign={showAssign}
+            onAssign={onAssign}
+          />
         ))}
       </section>
     </main>
   );
 }
+
+
+

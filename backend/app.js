@@ -17,6 +17,9 @@ const aidRoutes = require("./Router/AidRoutes");
 const damageRoutes = require("./Router/DamageRoutes");
 const { listAids } = require("./Controllers/AidController");
 const damageCtrl = require("./Controllers/DamageController");
+const deploymentRoutes = require("./Router/DeploymentRoutes");
+const requestsRoutes = require("./Router/RequestsRoutes");
+const teamLocationRoutes = require("./Router/TeamLocationRoutes");
 
 // ---- Config ----
 const PORT = 5000;
@@ -95,6 +98,9 @@ app.use("/api", urlResolverRoutes);
 app.use("/victims", victimRoutes);
 app.use("/aid", aidRoutes);
 app.use("/damage", damageRoutes);
+app.use("/deployments", deploymentRoutes);
+app.use("/requests", requestsRoutes);
+app.use("/teamLocations", teamLocationRoutes);
 
 // Aliases
 app.get("/aids", listAids);
