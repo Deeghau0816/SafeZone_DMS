@@ -63,7 +63,7 @@ export default function Nav() {
         <nav className="sz-links">
           <NavLink to="/" className="sz-link" end>Home</NavLink>
           <NavLink to="/dashboard" className="sz-link">Dashboard</NavLink>
-          <NavLink to="/map" className="sz-link">Map</NavLink>
+          <NavLink to="/UserAlerts" className="sz-link">Alerts</NavLink>
           <NavLink to="/contact" className="sz-link">Contact Us</NavLink>
 
           {!user ? (

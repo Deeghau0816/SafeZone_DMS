@@ -1,7 +1,7 @@
 // Controllers/DamageController.js
 const fs = require("fs");
 const path = require("path");
-const Damage = require("../Model/DamageModel");
+const Damage = require("../models/DamageModel");
 
 const NIC_RE   = /^(\d{9}[VvXx]|\d{12})$/;
 const PHONE_RE = /^(?:\+94|0)?7\d{8}$/;

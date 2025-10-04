@@ -1,0 +1,230 @@
+/* =========================================
+   UserLogin.css (scoped)
+   - Variables are scoped to .sz-login (not :root)
+   - No bleed into Nav/other pages
+   ========================================= */
+
+/* LOGIN SHELL — define variables here so they don't leak globally */
+.sz-login {
+  /* theme vars (scoped) */
+  --primary-color: #1e40af;      /* deep blue */
+  --success-color: #059669;      /* green button */
+  --success-color-hover: #047857;
+  --danger-color: #dc2626;
+
+  --bg-primary: #f1f5f9;
+  --bg-secondary: #ffffff;
+
+  --border-color: #e2e8f0;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+
+  --radius-sm: 10px;
+  --radius: 12px;
+  --radius-lg: 16px;
+
+  --shadow-1: 0 4px 6px -1px rgba(0,0,0,.1);
+  --shadow-2: 0 10px 15px -3px rgba(0,0,0,.1);
+  --shadow-3: 0 20px 25px -5px rgba(0,0,0,.1);
+
+  --transition: all .2s ease;
+
+  /* page bg/layout */
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 12px 40px; /* keep Nav outside this wrapper */
+}
+
+/* ----- Card (scoped under .sz-login) ----- */
+.sz-login .sz-card {
+  max-width: 500px;
+  width: 90%;
+  margin: 24px auto;
+  padding: 2.5rem 2rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-3);
+  border: 1px solid var(--border-color);
+  position: relative;
+  box-sizing: border-box;
+  animation: fadeInUp .6s ease;
+}
+
+/* Centered title with icon */
+.sz-login .sz-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  text-align: center;
+  letter-spacing: -0.01em;
+  margin: 0 0 1.5rem;
+  position: relative;
+}
+.sz-login .sz-title::before {
+  content: "🔐";
+  display: block;
+  font-size: 2.5rem;
+  margin-bottom: .5rem;
+  opacity: .9;
+}
+
+/* Form layout */
+.sz-login .sz-form { display: grid; gap: 1rem; }
+
+/* Labels */
+.sz-login .sz-label {
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: .25rem;
+}
+
+/* Inputs */
+.sz-login .sz-input-wrap { position: relative; }
+.sz-login .sz-input {
+  width: 100%;
+  padding: .875rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: var(--transition);
+  box-shadow: var(--shadow-1);
+}
+.sz-login .sz-input::placeholder { color: var(--text-muted); }
+
+.sz-login .sz-input:hover {
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-2);
+}
+.sz-login .sz-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(30,64,175,.12);
+  transform: translateY(-1px);
+}
+
+/* Show/Hide password button */
+.sz-login .sz-show-btn {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: #f8fafc;
+  color: var(--text-secondary);
+  font-size: .9rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.sz-login .sz-show-btn:hover { background: #eef2f7; }
+
+/* Error message */
+.sz-login .sz-error {
+  color: var(--danger-color);
+  font-size: .95rem;
+  font-weight: 600;
+  margin: .25rem 0 .5rem;
+  padding: .75rem 1rem;
+  background: rgba(220,38,38,.08);
+  border: 1px solid rgba(220,38,38,.22);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  animation: slideIn .3s ease;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Submit button */
+.sz-login .sz-btn {
+  width: 100%;
+  padding: .9rem 1.25rem;
+  background: var(--success-color);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-2);
+  letter-spacing: .01em;
+  position: relative;
+  overflow: hidden;
+  margin-top: .25rem;
+}
+.sz-login .sz-btn:hover:not(:disabled) {
+  background: var(--success-color-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-3);
+}
+.sz-login .sz-btn:active:not(:disabled) { transform: translateY(0); box-shadow: var(--shadow-2); }
+.sz-login .sz-btn:disabled {
+  background: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: var(--shadow-1);
+  opacity: .75;
+}
+.sz-login .sz-btn:disabled::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 20px; height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid transparent;
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Footer actions */
+.sz-login .sz-actions {
+  margin-top: 12px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: .95rem;
+}
+.sz-login .sz-actions a{
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 700;
+}
+.sz-login .sz-actions a:hover{ text-decoration: underline; }
+.sz-login .sz-actions span{ margin: 0 .5rem; color: var(--text-muted); }
+
+/* Responsive */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 768px) {
+  .sz-login .sz-card { margin: 16px auto; padding: 2rem; width: 95%; }
+  .sz-login .sz-title { font-size: 1.75rem; }
+  .sz-login .sz-title::before { font-size: 2rem; }
+}
+@media (max-width: 480px) {
+  .sz-login { padding: 16px 8px 28px; }
+  .sz-login .sz-card { padding: 1.5rem; width: 98%; }
+  .sz-login .sz-form { gap: 1rem; }
+}
+
+/* Accessibility */
+.sz-login .sz-input:focus-visible,
+.sz-login .sz-btn:focus-visible,
+.sz-login .sz-show-btn:focus-visible {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+}
