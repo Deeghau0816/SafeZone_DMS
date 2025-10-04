@@ -269,11 +269,13 @@ const ContactList = () => {
         <ul className="contact-list">
           {contacts.map((c) => (
             <li key={c._id} className="contact-item">
-              <p><b>Name:</b> {c.name}</p>
-              <p><b>Email:</b> {c.email}</p>
-              <p><b>Phone:</b> {c.phone}</p>
-              <p><b>Problem:</b> {c.problem}</p>
-              <small>Submitted: {new Date(c.createdAt).toLocaleString()}</small>
+              <div className="contact-details">
+                <p><b>Name:</b> {c.name}</p>
+                <p><b>Email:</b> {c.email}</p>
+                <p><b>Phone:</b> {c.phone}</p>
+                <p><b>Problem:</b> {c.problem}</p>
+                <small>Submitted: {new Date(c.createdAt).toLocaleString()}</small>
+              </div>
 
               <div className="actions">
                 <button

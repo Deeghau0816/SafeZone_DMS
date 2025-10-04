@@ -159,7 +159,7 @@ const SafeZoneHomePage = () => {
             <h3>Admin Dashboard</h3>
             <p>Access comprehensive disaster management tools, view reports, and manage emergency responses.</p>
             <button 
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/admin-dashboard')}
               style={{ backgroundColor: '#00bfff' }}
             >
               Open Dashboard
