@@ -1,0 +1,240 @@
+/* ==========================================
+   RA_Read.css – Light Theme for ReadAid
+   ========================================== */
+
+/* Root variables for light theme */
+:root {
+  --bg-color: #f9fafb;
+  --panel-color: #ffffff;
+  --panel-alt: #f4f6f8;
+  --text-color: #0f172a;
+  --subtext-color: #475569;
+  --line-color: #e5e9f1;
+  --accent-color: #3b82f6;
+  --danger-color: #ef4444;
+  --success-color: #22c55e;
+  --btn-bg: #ffffff;
+  --btn-hover: #e0e7ff;
+  --btn-border: #d1d5db;
+}
+
+/* ===== Main Page ===== */
+.ra-page {
+  background: var(--bg-color);
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-color);
+}
+
+/* ===== Header ===== */
+.ra-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.ra-header h2 {
+  font-size: 1.8rem;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.ra-toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ra-search {
+  padding: 6px 10px;
+  border: 1px solid var(--line-color);
+  border-radius: 6px;
+  outline: none;
+  width: 220px;
+  transition: 0.2s;
+}
+
+.ra-search:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 4px rgba(59, 130, 246, 0.3);
+}
+
+/* ===== Buttons ===== */
+.ra-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--btn-border);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.ra-btn--back {
+  background: var(--btn-bg);
+  color: var(--text-color);
+}
+
+.ra-btn--back:hover {
+  background: var(--btn-hover);
+}
+
+.ra-btn--ghost {
+  background: var(--btn-bg);
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.ra-btn--ghost:hover {
+  background: var(--accent-color);
+  color: #fff;
+}
+
+.ra-btn--success {
+  background: var(--success-color);
+  color: #fff;
+  border: none;
+}
+
+.ra-btn--success:hover {
+  background: #16a34a;
+}
+
+.ra-btn--danger {
+  background: var(--danger-color);
+  color: #fff;
+  border: none;
+}
+
+.ra-btn--danger:hover {
+  background: #dc2626;
+}
+
+/* ===== Table ===== */
+.ra-table-wrap {
+  overflow-x: auto;
+}
+
+.ra-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel-color);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.ra-table th,
+.ra-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line-color);
+  text-align: left;
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+.ra-table th {
+  background: var(--panel-alt);
+  color: var(--subtext-color);
+  font-weight: 600;
+}
+
+.ra-table tbody tr:hover {
+  background: #f1f5f9;
+}
+
+.ra-reviewed {
+  background: #e6f4ea;
+}
+
+.td-mono {
+  font-family: "Courier New", Courier, monospace;
+}
+
+/* ===== Map Preview ===== */
+iframe {
+  border-radius: 8px;
+}
+
+/* ===== Badges & Pills ===== */
+.ra-badge {
+  background: var(--panel-alt);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: var(--subtext-color);
+}
+
+.ra-pill {
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: #fff;
+  display: inline-block;
+}
+
+.ra-pill--low {
+  background: #22c55e;
+}
+
+.ra-pill--normal {
+  background: #3b82f6;
+}
+
+.ra-pill--high {
+  background: #f59e0b;
+}
+
+.ra-pill--urgent {
+  background: #ef4444;
+}
+
+.ra-pill--critical {
+  background: #dc2626;
+}
+
+/* ===== Actions Column ===== */
+.ra-td-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ===== Empty State ===== */
+.muted {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--subtext-color);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1280px) {
+  .ra-table th,
+  .ra-table td {
+    font-size: 0.85rem;
+    padding: 8px 10px;
+  }
+
+  .ra-search {
+    width: 180px;
+  }
+
+  iframe {
+    width: 180px;
+    height: 120px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ra-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .ra-td-actions {
+    flex-direction: column;
+  }
+}

@@ -1,6 +1,10 @@
 .safezone-container {
     font-family: Arial, sans-serif;
     min-height: 100vh;
+    margin-top: 0;
+    padding-top: 0;
+    position: relative;
+    z-index: 1;
   }
   
   /* Hero Section */
@@ -8,6 +12,10 @@
     background: linear-gradient(135deg, #667eea 0%, #5fa24bff 100%);
     color: white;
     padding: 4rem 2rem;
+    margin-top: 0 !important;
+    padding-top: 2rem !important; /* Reduced top padding since body already has space */
+    position: relative;
+    z-index: 1;
   }
 
   .hero-content {

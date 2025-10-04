@@ -315,5 +315,60 @@
 
 /* --- Body padding for fixed header --- */
 body {
-  padding-top: 80px;
+  padding-top: 80px !important; /* Adjusted to account for actual header height */
+  margin: 0 !important;
+}
+
+/* --- Main content spacing --- */
+main {
+  padding-top: 0 !important; /* Remove any default padding */
+  margin-top: 0 !important;
+}
+
+/* --- Ensure content appears after header --- */
+.safezone-container {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* --- Force content below header --- */
+.safezone-container,
+main,
+#root > div {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* --- Specific fix for home page --- */
+.safezone-container {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* --- Ensure hero section starts after header --- */
+.hero-section {
+  margin-top: 0 !important;
+  padding-top: 2rem !important; /* Add some top padding for visual spacing */
+}
+
+/* --- Override any conflicting styles --- */
+.safezone-container,
+.hero-section,
+.quick-actions,
+.features-section,
+.alerts-section,
+.cta-section {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* --- Force all pages to respect header space --- */
+#root {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+#root > div {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
 }

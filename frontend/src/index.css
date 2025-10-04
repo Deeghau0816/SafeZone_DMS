@@ -4,12 +4,29 @@
 
 body {
   margin: 0;
+  padding-top: 80px !important; /* Space for fixed header */
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+/* Ensure all main content appears after header */
+main {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+#root {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+#root > div {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 
 code {
