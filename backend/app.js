@@ -10,7 +10,6 @@ const pinRouter = require("./Router/pins");
 const contactRoutes = require("./Router/contact");
 const shelterRoutes = require("./Router/shelters");
 const urlResolverRoutes = require("./Router/urlResolver");
-const multer = require("multer");
 
 // ---- New Routes & Controllers ----
 const victimRoutes = require("./Router/VictimRoutes");
