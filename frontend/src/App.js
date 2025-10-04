@@ -28,6 +28,10 @@ import Claim from "./Component/VictimDashboard/DisasterClaim/Claim";
 import ReadClaim from "./Component/VictimDashboard/DisasterClaim/Read";
 import ReportsHub from "./Component/VictimDashboard/ReportsHub/ReportsHub";
 import Records from "./Component/VictimDashboard/Records/Records";
+import DMODashboard from "./Components/DMODashboard/DMODashboard";
+import ResponseDashboard from "./Components/ResponseDashboard/ResponseDashboard";
+import Deployments from "./Components/DMODashboard/Reports/Deployments";
+
 
 
 function App() {
@@ -59,6 +63,11 @@ function App() {
         <Route path="/victim/claim/records" element={<ReadClaim />} />
         <Route path="/victim/reports" element={<ReportsHub />} />
         <Route path="/victim/records" element={<Records />} />
+
+        {/* DMO and Response Dashboard Routes */}
+        <Route path="/dmo" element={<DMODashboard />} />
+        <Route path="/deployments" element={<Deployments />} />
+        <Route path="/response" element={<ResponseDashboard />} />
       </Routes>
       <Footer />
     </div>

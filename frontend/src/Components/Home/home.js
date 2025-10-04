@@ -165,6 +165,31 @@ const SafeZoneHomePage = () => {
               Open Dashboard
             </button>
           </div>
+
+          <div className="action-card">
+            <BarChart3 size={48} style={{ color: '#00bfff', marginBottom: '1rem' }} />
+            <h3>DMO Dashboard</h3>
+            <p>Access comprehensive disaster management tools, view reports, and manage emergency responses.</p>
+            <button 
+              onClick={() => navigate('/dmo')}
+              style={{ backgroundColor: '#00bfff' }}
+            >
+              Open Dashboard
+            </button>
+          </div>
+
+          <div className="action-card">
+            <BarChart3 size={48} style={{ color: '#00bfff', marginBottom: '1rem' }} />
+            <h3>Response Team Dashboard</h3>
+            <p>Access comprehensive disaster management tools, view reports, and manage emergency responses.</p>
+            <button 
+              onClick={() => navigate('/response')}
+              style={{ backgroundColor: '#00bfff' }}
+            >
+              Open Dashboard
+            </button>
+          </div>
+
         </div>
       </section>
 
