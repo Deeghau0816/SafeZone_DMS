@@ -149,9 +149,14 @@ const SafeZoneHomePage = () => {
 
           <div className="action-card">
             <Users size={48} style={{ color: '#9b59b6', marginBottom: '1rem' }} />
-            <h3>Volunteer Opportunities</h3>
-            <p>Join our community of volunteers and make a difference in disaster preparedness and response.</p>
-            <button style={{ backgroundColor: '#9b59b6' }}>Get Involved</button>
+            <h3>Support Disasters</h3>
+            <p>Join our community of support disasters and make a difference in disaster preparedness and response.</p>
+            <button 
+              onClick={() => navigate('/donation')}
+              style={{ backgroundColor: '#9b59b6' }}
+            >
+              Get Involved
+            </button>
           </div>
 
           <div className="action-card">
@@ -159,7 +164,7 @@ const SafeZoneHomePage = () => {
             <h3>Admin Dashboard</h3>
             <p>Access comprehensive disaster management tools, view reports, and manage emergency responses.</p>
             <button 
-              onClick={() => navigate('/admin-dashboard')}
+              onClick={() => navigate('/dashboard')}
               style={{ backgroundColor: '#00bfff' }}
             >
               Open Dashboard

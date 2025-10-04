@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../HeaderFotter/Header';
 import Footer from '../../HeaderFotter/Footer';
 import Map from '../map/map';
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { EditOutlined as EditIcon, DeleteOutlined as DeleteIcon } from '@mui/icons-material';
 import ContactList from '../Conatct/ContactList';
 import ShelterManagement from '../Shelter/ShelterManagement';
 import './SimpleDashboard.css';

@@ -6,7 +6,7 @@ import axios from "axios";
 import LocationPinIcon from "@mui/icons-material/LocationOn";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
-import DirectionsIcon from "@mui/icons-material/Directions";
+import { Directions as DirectionsIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom"; 
 
 
