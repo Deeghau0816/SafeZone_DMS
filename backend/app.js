@@ -12,32 +12,18 @@ const multer = require("multer");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
-// ---------------- Existing (yours) routers ----------------
-const pinRouter      = require("./Router/pins");
-const contactRoutes  = require("./Router/contact");
-const shelterRoutes  = require("./Router/shelters");
-
-const victimRoutes   = require("./Router/VictimRoutes");
-const aidRoutes      = require("./Router/AidRoutes");
-const damageRoutes   = require("./Router/DamageRoutes");
-const { listAids }   = require("./Controllers/AidController");
-const damageCtrl     = require("./Controllers/DamageController");
-// ---- Existing Routes & Controllers ----
+// ---------------- Routes & Controllers (consolidated) ----------------
 const pinRouter = require("./Router/pins");
 const contactRoutes = require("./Router/contact");
 const shelterRoutes = require("./Router/shelters");
 const urlResolverRoutes = require("./Router/urlResolver");
 
-// ---- New Routes & Controllers ----
 const victimRoutes = require("./Router/VictimRoutes");
 const aidRoutes = require("./Router/AidRoutes");
 const damageRoutes = require("./Router/DamageRoutes");
-const { listAids } = require("./Controllers/AidController");
-const damageCtrl = require("./Controllers/DamageController");
 const deploymentRoutes = require("./Router/DeploymentRoutes");
 const requestsRoutes = require("./Router/RequestsRoutes");
 const teamLocationRoutes = require("./Router/TeamLocationRoutes");
-
 // ---- Additional Routes & Controllers ----
 const volunteerRoutes = require("./Router/VolunteerRoutes");
 const operationRoutes = require("./Router/OperationRoutes");
@@ -49,17 +35,8 @@ const donationRoutes = require("./Router/DonationRoutes");
 const activeDisasterRoutes = require("./Router/ActiveDisasterRoutes");
 const ngopastRoutes = require("./Router/NgopastRoutes");
 
-// ---- Config ----
-const PORT = 5000;
-const FRONTEND = "http://localhost:3000";
-
-// **Use the standard MongoDB cluster connection string from Atlas (bypasses SRV DNS issues)**
-// If SRV format fails, try the standard format below:
-const MONGO_URI_SRV = "mongodb+srv://admin:y59JHr1UwxN8ONkF@cluster0.bch8cu9.mongodb.net/safezone?retryWrites=true&w=majority";
-const MONGO_URI_STANDARD = "mongodb://admin:y59JHr1UwxN8ONkF@cluster0-shard-00-00.bch8cu9.mongodb.net:27017,cluster0-shard-00-01.bch8cu9.mongodb.net:27017,cluster0-shard-00-02.bch8cu9.mongodb.net:27017/safezone?ssl=true&replicaSet=atlas-12345678-shard-0&authSource=admin&retryWrites=true&w=majority";
-
-// Start with SRV format, fallback to standard if needed
-let MONGO_URI = MONGO_URI_SRV;
+const { listAids } = require("./Controllers/AidController");
+const damageCtrl = require("./Controllers/DamageController");
 // ---------------- Theirs (+ your project) routers ----------
 const adminAuthRoutes = require("./Router/AdminRoute");
 const alertRoutes     = require("./Router/AlertRoute");
@@ -304,88 +281,8 @@ function wireMongoEvents() {
 async function connectToMongoDB() {
   try {
     console.log("🔄 Attempting to connect to MongoDB...");
-
-    // Try SRV format first
-    console.log("🔗 Trying SRV connection format...");
-    await mongoose.connect(MONGO_URI_SRV, mongooseOptions);
-
-    isConnected = true;
-    reconnectAttempts = 0;
-    console.log("✅ Successfully connected to MongoDB Atlas using SRV format");
-
-    // Set up connection event listeners
-    mongoose.connection.on('error', (err) => {
-      console.error("❌ MongoDB connection error:", err.message);
-      isConnected = false;
-    });
-
-    mongoose.connection.on('disconnected', () => {
-      console.warn("⚠️ MongoDB disconnected");
-      isConnected = false;
-      attemptReconnection();
-    });
-
-    mongoose.connection.on('reconnected', () => {
-      console.log("🔄 MongoDB reconnected");
-      isConnected = true;
-      reconnectAttempts = 0;
-    });
-
-    // Start the server only after successful connection
-    startServer();
-
-  } catch (error) {
-    console.error("❌ SRV connection failed:", error.message);
-
-    if (error.message.includes('ENOTFOUND') || error.message.includes('DNS') || error.name === 'MongoServerSelectionError') {
-      console.log("🔄 DNS/SRV resolution failed. Trying standard connection format...");
-
-      try {
-        // Try standard format as fallback
-        await mongoose.connect(MONGO_URI_STANDARD, mongooseOptions);
-
-        isConnected = true;
-        reconnectAttempts = 0;
-        console.log("✅ Successfully connected to MongoDB Atlas using standard format");
-
-        // Set up connection event listeners
-        mongoose.connection.on('error', (err) => {
-          console.error("❌ MongoDB connection error:", err.message);
-          isConnected = false;
-        });
-
-        mongoose.connection.on('disconnected', () => {
-          console.warn("⚠️ MongoDB disconnected");
-          isConnected = false;
-          attemptReconnection();
-        });
-
-        mongoose.connection.on('reconnected', () => {
-          console.log("🔄 MongoDB reconnected");
-          isConnected = true;
-          reconnectAttempts = 0;
-        });
-
-        // Start the server only after successful connection
-        startServer();
-
-      } catch (standardError) {
-        console.error("❌ Standard connection also failed:", standardError.message);
-        console.error("🌐 Both SRV and standard formats failed. This indicates:");
-        console.error("   - Network connectivity issues");
-        console.error("   - MongoDB Atlas cluster problems");
-        console.error("   - Incorrect credentials or cluster configuration");
-        console.error("📋 Please check:");
-        console.error("   1. Your internet connection");
-        console.error("   2. MongoDB Atlas cluster status");
-        console.error("   3. IP whitelist settings");
-        console.error("   4. Database user credentials");
-        console.error("   5. Try changing DNS to 8.8.8.8 or 1.1.1.1");
-        process.exit(1);
-      }
-    } else {
-      console.error("⚠️ Unexpected error:", error.message);
     await mongoose.connect(MONGO_URL, mongooseOptions);
+
     isConnected = true;
     reconnectAttempts = 0;
     console.log("✅ Successfully connected to MongoDB:", redactCreds(MONGO_URL));
@@ -393,7 +290,12 @@ async function connectToMongoDB() {
     startServer();
   } catch (error) {
     console.error("❌ Failed to connect to MongoDB:", error.message);
-    if (error.name === "MongoServerSelectionError" || error.name === "MongoNetworkError") {
+    // If it's a network/DNS or selection error, attempt reconnection with backoff
+    if (
+      error.name === "MongoServerSelectionError" ||
+      error.name === "MongoNetworkError" ||
+      /ECONNREFUSED|ENOTFOUND|DNS/.test(String(error.message))
+    ) {
       console.error("🌐 Network/DNS issue detected. Attempting reconnection...");
       attemptReconnection();
     } else {
