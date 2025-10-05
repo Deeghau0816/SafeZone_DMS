@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-// Keys must match what frontend sends (enum-safe)
+//  Keys must match what frontend sends (enum-safe)
 const ALLOWED_ITEMS = [
   "dry_rations",
   "water",

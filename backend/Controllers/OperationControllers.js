@@ -11,7 +11,7 @@ const TL_KEYS = [
   "returnReport",
 ];
 
-/** Ensure timeline only contains allowed keys with 'pending' | 'done' */
+/** Ensures timeline only contains allowed keys with 'pending' | 'done' */
 function sanitizeTimeline(input) {
   if (!input || typeof input !== "object") return undefined;
   const out = {};

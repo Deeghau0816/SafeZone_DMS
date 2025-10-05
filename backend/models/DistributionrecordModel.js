@@ -1,4 +1,4 @@
-// backend/Model/DistributionrecordModel.js
+//  backend/Model/DistributionrecordModel.js
 const mongoose = require('mongoose');
 
 // Define the schema for the distribution record

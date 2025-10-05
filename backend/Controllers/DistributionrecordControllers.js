@@ -1,6 +1,6 @@
 const DistributionRecord = require('../models/DistributionrecordModel');
 
-// ================== CREATE ==================
+// ================== CREATEs ==================
 const createDistributionRecord = async (req, res) => {
   try {
     const { familiesAssisted, resourcesDistributed } = req.body;

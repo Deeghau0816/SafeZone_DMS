@@ -2,7 +2,7 @@
 const TargetInventory = require("../models/TargetinventoryModel");
 
 /**
- * GET current targets
+ * GET current target
  */
 exports.getTargets = async (req, res) => {
   try {

@@ -1,7 +1,7 @@
 // backend/Controllers/ActiveDisasterControllers.js
 const ActiveDisaster = require("../models/ActiveDisasterModel");
 
-// Safe CSV to Array conversion - handles undefined, null, and non-string values
+// Safe CSV sto Array conversion - handles undefined, null, and non-string values
 function csvToArray(s) {
   if (!s || s === undefined || s === null) return [];
   try {

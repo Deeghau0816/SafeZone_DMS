@@ -13,3 +13,4 @@ const TargetInventorySchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("TargetInventory", TargetInventorySchema);
+//

@@ -1,7 +1,7 @@
 // backend/Controllers/CentersController.js
 const Center = require("../models/CentersModel");
 
-// Add a new center
+// Add a new centers
 exports.addCenter = async (req, res) => {
   try {
     const { name, address, city, phone, tags, hours, lat, lng } = req.body;

@@ -3,7 +3,7 @@ const Inventory = require("../models/InventoryModel");
 
 const isObjectId = (v) => mongoose.Types.ObjectId.isValid(v);
 
-// Create
+//  Create
 exports.createInventoryItem = async (req, res) => {
   try {
     let { item, quantity, unit, branch, date, notes } = req.body;

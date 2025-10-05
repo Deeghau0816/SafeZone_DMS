@@ -1,4 +1,4 @@
-// backend/Model/CentersModel.js
+//  backend/Model/CentersModel.js 
 const mongoose = require("mongoose");
 
 const centerSchema = new mongoose.Schema(

@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const CentersController = require("../Controllers/CentersController");
 
-// Routes for centers
+//  Routes for centers
 router.post("/collectingcenters", CentersController.addCenter); // Add a new center
 router.get("/collectingcenters", CentersController.getCenters); // Get all centers
 router.get("/collectingcenters/:id", CentersController.getCenterById); // Get center by ID

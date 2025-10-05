@@ -295,7 +295,7 @@ function startServer() {
 // ---- Initialize Connection ----
 connectToMongoDB();
 
-// ---- Global Error Listeners ----
+//  ---- Global Error Listeners ----
 process.on("unhandledRejection", (reason) => {
   console.error("unhandledRejection:", reason);
 });

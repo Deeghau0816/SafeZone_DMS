@@ -10,7 +10,7 @@ const {
 
 const router = express.Router();
 
-// Multer config (uploads folder inside backend)
+//  Multer config (uploads folder inside backend)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, path.join(__dirname, "../uploads")),
   filename: (req, file, cb) =>

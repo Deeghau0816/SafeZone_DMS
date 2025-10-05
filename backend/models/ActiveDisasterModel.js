@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const ImageSchema = new mongoose.Schema(
   {
     cover: { type: String, default: "" },        // "/uploads/xxx.jpg"
-    gallery: { type: [String], default: [] }     // up to 4 images now
+    gallery: { type: [String], default: [] }     // up to 4 imagess now
   },
   { _id: false }
 );

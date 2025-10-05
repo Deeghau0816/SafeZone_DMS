@@ -4,7 +4,7 @@ import React from "react";
 
 import { Route, Routes, Navigate } from "react-router-dom";
 
-// Existing Components
+//  Existing Component
 import MapComponent from "./Components/map/map";
 import UserMap from "./Components/map/UserMap";
 import PinDetails from "./Components/map/PinDetails";

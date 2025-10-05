@@ -1,6 +1,6 @@
 const Donation = require("../models/DonationModel");
 
-/* ------------------------------ helpers ------------------------------ */
+/* ------------------------------- helpers ------------------------------ */
 const toBool = (v) => v === true || v === "true" || v === "1" || v === 1 || v === "on";
 const toNumber = (v, fb = null) => (Number.isFinite(Number(v)) ? Number(v) : fb);
 const parseDate = (v) => (v ? (isNaN(new Date(v).getTime()) ? undefined : new Date(v)) : undefined);

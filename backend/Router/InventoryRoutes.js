@@ -9,7 +9,7 @@ const {
 
 const router = express.Router();
 
-// Base: /api/inventory
+//  Base: /api/inventory
 router.route("/")
   .get(getInventoryItems)
   .post(createInventoryItem);

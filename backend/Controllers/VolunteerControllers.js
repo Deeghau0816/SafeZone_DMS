@@ -17,7 +17,7 @@ const convertAssignmentStatus = (s) => s === "assigned";
 const addAssignmentStatus = (obj) => ({ ...obj, assignmentStatus: obj.assigned ? "assigned" : "not_assigned" });
 const stripUndefined = (o) => { Object.keys(o).forEach((k) => o[k] === undefined && delete o[k]); return o; };
 
-// ------------------------ create ------------------------
+// ------------------------ creates ------------------------
 exports.createVolunteer = async (req, res) => {
   try {
     const body = req.body || {};

@@ -18,3 +18,4 @@ const ngopastSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Ngopast", ngopastSchema);
+//

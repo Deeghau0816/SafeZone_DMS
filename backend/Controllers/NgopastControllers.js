@@ -6,7 +6,7 @@ exports.createRecord = async (req, res) => {
   try {
     const { note, mockTest, images } = req.body;
 
-    // 1. Mock mode (generate fake images)
+    // 1. Mock mode (generate fake image)
     if (mockTest) {
       const fakeImages = [
         {

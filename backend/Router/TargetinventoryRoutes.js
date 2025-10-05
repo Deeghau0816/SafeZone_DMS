@@ -6,7 +6,7 @@ const TargetInventory = require("../models/TargetinventoryModel");
 // ✅ Create or update targets
 router.post("/", async (req, res) => {
   try {
-    // we expect targets in req.body (ex: { water: 800, bedding: 200, ... })
+    //  we expect targets in req.body (ex: { water: 800, bedding: 200, ... })
     const targets = req.body;
 
     let doc = await TargetInventory.findOne();

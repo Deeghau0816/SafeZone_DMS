@@ -10,7 +10,7 @@ const {
   testEndpoint
 } = require('../Controllers/DistributionrecordControllers');
 
-// Test endpoint - add this first for debugging
+//  Test endpoint - add this first for debugging
 router.post('/test', testEndpoint);
 
 // POST route to create a new distribution record

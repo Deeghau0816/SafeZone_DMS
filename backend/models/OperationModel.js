@@ -70,7 +70,7 @@ operationSchema.virtual('remainingSlots').get(function() {
   return Math.max(0, this.volunteerCount - assigned);
 });
 
-// Include virtuals when converting to JSON
+//  Include virtuals when converting to JSON
 operationSchema.set('toJSON', { virtuals: true });
 operationSchema.set('toObject', { virtuals: true });
 
