@@ -1,0 +1,38 @@
+.hshell {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0b1220;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+}
+.hslide {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  opacity: 0; transform: scale(1.04);
+  transition: opacity .6s ease, transform 1s ease;
+}
+.hslide.active {
+  opacity: 1; transform: scale(1);
+}
+.hctl {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  border: none; background: rgba(15,23,42,.45); color: #fff;
+  width: 42px; height: 42px; border-radius: 50%; cursor: pointer;
+  display: grid; place-items: center; font-size: 22px;
+  backdrop-filter: blur(6px);
+}
+.hctl:hover { background: rgba(15,23,42,.7); }
+.hctl.prev { left: 12px; }
+.hctl.next { right: 12px; }
+
+.hdots {
+  position: absolute; bottom: 12px; left: 0; right: 0;
+  display: flex; justify-content: center; gap: 8px;
+}
+.hdot {
+  width: 10px; height: 10px; border-radius: 999px;
+  border: none; background: rgba(255,255,255,.45); cursor: pointer;
+}
+.hdot.on { background: #fff; width: 26px; }
+
