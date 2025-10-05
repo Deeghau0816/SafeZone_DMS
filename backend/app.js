@@ -1,3 +1,4 @@
+//app.js backend
 // app.js (merged)
 // -------------------------------------------------
 const path = require("path");
@@ -37,6 +38,28 @@ const deploymentRoutes = require("./Router/DeploymentRoutes");
 const requestsRoutes = require("./Router/RequestsRoutes");
 const teamLocationRoutes = require("./Router/TeamLocationRoutes");
 
+// ---- Additional Routes & Controllers ----
+const volunteerRoutes = require("./Router/VolunteerRoutes");
+const operationRoutes = require("./Router/OperationRoutes");
+const distributionRecordRoutes = require("./Router/DistributionrecordRoutes");
+const targetInventoryRoutes = require("./Router/TargetinventoryRoutes");
+const centersRoutes = require("./Router/CentersRoutes");
+const inventoryRoutes = require("./Router/InventoryRoutes");
+const donationRoutes = require("./Router/DonationRoutes");
+const activeDisasterRoutes = require("./Router/ActiveDisasterRoutes");
+const ngopastRoutes = require("./Router/NgopastRoutes");
+
+// ---- Config ----
+const PORT = 5000;
+const FRONTEND = "http://localhost:3000";
+
+// **Use the standard MongoDB cluster connection string from Atlas (bypasses SRV DNS issues)**
+// If SRV format fails, try the standard format below:
+const MONGO_URI_SRV = "mongodb+srv://admin:y59JHr1UwxN8ONkF@cluster0.bch8cu9.mongodb.net/safezone?retryWrites=true&w=majority";
+const MONGO_URI_STANDARD = "mongodb://admin:y59JHr1UwxN8ONkF@cluster0-shard-00-00.bch8cu9.mongodb.net:27017,cluster0-shard-00-01.bch8cu9.mongodb.net:27017,cluster0-shard-00-02.bch8cu9.mongodb.net:27017/safezone?ssl=true&replicaSet=atlas-12345678-shard-0&authSource=admin&retryWrites=true&w=majority";
+
+// Start with SRV format, fallback to standard if needed
+let MONGO_URI = MONGO_URI_SRV;
 // ---------------- Theirs (+ your project) routers ----------
 const adminAuthRoutes = require("./Router/AdminRoute");
 const alertRoutes     = require("./Router/AlertRoute");
@@ -158,6 +181,18 @@ app.use("/deployments", deploymentRoutes);
 app.use("/requests", requestsRoutes);
 app.use("/teamLocations", teamLocationRoutes);
 
+// Additional routes
+app.use("/api", distributionRecordRoutes);
+app.use("/api/targetinventories", targetInventoryRoutes);
+app.use("/api/volunteer", volunteerRoutes);
+app.use("/api/volunteers", volunteerRoutes);
+app.use("/api/operations", operationRoutes);
+app.use("/api", centersRoutes);
+app.use("/api/inventory", inventoryRoutes);
+app.use("/api/donations", donationRoutes);
+app.use("/api/activedisasters", activeDisasterRoutes);
+app.use("/api/ngopast", ngopastRoutes);
+
 // Aliases
 app.get("/aids",    listAids);
 app.get("/damages", damageCtrl.listDamages);
@@ -209,6 +244,13 @@ app.use((err, _req, res, _next) => {
 
 // ---------------- Mongo connection & server ---------------
 const mongooseOptions = {
+  // Remove deprecated options that are causing warnings
+  serverSelectionTimeoutMS: 30000, // 30 seconds timeout for server selection
+  socketTimeoutMS: 45000, // 45 seconds timeout for socket operations
+  connectTimeoutMS: 30000, // 30 seconds timeout for initial connection
+  maxPoolSize: 10, // Maximum number of connections in the pool
+  minPoolSize: 5, // Minimum number of connections in the pool
+  maxIdleTimeMS: 30000, // Close connections after 30 seconds of inactivity
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverSelectionTimeoutMS: 30000,
@@ -262,6 +304,87 @@ function wireMongoEvents() {
 async function connectToMongoDB() {
   try {
     console.log("🔄 Attempting to connect to MongoDB...");
+
+    // Try SRV format first
+    console.log("🔗 Trying SRV connection format...");
+    await mongoose.connect(MONGO_URI_SRV, mongooseOptions);
+
+    isConnected = true;
+    reconnectAttempts = 0;
+    console.log("✅ Successfully connected to MongoDB Atlas using SRV format");
+
+    // Set up connection event listeners
+    mongoose.connection.on('error', (err) => {
+      console.error("❌ MongoDB connection error:", err.message);
+      isConnected = false;
+    });
+
+    mongoose.connection.on('disconnected', () => {
+      console.warn("⚠️ MongoDB disconnected");
+      isConnected = false;
+      attemptReconnection();
+    });
+
+    mongoose.connection.on('reconnected', () => {
+      console.log("🔄 MongoDB reconnected");
+      isConnected = true;
+      reconnectAttempts = 0;
+    });
+
+    // Start the server only after successful connection
+    startServer();
+
+  } catch (error) {
+    console.error("❌ SRV connection failed:", error.message);
+
+    if (error.message.includes('ENOTFOUND') || error.message.includes('DNS') || error.name === 'MongoServerSelectionError') {
+      console.log("🔄 DNS/SRV resolution failed. Trying standard connection format...");
+
+      try {
+        // Try standard format as fallback
+        await mongoose.connect(MONGO_URI_STANDARD, mongooseOptions);
+
+        isConnected = true;
+        reconnectAttempts = 0;
+        console.log("✅ Successfully connected to MongoDB Atlas using standard format");
+
+        // Set up connection event listeners
+        mongoose.connection.on('error', (err) => {
+          console.error("❌ MongoDB connection error:", err.message);
+          isConnected = false;
+        });
+
+        mongoose.connection.on('disconnected', () => {
+          console.warn("⚠️ MongoDB disconnected");
+          isConnected = false;
+          attemptReconnection();
+        });
+
+        mongoose.connection.on('reconnected', () => {
+          console.log("🔄 MongoDB reconnected");
+          isConnected = true;
+          reconnectAttempts = 0;
+        });
+
+        // Start the server only after successful connection
+        startServer();
+
+      } catch (standardError) {
+        console.error("❌ Standard connection also failed:", standardError.message);
+        console.error("🌐 Both SRV and standard formats failed. This indicates:");
+        console.error("   - Network connectivity issues");
+        console.error("   - MongoDB Atlas cluster problems");
+        console.error("   - Incorrect credentials or cluster configuration");
+        console.error("📋 Please check:");
+        console.error("   1. Your internet connection");
+        console.error("   2. MongoDB Atlas cluster status");
+        console.error("   3. IP whitelist settings");
+        console.error("   4. Database user credentials");
+        console.error("   5. Try changing DNS to 8.8.8.8 or 1.1.1.1");
+        process.exit(1);
+      }
+    } else {
+      console.error("⚠️ Unexpected error:", error.message);
     await mongoose.connect(MONGO_URL, mongooseOptions);
     isConnected = true;
     reconnectAttempts = 0;
@@ -303,6 +426,7 @@ function attemptReconnection() {
 // Boot
 connectToMongoDB();
 
+//  ---- Global Error Listeners ----
 // ---------------- Global error listeners ------------------
 process.on("unhandledRejection", (reason) => {
   console.error("unhandledRejection:", reason);
@@ -312,4 +436,34 @@ process.on("uncaughtException", (err) => {
   console.error("uncaughtException:", err);
 });
 
+// ---- File Upload Route for Deposit Proof ----
+app.post("/api/uploads/deposit-proof", (req, res) => {
+  const upload = multer({
+    storage: multer.diskStorage({
+      destination: (req, file, cb) => {
+        cb(null, UPLOAD_DIR);
+      },
+      filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+      },
+    }),
+    limits: { fileSize: 2 * 1024 * 1024 }, // 2MB limit
+  }).single("file");
+
+  upload(req, res, (err) => {
+    if (err) {
+      if (err instanceof multer.MulterError) {
+        if (err.code === "LIMIT_FILE_SIZE") {
+          return res.status(400).json({ message: "File too large. Maximum size is 2MB." });
+        }
+      }
+      return res.status(500).json({ message: err.message || "File upload failed" });
+    }
+
+    res.status(200).json({
+      message: "File uploaded successfully",
+      filePath: `/uploads/${req.file.filename}`,
+    });
+  });
+});
 module.exports = app;

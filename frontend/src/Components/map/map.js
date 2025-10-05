@@ -5,13 +5,13 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import axios from "axios";
 import "./popup.css";
 
-import LocationPinIcon from "@mui/icons-material/LocationPin";
+import LocationPinIcon from "@mui/icons-material/LocationOn";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import VideocamIcon from "@mui/icons-material/Videocam";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { DeleteOutlined as DeleteIcon } from "@mui/icons-material";
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
-import DirectionsIcon from "@mui/icons-material/Directions";
+import { Directions as DirectionsIcon } from "@mui/icons-material";
 
 function Map() {
   const [userLocation, setUserLocation] = useState(null);

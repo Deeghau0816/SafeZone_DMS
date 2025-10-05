@@ -3,7 +3,7 @@ import { Map as MapboxMap, Marker, Popup } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from 'axios';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { EditOutlined as EditIcon, DeleteOutlined as DeleteIcon } from '@mui/icons-material';
 import './ShelterManagement.css';
 
 const ShelterManagement = () => {
