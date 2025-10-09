@@ -11,31 +11,19 @@ const multer = require("multer");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
-// ---------------- Existing (yours) routers ----------------
-const pinRouter      = require("./Router/pins");
-const contactRoutes  = require("./Router/contact");
-const shelterRoutes  = require("./Router/shelters");
-
-const victimRoutes   = require("./Router/VictimRoutes");
-const aidRoutes      = require("./Router/AidRoutes");
-const damageRoutes   = require("./Router/DamageRoutes");
-const { listAids }   = require("./Controllers/AidController");
-const damageCtrl     = require("./Controllers/DamageController");
-// ---- Existing Routes & Controllers ----
+// ---------------- Router imports ----------------
 const pinRouter = require("./Router/pins");
 const contactRoutes = require("./Router/contact");
 const shelterRoutes = require("./Router/shelters");
 const urlResolverRoutes = require("./Router/urlResolver");
-
-// ---- New Routes & Controllers ----
 const victimRoutes = require("./Router/VictimRoutes");
 const aidRoutes = require("./Router/AidRoutes");
 const damageRoutes = require("./Router/DamageRoutes");
-const { listAids } = require("./Controllers/AidController");
-const damageCtrl = require("./Controllers/DamageController");
 const deploymentRoutes = require("./Router/DeploymentRoutes");
 const requestsRoutes = require("./Router/RequestsRoutes");
 const teamLocationRoutes = require("./Router/TeamLocationRoutes");
+const { listAids } = require("./Controllers/AidController");
+const damageCtrl = require("./Controllers/DamageController");
 
 // ---------------- Theirs (+ your project) routers ----------
 const adminAuthRoutes = require("./Router/AdminRoute");
@@ -142,15 +130,10 @@ app.use((req, res, next) => {
 });
 
 // ---------------- Routes (yours) --------------------------
-app.use("/pins",         pinRouter);
-app.use("/api/contact",  contactRoutes);
+app.use("/pins", pinRouter);
+app.use("/api/contact", contactRoutes);
 app.use("/api/shelters", shelterRoutes);
 app.use("/api", urlResolverRoutes);
-
-app.use("/victims",      victimRoutes);
-app.use("/aid",          aidRoutes);
-app.use("/damage",       damageRoutes);
-// New routes
 app.use("/victims", victimRoutes);
 app.use("/aid", aidRoutes);
 app.use("/damage", damageRoutes);
