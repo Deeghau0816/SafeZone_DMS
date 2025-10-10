@@ -41,6 +41,7 @@ const PORT = process.env.PORT || 5000;
 // Accept both 3000 (CRA) and 5173 (Vite) in dev
 const ALLOWED_ORIGINS = [
   process.env.FRONTEND_ORIGIN || "http://localhost:3000",
+  "http://localhost:3001",
   "http://localhost:5173"
 ];
 
@@ -53,9 +54,6 @@ const MONGO_URL =
 // redact password in logs
 const redactCreds = (s = "") => s.replace(/\/\/.*?:.*?@/, "//***:***@");
 console.log("[BOOT] Using Mongo URL:", redactCreds(MONGO_URL));
-if (!process.env.DB && !process.env.MONGO_URL) {
-  console.warn("[WARN] No DB/MONGO_URL in .env; using local mongodb://127.0.0.1:27017/itpDB");
-}
 
 // ---------------- Core middleware -------------------------
 app.use(
@@ -170,11 +168,6 @@ app.use(["/admin", "/alerts", "/users"], (req, res) => {
   });
 });
 
-// Catch-all 404
-app.use((req, res) => {
-  res.status(404).json({ ok: false, message: "Route not found" });
-});
-
 // ---------------- Error handler ---------------------------
 app.use((err, _req, res, _next) => {
   console.error("Unhandled error:", err);
@@ -192,8 +185,6 @@ app.use((err, _req, res, _next) => {
 
 // ---------------- Mongo connection & server ---------------
 const mongooseOptions = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   serverSelectionTimeoutMS: 30000,
   socketTimeoutMS: 45000,
   connectTimeoutMS: 30000,
@@ -203,6 +194,8 @@ const mongooseOptions = {
   retryWrites: true,
   retryReads: true,
   family: 4, // prefer IPv4
+  tls: true,
+  tlsAllowInvalidCertificates: true,
 };
 
 let reconnectAttempts = 0;
@@ -253,6 +246,23 @@ async function connectToMongoDB() {
     startServer();
   } catch (error) {
     console.error("❌ Failed to connect to MongoDB:", error.message);
+    
+    // If SRV connection fails due to DNS, try direct connection
+    if (error.code === 'ENOTFOUND' && MONGO_URL === MONGO_URL_SRV) {
+      console.log("🔄 SRV connection failed due to DNS. Trying direct connection...");
+      try {
+        await mongoose.connect(MONGO_URL_DIRECT, mongooseOptions);
+        isConnected = true;
+        reconnectAttempts = 0;
+        console.log("✅ Successfully connected to MongoDB via direct connection:", redactCreds(MONGO_URL_DIRECT));
+        wireMongoEvents();
+        startServer();
+        return;
+      } catch (directError) {
+        console.error("❌ Direct connection also failed:", directError.message);
+      }
+    }
+    
     if (error.name === "MongoServerSelectionError" || error.name === "MongoNetworkError") {
       console.error("🌐 Network/DNS issue detected. Attempting reconnection...");
       attemptReconnection();
@@ -293,6 +303,77 @@ process.on("unhandledRejection", (reason) => {
 
 process.on("uncaughtException", (err) => {
   console.error("uncaughtException:", err);
+});
+
+// ---------------- Personal Routes Integration -----------------
+// Additional routes for personal features
+try {
+  const volunteerRoutes = require("./Router/VolunteerRoutes");
+  const operationRoutes = require("./Router/OperationRoutes");
+  const distributionRecordRoutes = require("./Router/DistributionrecordRoutes");
+  const targetInventoryRoutes = require("./Router/TargetinventoryRoutes");
+  const centersRoutes = require("./Router/CentersRoutes");
+  const inventoryRoutes = require("./Router/InventoryRoutes");
+  const donationRoutes = require("./Router/DonationRoutes");
+  const activeDisasterRoutes = require("./Router/ActiveDisasterRoutes");
+  const ngopastRoutes = require("./Router/NgopastRoutes");
+
+  // Personal routes
+  app.use("/api/volunteer", volunteerRoutes);
+  app.use("/api/volunteers", volunteerRoutes);
+  app.use("/api/operations", operationRoutes);
+  app.use("/api", distributionRecordRoutes);
+  app.use("/api/targetinventories", targetInventoryRoutes);
+  app.use("/api", centersRoutes);
+  app.use("/api/inventory", inventoryRoutes);
+  app.use("/api/donations", donationRoutes);
+  app.use("/api/activedisasters", activeDisasterRoutes);
+  app.use("/api/ngopast", ngopastRoutes);
+
+  console.log("✅ Personal routes loaded successfully");
+} catch (error) {
+  console.warn("⚠️ Some personal routes could not be loaded:", error.message);
+}
+
+// Additional file upload endpoint for personal features
+app.post("/api/uploads/deposit-proof", (req, res) => {
+  const multer = require("multer");
+  const path = require("path");
+  
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, path.join(process.cwd(), "uploads"));
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + path.extname(file.originalname));
+    },
+  });
+
+  const upload = multer({
+    storage: storage,
+    limits: { fileSize: 2 * 1024 * 1024 },
+  }).single("file");
+
+  upload(req, res, (err) => {
+    if (err) {
+      if (err instanceof multer.MulterError) {
+        if (err.code === "LIMIT_FILE_SIZE") {
+          return res.status(400).json({ message: "File too large. Maximum size is 2MB." });
+        }
+      }
+      return res.status(500).json({ message: err.message || "File upload failed" });
+    }
+
+    res.status(200).json({
+      message: "File uploaded successfully",
+      filePath: `/uploads/${req.file.filename}`,
+    });
+  });
+});
+
+// Catch-all 404 (must be last)
+app.use((req, res) => {
+  res.status(404).json({ ok: false, message: "Route not found" });
 });
 
 module.exports = app;

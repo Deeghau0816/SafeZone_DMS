@@ -1,5 +1,5 @@
 // Services/openweather.js
-const fetch = require("node-fetch");
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const crypto = require("crypto");
 
 const KEY = process.env.OPENWEATHER_API_KEY;

@@ -35,7 +35,7 @@
   padding: 20px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: var(--text-color);
-  min-height: 100vh;
+  min-height: calc(100vh - 80px) !important;
   position: relative;
 }
 

@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Report.css";
+import { validateNIC, validatePhone, validateName, validateEmail, validateAddress } from "../utils/validation";
 
 // Backend API endpoint for victim reports
 const API = "http://localhost:5000/victims";
@@ -216,27 +217,22 @@ export default function Report() {
     let ok = true;
     setErrors({}); // reset errors first
 
-    if (!form.name) {
-      setError("name", "Reporter name is required");
-      ok = false;
-    } else if (!NAME_REGEX.test(form.name)) {
-      setError("name", "Letters and spaces only");
-      ok = false;
-    }
-
-    if (!form.phoneDigits) {
-      setError("phone", "Phone is required");
-      ok = false;
-    } else if (!LK_PHONE_DIGITS.test(form.phoneDigits)) {
-      setError("phone", "Enter 9–10 digits");
+    // Use enhanced validation functions
+    const nameValidation = validateName(form.name);
+    if (!nameValidation.isValid) {
+      setError("name", nameValidation.error);
       ok = false;
     }
 
-    if (!form.nic) {
-      setError("nic", "NIC is required");
+    const phoneValidation = validatePhone(form.phoneDigits);
+    if (!phoneValidation.isValid) {
+      setError("phone", phoneValidation.error);
       ok = false;
-    } else if (!NIC_REGEX.test(form.nic.toUpperCase())) {
-      setError("nic", "Use 123456789V or 200012345678");
+    }
+
+    const nicValidation = validateNIC(form.nic);
+    if (!nicValidation.isValid) {
+      setError("nic", nicValidation.error);
       ok = false;
     }
 
@@ -248,13 +244,15 @@ export default function Report() {
       setError("disasterType", "Disaster type is required");
       ok = false;
     }
-    if (!form.address) {
-      setError("address", "Home address is required");
+    const addressValidation = validateAddress(form.address);
+    if (!addressValidation.isValid) {
+      setError("address", addressValidation.error);
       ok = false;
     }
 
-    if (form.email && !EMAIL_REGEX.test(form.email)) {
-      setError("email", "Enter a valid email");
+    const emailValidation = validateEmail(form.email);
+    if (!emailValidation.isValid) {
+      setError("email", emailValidation.error);
       ok = false;
     }
 
@@ -288,6 +286,21 @@ export default function Report() {
     e.preventDefault();
 
     if (!validateAll()) return;
+
+    // Prevent duplicate submissions
+    const recentSubmissions = JSON.parse(localStorage.getItem('recentSubmissions') || '[]');
+    const now = Date.now();
+    const recentThreshold = 30000; // 30 seconds
+    
+    // Check for recent submissions with same NIC
+    const recentSubmission = recentSubmissions.find(sub => 
+      sub.nic === form.nic && (now - sub.timestamp) < recentThreshold
+    );
+    
+    if (recentSubmission) {
+      alert("Please wait before submitting another report with the same NIC.");
+      return;
+    }
 
     // Prepare form data for submission
     const nic = (form.nic || "").toUpperCase();
@@ -328,7 +341,21 @@ export default function Report() {
       });
       
       // Store victim ID for auto-refresh functionality
-      if (data?.victim?._id) localStorage.setItem("lastVictimId", data.victim._id);
+      if (data?.victim?._id) {
+        localStorage.setItem("lastVictimId", data.victim._id);
+        localStorage.setItem("lastSubmissionId", data.victim._id);
+      }
+
+      // Record this submission to prevent duplicates
+      recentSubmissions.push({
+        nic: form.nic,
+        timestamp: now,
+        id: data?.victim?._id
+      });
+      
+      // Keep only last 10 submissions
+      const updatedSubmissions = recentSubmissions.slice(-10);
+      localStorage.setItem('recentSubmissions', JSON.stringify(updatedSubmissions));
 
       // WhatsApp notification setup
       const adminNumber = "+94718940311";
@@ -336,7 +363,8 @@ export default function Report() {
 
       // Create notification message
       const plainMsg = [
-        "🚨 Disaster Report 🚨",
+        "🚨 NEW DISASTER REPORT 🚨",
+        `Report ID: ${data?.victim?._id || 'N/A'}`,
         `Name: ${form.name}`,
         `Phone: ${phone}`,
         `NIC: ${nic}`,
@@ -346,15 +374,20 @@ export default function Report() {
         `Occurred at: ${form.occurredAt || "N/A"}`,
         `Description: ${form.description || "N/A"}`,
         `Location: ${locationStr || "N/A"}`,
+        `Time: ${new Date().toLocaleString()}`,
       ].join("\n");
       const msg = encodeURIComponent(plainMsg);
 
       // Determine recipients based on disaster status
       let recipients = [];
+      let recipientType = "";
+      
       if (form.status === "High") {
-        recipients = [adminNumber]; // Notify admin for High status
+        recipients = [adminNumber];
+        recipientType = "Admin";
       } else {
-        recipients = [disasterManager]; // Notify disaster manager for Medium/Low status
+        recipients = [disasterManager];
+        recipientType = "Disaster Manager";
       }
 
       // Send WhatsApp messages programmatically
@@ -380,7 +413,7 @@ export default function Report() {
 
       // Success alert and navigation
       setTimeout(() => {
-        alert("Successfully reported");
+        alert(`Successfully reported! WhatsApp notification sent to ${recipientType}.`);
         navigate("/victim/dashboard");
       }, 100);
     } catch (err) {
