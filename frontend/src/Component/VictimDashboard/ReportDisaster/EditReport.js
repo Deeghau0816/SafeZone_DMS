@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import axios from "axios";
 import "./EditReport.css";
+import { validateNIC, validatePhone, validateName, validateEmail } from "../utils/validation";
 
 // Backend API endpoint
 const API = "http://localhost:5000/victims";
@@ -152,31 +153,32 @@ export default function EditReport() {
       if (name === "name") {
         const v = value;
         setForm((f) => ({ ...f, name: v }));
-        if (!v.trim()) setError("name", "Name is required");
-        else if (!NAME_REGEX.test(v)) setError("name", "Letters and spaces only");
+        const nameValidation = validateName(v);
+        if (!nameValidation.isValid) setError("name", nameValidation.error);
         else clearError("name");
         return;
       }
       if (name === "email") {
         const v = value.trim();
         setForm((f) => ({ ...f, email: v }));
-        if (v && !EMAIL_REGEX.test(v)) setError("email", "Invalid email");
+        const emailValidation = validateEmail(v);
+        if (!emailValidation.isValid) setError("email", emailValidation.error);
         else clearError("email");
         return;
       }
       if (name === "nic") {
         const v = (value || "").toUpperCase();
         setForm((f) => ({ ...f, nic: v }));
-        if (!v) setError("nic", "NIC is required");
-        else if (!NIC_REGEX.test(v)) setError("nic", "Use 123456789V or 200012345678");
+        const nicValidation = validateNIC(v);
+        if (!nicValidation.isValid) setError("nic", nicValidation.error);
         else clearError("nic");
         return;
       }
       if (name === "phoneDigits") {
         const v = value.replace(/[^\d]/g, "");
         setForm((f) => ({ ...f, phoneDigits: v }));
-        if (!v) setError("phone", "Phone is required");
-        else if (!LK_PHONE_DIGITS.test(v)) setError("phone", "Enter 9–10 digits");
+        const phoneValidation = validatePhone(v);
+        if (!phoneValidation.isValid) setError("phone", phoneValidation.error);
         else clearError("phone");
         return;
       }

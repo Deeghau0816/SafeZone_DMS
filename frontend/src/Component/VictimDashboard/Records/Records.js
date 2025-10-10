@@ -228,6 +228,7 @@ export default function Records() {
   const load = async () => {
     try {
       setLoading(true);
+      console.log('🔄 Loading Records data...');
       
       const [reportsRes, aidsRes, claimsRes] = await Promise.allSettled([
         axios.get("http://localhost:5000/victims"),
@@ -235,12 +236,44 @@ export default function Records() {
         axios.get("http://localhost:5000/damage"),
       ]);
       
-      setReportList(reportsRes.status === "fulfilled" ? pickArray(reportsRes.value.data) : []);
-      setAidList(aidsRes.status === "fulfilled" ? pickArray(aidsRes.value.data) : []);
-      setClaimList(claimsRes.status === "fulfilled" ? pickArray(claimsRes.value.data) : []);
+      // Debug logging
+      console.log('📊 API Responses:', {
+        reports: reportsRes.status,
+        aids: aidsRes.status,
+        claims: claimsRes.status
+      });
+      
+      if (reportsRes.status === "rejected") {
+        console.error('❌ Reports API failed:', reportsRes.reason?.message);
+      }
+      if (aidsRes.status === "rejected") {
+        console.error('❌ Aids API failed:', aidsRes.reason?.message);
+      }
+      if (claimsRes.status === "rejected") {
+        console.error('❌ Claims API failed:', claimsRes.reason?.message);
+      }
+      
+      const reports = reportsRes.status === "fulfilled" ? pickArray(reportsRes.value.data) : [];
+      const aids = aidsRes.status === "fulfilled" ? pickArray(aidsRes.value.data) : [];
+      const claims = claimsRes.status === "fulfilled" ? pickArray(claimsRes.value.data) : [];
+      
+      console.log('📈 Data loaded:', {
+        reports: reports.length,
+        aids: aids.length,
+        claims: claims.length
+      });
+      
+      // Clear API error if at least one API succeeded
+      if (reportsRes.status === "fulfilled" || aidsRes.status === "fulfilled" || claimsRes.status === "fulfilled") {
+        // API connection successful
+      }
+      
+      setReportList(reports);
+      setAidList(aids);
+      setClaimList(claims);
       
     } catch (error) {
-      console.error('Error loading data:', error);
+      console.error('❌ Error loading data:', error);
       setReportList([]);
       setAidList([]);
       setClaimList([]);
@@ -366,22 +399,205 @@ export default function Records() {
   };
 
   /**
-   * Download data as CSV
+   * Download data as PDF Report
    */
-  const downloadCSV = (data, filename) => {
-    const headers = Object.keys(data[0] || {});
-    const csvContent = [
-      headers.join(','),
-      ...data.map(row => headers.map(header => `"${row[header] || ''}"`).join(','))
-    ].join('\n');
+  const downloadPDF = (data, filename, title, type) => {
+    // Create a new window for PDF generation
+    const printWindow = window.open('', '_blank');
     
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${filename}.csv`;
-    link.click();
-    window.URL.revokeObjectURL(url);
+    // Get current date for the report
+    const currentDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    
+    // Create HTML content for PDF
+    let htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${title}</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+          }
+          .header {
+            text-align: center;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+          }
+          .header h1 {
+            color: #2563eb;
+            margin: 0;
+            font-size: 24px;
+          }
+          .header .subtitle {
+            color: #666;
+            margin: 5px 0;
+            font-size: 14px;
+          }
+          .report-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #666;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+          }
+          th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 11px;
+          }
+          th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+          }
+          tr:nth-child(even) {
+            background-color: #f9f9f9;
+          }
+          .summary {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+          }
+          .summary h3 {
+            margin: 0 0 10px 0;
+            color: #2563eb;
+          }
+          .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+          }
+          @media print {
+            body { margin: 0; }
+            .no-print { display: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>SafeZone Disaster Management System</h1>
+          <div class="subtitle">${title}</div>
+        </div>
+        
+        <div class="report-info">
+          <div>Generated on: ${currentDate}</div>
+          <div>Total Records: ${data.length}</div>
+        </div>
+    `;
+
+    // Add summary section based on type
+    if (type === 'reports') {
+      htmlContent += `
+        <div class="summary">
+          <h3>Disaster Reports Summary</h3>
+          <p><strong>Total Reports:</strong> ${data.length}</p>
+          <p><strong>Report Types:</strong> ${[...new Set(data.map(r => r.disasterType))].join(', ')}</p>
+          <p><strong>Risk Levels:</strong> ${[...new Set(data.map(r => r.status))].join(', ')}</p>
+        </div>
+      `;
+    } else if (type === 'aid') {
+      htmlContent += `
+        <div class="summary">
+          <h3>Aid Requests Summary</h3>
+          <p><strong>Total Requests:</strong> ${data.length}</p>
+          <p><strong>Aid Types:</strong> ${[...new Set(data.map(a => a.aidType))].join(', ')}</p>
+          <p><strong>Urgency Levels:</strong> ${[...new Set(data.map(a => a.urgency))].join(', ')}</p>
+        </div>
+      `;
+    } else if (type === 'claims') {
+      const totalLoss = data.reduce((sum, claim) => sum + (parseFloat(claim.estimatedLoss) || 0), 0);
+      htmlContent += `
+        <div class="summary">
+          <h3>Damage Claims Summary</h3>
+          <p><strong>Total Claims:</strong> ${data.length}</p>
+          <p><strong>Total Estimated Loss:</strong> LKR ${totalLoss.toLocaleString()}</p>
+          <p><strong>Damage Types:</strong> ${[...new Set(data.map(c => c.damageType))].join(', ')}</p>
+        </div>
+      `;
+    } else if (type === 'complete') {
+      const reports = data.filter(item => item.disasterType);
+      const aids = data.filter(item => item.aidType);
+      const claims = data.filter(item => item.damageType);
+      const totalLoss = claims.reduce((sum, claim) => sum + (parseFloat(claim.estimatedLoss) || 0), 0);
+      
+      htmlContent += `
+        <div class="summary">
+          <h3>Complete Records Summary</h3>
+          <p><strong>Total Records:</strong> ${data.length}</p>
+          <p><strong>Disaster Reports:</strong> ${reports.length}</p>
+          <p><strong>Aid Requests:</strong> ${aids.length}</p>
+          <p><strong>Damage Claims:</strong> ${claims.length}</p>
+          <p><strong>Total Estimated Loss:</strong> LKR ${totalLoss.toLocaleString()}</p>
+        </div>
+      `;
+    } else if (type === 'trends') {
+      htmlContent += `
+        <div class="summary">
+          <h3>Daily Trends Summary</h3>
+          <p><strong>Total Data Points:</strong> ${data.length}</p>
+          <p><strong>Date Range:</strong> ${data.length > 0 ? `${data[0].date} to ${data[data.length - 1].date}` : 'N/A'}</p>
+        </div>
+      `;
+    }
+
+    // Add data table
+    if (data.length > 0) {
+      const headers = Object.keys(data[0]);
+      htmlContent += `
+        <table>
+          <thead>
+            <tr>
+              ${headers.map(header => `<th>${header.charAt(0).toUpperCase() + header.slice(1).replace(/([A-Z])/g, ' $1')}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${data.map(row => `
+              <tr>
+                ${headers.map(header => `<td>${row[header] || '—'}</td>`).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    } else {
+      htmlContent += '<p>No data available for this report.</p>';
+    }
+
+    htmlContent += `
+        <div class="footer">
+          <p>This report was generated by SafeZone Disaster Management System</p>
+          <p>For more information, visit: localhost:3000</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Write content to new window and trigger print
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+    
+    // Wait for content to load, then trigger print
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 500);
   };
 
   // ========================================
@@ -435,218 +651,222 @@ export default function Records() {
         </div>
       </header>
 
-      {/* ========================================
-           Summary Cards Section
-           ======================================== */}
-      <section className="summary-cards">
-        <div className="summary-card">
-          <div className="card-icon reports">
-            <IconBarChart />
-          </div>
-          <div className="card-content">
-            <h3>{reportList.length}</h3>
-            <p>Disaster Reports</p>
-          </div>
-        </div>
-        
-        <div className="summary-card">
-          <div className="card-icon aid">
-            <IconPieChart />
-          </div>
-          <div className="card-content">
-            <h3>{aidList.length}</h3>
-            <p>Aid Requests</p>
-          </div>
-        </div>
-        
-        <div className="summary-card">
-          <div className="card-icon claims">
-            <IconBarChart />
-          </div>
-          <div className="card-content">
-            <h3>{claimList.length}</h3>
-            <p>Damage Claims</p>
-          </div>
-        </div>
-        
-        <div className="summary-card">
-          <div className="card-icon loss">
-            <IconPieChart />
-          </div>
-          <div className="card-content">
-            <h3>Rs. {totalLoss.toLocaleString()}</h3>
-            <p>Total Estimated Loss</p>
-          </div>
-        </div>
-      </section>
 
       {/* ========================================
-           Charts Section
+           Main Content Grid Layout
            ======================================== */}
-      <section className="charts-section">
-        <div className="charts-grid">
-          {/* Disaster Types Chart */}
-          <div className="chart-card">
-            <div className="chart-header">
-              <h3>Disaster Types Distribution</h3>
-              <div className="chart-actions">
-                <button 
-                  className="btn-icon"
-                  onClick={() => downloadCSV(reportList, 'disaster-reports')}
-                  title="Download data"
-                >
-                  <IconDownload />
-                </button>
-                <Link to="/victim/read" className="btn-icon" title="View details">
-                  <IconEye />
-                </Link>
+      <div className="main-content-grid">
+        {/* Left Side - Charts Section */}
+        <div className="charts-section">
+          {/* Summary Cards - Horizontal Row */}
+          <section className="summary-cards-horizontal">
+            <div className="summary-card">
+              <div className="card-icon reports">
+                <IconBarChart />
+              </div>
+              <div className="card-content">
+                <h3>{reportList.length}</h3>
+                <p>Disaster Reports</p>
               </div>
             </div>
-            <SimplePieChart data={disasterTypes} title="Disaster Types" />
-          </div>
+            
+            <div className="summary-card">
+              <div className="card-icon aid">
+                <IconPieChart />
+              </div>
+              <div className="card-content">
+                <h3>{aidList.length}</h3>
+                <p>Aid Requests</p>
+              </div>
+            </div>
+            
+            <div className="summary-card">
+              <div className="card-icon claims">
+                <IconBarChart />
+              </div>
+              <div className="card-content">
+                <h3>{claimList.length}</h3>
+                <p>Damage Claims</p>
+              </div>
+            </div>
+            
+            <div className="summary-card">
+              <div className="card-icon loss">
+                <IconPieChart />
+              </div>
+              <div className="card-content">
+                <h3>Rs. {totalLoss.toLocaleString()}</h3>
+                <p>Total Estimated Loss</p>
+              </div>
+            </div>
+          </section>
 
-          {/* Aid Types Chart */}
-          <div className="chart-card">
-            <div className="chart-header">
-              <h3>Aid Types Distribution</h3>
-              <div className="chart-actions">
-                <button 
-                  className="btn-icon"
-                  onClick={() => downloadCSV(aidList, 'aid-requests')}
-                  title="Download data"
-                >
-                  <IconDownload />
-                </button>
-                <Link to="/victim/aid/records" className="btn-icon" title="View details">
-                  <IconEye />
-                </Link>
-              </div>
-            </div>
-            <SimpleBarChart data={aidTypes} title="Aid Types" color="#10b981" />
-          </div>
-
-          {/* Damage Types Chart */}
-          <div className="chart-card">
-            <div className="chart-header">
-              <h3>Damage Types Distribution</h3>
-              <div className="chart-actions">
-                <button 
-                  className="btn-icon"
-                  onClick={() => downloadCSV(claimList, 'damage-claims')}
-                  title="Download data"
-                >
-                  <IconDownload />
-                </button>
-                <Link to="/victim/claim/records" className="btn-icon" title="View details">
-                  <IconEye />
-                </Link>
-              </div>
-            </div>
-            <SimplePieChart data={damageTypes} title="Damage Types" />
-          </div>
-
-          {/* Risk Levels Chart */}
-          <div className="chart-card">
-            <div className="chart-header">
-              <h3>Risk Level Distribution</h3>
-              <div className="chart-actions">
-                <button 
-                  className="btn-icon"
-                  onClick={() => downloadCSV(reportList, 'risk-levels')}
-                  title="Download data"
-                >
-                  <IconDownload />
-                </button>
-                <Link to="/victim/read" className="btn-icon" title="View details">
-                  <IconEye />
-                </Link>
-              </div>
-            </div>
-            <SimpleBarChart data={riskLevels} title="Risk Levels" color="#f59e0b" />
-          </div>
-
-          {/* Urgency Levels Chart */}
-          <div className="chart-card">
-            <div className="chart-header">
-              <h3>Aid Urgency Distribution</h3>
-              <div className="chart-actions">
-                <button 
-                  className="btn-icon"
-                  onClick={() => downloadCSV(aidList, 'aid-urgency')}
-                  title="Download data"
-                >
-                  <IconDownload />
-                </button>
-                <Link to="/victim/aid/records" className="btn-icon" title="View details">
-                  <IconEye />
-                </Link>
-              </div>
-            </div>
-            <SimpleBarChart data={urgencyLevels} title="Urgency Levels" color="#ef4444" />
-          </div>
-
-          {/* Daily Trends Chart */}
-          <div className="chart-card chart-wide">
-            <div className="chart-header">
-              <h3>Daily Submission Trends</h3>
-              <div className="chart-actions">
-                <button 
-                  className="btn-icon"
-                  onClick={() => downloadCSV(dailyTrends, 'daily-trends')}
-                  title="Download data"
-                >
-                  <IconDownload />
-                </button>
-              </div>
-            </div>
-            <div className="trends-chart">
-              <div className="trends-legend">
-                <div className="legend-item">
-                  <div className="legend-color" style={{ backgroundColor: '#3b82f6' }} />
-                  <span>Reports</span>
-                </div>
-                <div className="legend-item">
-                  <div className="legend-color" style={{ backgroundColor: '#10b981' }} />
-                  <span>Aid</span>
-                </div>
-                <div className="legend-item">
-                  <div className="legend-color" style={{ backgroundColor: '#8b5cf6' }} />
-                  <span>Claims</span>
+          {/* Distribution Charts - 3 Column Grid */}
+          <section className="distribution-charts">
+            <div className="chart-card">
+              <div className="chart-header">
+                <h3>Disaster Types Distribution</h3>
+                <div className="chart-actions">
+                  <button 
+                    className="btn-icon"
+                    onClick={() => downloadPDF(reportList, 'disaster-reports', 'Disaster Reports Analysis', 'reports')}
+                    title="Download data"
+                  >
+                    <IconDownload />
+                  </button>
+                  <Link to="/victim/read" className="btn-icon" title="View details">
+                    <IconEye />
+                  </Link>
                 </div>
               </div>
-              <div className="trends-bars">
-                {dailyTrends.map((day, index) => {
-                  const maxValue = Math.max(day.Reports, day.Aid, day.Claims);
-                  return (
-                    <div key={index} className="trend-day">
-                      <div className="day-label">{day.label}</div>
-                      <div className="day-bars">
-                        <div 
-                          className="day-bar reports" 
-                          style={{ height: `${(day.Reports / maxValue) * 100}%` }}
-                        />
-                        <div 
-                          className="day-bar aid" 
-                          style={{ height: `${(day.Aid / maxValue) * 100}%` }}
-                        />
-                        <div 
-                          className="day-bar claims" 
-                          style={{ height: `${(day.Claims / maxValue) * 100}%` }}
-                        />
+              <SimplePieChart data={disasterTypes} title="Disaster Types" />
+            </div>
+
+            <div className="chart-card">
+              <div className="chart-header">
+                <h3>Aid Types Distribution</h3>
+                <div className="chart-actions">
+                  <button 
+                    className="btn-icon"
+                    onClick={() => downloadPDF(aidList, 'aid-requests', 'Aid Requests Analysis', 'aid')}
+                    title="Download data"
+                  >
+                    <IconDownload />
+                  </button>
+                  <Link to="/victim/aid/records" className="btn-icon" title="View details">
+                    <IconEye />
+                  </Link>
+                </div>
+              </div>
+              <SimpleBarChart data={aidTypes} title="Aid Types" color="#10b981" />
+            </div>
+
+            <div className="chart-card">
+              <div className="chart-header">
+                <h3>Damage Types Distribution</h3>
+                <div className="chart-actions">
+                  <button 
+                    className="btn-icon"
+                    onClick={() => downloadPDF(claimList, 'damage-claims', 'Damage Claims Analysis', 'claims')}
+                    title="Download data"
+                  >
+                    <IconDownload />
+                  </button>
+                  <Link to="/victim/claim/records" className="btn-icon" title="View details">
+                    <IconEye />
+                  </Link>
+                </div>
+              </div>
+              <SimplePieChart data={damageTypes} title="Damage Types" />
+            </div>
+          </section>
+
+          {/* Risk & Urgency Distribution - 2 Column Grid */}
+          <section className="risk-urgency-charts">
+            <div className="chart-card">
+              <div className="chart-header">
+                <h3>Risk Level Distribution</h3>
+                <div className="chart-actions">
+                  <button 
+                    className="btn-icon"
+                    onClick={() => downloadPDF(reportList, 'risk-levels', 'Risk Level Analysis', 'reports')}
+                    title="Download data"
+                  >
+                    <IconDownload />
+                  </button>
+                  <Link to="/victim/read" className="btn-icon" title="View details">
+                    <IconEye />
+                  </Link>
+                </div>
+              </div>
+              <SimpleBarChart data={riskLevels} title="Risk Levels" color="#f59e0b" />
+            </div>
+
+            <div className="chart-card">
+              <div className="chart-header">
+                <h3>Aid Urgency Distribution</h3>
+                <div className="chart-actions">
+                  <button 
+                    className="btn-icon"
+                    onClick={() => downloadPDF(aidList, 'aid-urgency', 'Aid Urgency Analysis', 'aid')}
+                    title="Download data"
+                  >
+                    <IconDownload />
+                  </button>
+                  <Link to="/victim/aid/records" className="btn-icon" title="View details">
+                    <IconEye />
+                  </Link>
+                </div>
+              </div>
+              <SimpleBarChart data={urgencyLevels} title="Urgency Levels" color="#ef4444" />
+            </div>
+          </section>
+
+          {/* Daily Trends - Full Width */}
+          <section className="daily-trends-section">
+            <div className="chart-card chart-wide">
+              <div className="chart-header">
+                <h3>Daily Submission Trends</h3>
+                <div className="chart-actions">
+                  <button 
+                    className="btn-icon"
+                    onClick={() => downloadPDF(dailyTrends, 'daily-trends', 'Daily Trends Analysis', 'trends')}
+                    title="Download data"
+                  >
+                    <IconDownload />
+                  </button>
+                </div>
+              </div>
+              <div className="trends-chart">
+                <div className="trends-legend">
+                  <div className="legend-item">
+                    <div className="legend-color" style={{ backgroundColor: '#3b82f6' }} />
+                    <span>Reports</span>
+                  </div>
+                  <div className="legend-item">
+                    <div className="legend-color" style={{ backgroundColor: '#10b981' }} />
+                    <span>Aid</span>
+                  </div>
+                  <div className="legend-item">
+                    <div className="legend-color" style={{ backgroundColor: '#8b5cf6' }} />
+                    <span>Claims</span>
+                  </div>
+                </div>
+                <div className="trends-bars">
+                  {dailyTrends.map((day, index) => {
+                    const maxValue = Math.max(day.Reports, day.Aid, day.Claims);
+                    return (
+                      <div key={index} className="trend-day">
+                        <div className="day-label">{day.label}</div>
+                        <div className="day-bars">
+                          <div 
+                            className="day-bar reports" 
+                            style={{ height: `${(day.Reports / maxValue) * 100}%` }}
+                          />
+                          <div 
+                            className="day-bar aid" 
+                            style={{ height: `${(day.Aid / maxValue) * 100}%` }}
+                          />
+                          <div 
+                            className="day-bar claims" 
+                            style={{ height: `${(day.Claims / maxValue) * 100}%` }}
+                          />
+                        </div>
+                        <div className="day-values">
+                          <span>{day.Reports}</span>
+                          <span>{day.Aid}</span>
+                          <span>{day.Claims}</span>
+                        </div>
                       </div>
-                      <div className="day-values">
-                        <span>{day.Reports}</span>
-                        <span>{day.Aid}</span>
-                        <span>{day.Claims}</span>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
+          </section>
         </div>
-      </section>
+      </div>
+
 
       {/* ========================================
            Quick Actions Section
@@ -676,7 +896,7 @@ export default function Records() {
             className="action-card"
             onClick={() => {
               const allData = [...reportList, ...aidList, ...claimList];
-              downloadCSV(allData, 'complete-records');
+              downloadPDF(allData, 'complete-records', 'Complete Records Analysis', 'complete');
             }}
           >
             <IconDownload />

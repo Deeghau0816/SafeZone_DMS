@@ -41,6 +41,7 @@ const PORT = process.env.PORT || 5000;
 // Accept both 3000 (CRA) and 5173 (Vite) in dev
 const ALLOWED_ORIGINS = [
   process.env.FRONTEND_ORIGIN || "http://localhost:3000",
+  "http://localhost:3001",
   "http://localhost:5173"
 ];
 

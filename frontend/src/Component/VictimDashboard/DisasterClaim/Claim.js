@@ -2,14 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Claim.css";
+import { validateNIC, validatePhone, validateName, validateEmail, validateAddress } from "../utils/validation";
 
 const CREATE_CLAIM_URL = "http://localhost:5000/damage";
-
-/* -------------------- Validators ---------------------- */
-const NAME_REGEX = /^[a-zA-Z\s]+$/;
-const NIC_REGEX = /^(\d{9}[VvXx]|\d{12})$/;
-const PHONE_REGEX = /^7\d{8}$/;
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export default function Claim() {
   const navigate = useNavigate();
@@ -57,18 +52,21 @@ export default function Claim() {
   const validate = () => {
     const er = {};
 
-    if (!form.name.trim() || form.name.trim().length < 2)
-      er.name = "Enter your full name.";
-    else if (!NAME_REGEX.test(form.name.trim()))
-      er.name = "Name can only contain letters and spaces.";
-    if (!NIC_REGEX.test(form.nic.trim()))
-      er.nic = "Invalid NIC (9 digits + V/X or 12 digits).";
-    if (!PHONE_REGEX.test(form.phoneDigits.trim()))
-      er.phoneDigits = "Enter a valid Sri Lankan phone (7XXXXXXXX).";
-    if (!EMAIL_REGEX.test(form.email.trim()))
-      er.email = "Enter a valid email address.";
-    if (!form.address.trim() || form.address.trim().length < 5)
-      er.address = "Enter your address.";
+    // Use enhanced validation functions
+    const nameValidation = validateName(form.name);
+    if (!nameValidation.isValid) er.name = nameValidation.error;
+    
+    const nicValidation = validateNIC(form.nic);
+    if (!nicValidation.isValid) er.nic = nicValidation.error;
+    
+    const phoneValidation = validatePhone(form.phoneDigits);
+    if (!phoneValidation.isValid) er.phoneDigits = phoneValidation.error;
+    
+    const emailValidation = validateEmail(form.email);
+    if (!emailValidation.isValid) er.email = emailValidation.error;
+    
+    const addressValidation = validateAddress(form.address);
+    if (!addressValidation.isValid) er.address = addressValidation.error;
     if (!/^\d{5}$/.test(form.postalCode.trim()))
       er.postalCode = "Postal code must be 5 digits.";
     if (!form.damageType) er.damageType = "Select a damage type.";

@@ -188,7 +188,7 @@
 /* Purpose: Two-column layout for main content and sidebar */
 /* ======================================== */
 .grid{ display:grid; grid-template-columns: 1fr 340px; gap:24px; }  /* Main grid: content + sidebar */
-.cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }  /* Service cards grid */
+.vdash .cards{ display:grid !important; grid-template-columns:1fr !important; gap:20px !important; }  /* Service cards vertical stack */
 
 /* ======================================== */
 /* UI COMPONENT: SERVICE CARDS */
@@ -692,7 +692,7 @@
 @media (max-width:1200px){
   .container{ padding:24px 20px; }
   .grid{ grid-template-columns:1fr; gap:20px; }
-  .cards{ grid-template-columns:repeat(2,1fr); gap:16px; }
+  .vdash .cards{ grid-template-columns:1fr !important; gap:16px !important; }
   .mini-slider{ height:150px; }
 }
 
@@ -708,9 +708,9 @@
     width:100%; 
     justify-content:flex-start;
   }
-  .cards{ 
-    grid-template-columns:1fr; 
-    gap:16px; 
+  .vdash .cards{ 
+    grid-template-columns:1fr !important; 
+    gap:16px !important; 
   }
   .card{
     padding:20px;
