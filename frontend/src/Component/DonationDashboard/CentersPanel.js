@@ -166,7 +166,7 @@ function CentersPanel() {
       <div className="dd-centers-panel">
         <div className="dd-error">
           <p>{error}</p>
-          <button className="ngo-btn ngo-btn-primary" onClick={fetchCenters}>
+          <button className="dd-btn dd-btn-primary" onClick={fetchCenters}>
             Retry
           </button>
         </div>
@@ -184,7 +184,7 @@ function CentersPanel() {
             <p>Manage donation collection centers and their locations</p>
           </div>
           <button
-            className="ngo-btn ngo-btn-primary"
+            className="dd-btn dd-btn-primary"
             onClick={handleAddCenter}
             type="button"
             title="Navigate to centers form"
@@ -212,7 +212,7 @@ function CentersPanel() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button
-            className="ngo-btn ngo-btn-ghost"
+            className="dd-btn dd-btn-ghost"
             onClick={handleRefresh}
             type="button"
             title="Refresh centers data"
@@ -222,7 +222,7 @@ function CentersPanel() {
           </button>
           {(searchTerm || filterCity) && (
             <button
-              className="ngo-btn ngo-btn-ghost"
+              className="dd-btn dd-btn-ghost"
               onClick={handleClearSearch}
               type="button"
               title="Clear search and filters"
@@ -294,7 +294,7 @@ function CentersPanel() {
 
                 <div className="dd-cc-actions">
                   <a
-                    className="ngo-btn ngo-btn-primary"
+                    className="dd-btn dd-btn-primary"
                     href={`https://www.google.com/maps/dir/?api=1&destination=${c.lat},${c.lng}`}
                     target="_blank"
                     rel="noreferrer"
@@ -303,13 +303,13 @@ function CentersPanel() {
                     Get Directions
                   </a>
                   <button
-                    className="ngo-btn ngo-btn-ghost"
+                    className="dd-btn dd-btn-ghost"
                     onClick={(e) => handleEditCenter(c, e)}
                   >
                     Edit
                   </button>
                   <button
-                    className="ngo-btn ngo-btn-danger"
+                    className="dd-btn dd-btn-danger"
                     onClick={(e) => {
                       e.stopPropagation();
                       removeCenter(c._id);
@@ -338,7 +338,7 @@ function CentersPanel() {
                     </div>
                   </div>
                   <a
-                    className="ngo-btn ngo-btn-primary"
+                    className="dd-btn dd-btn-primary"
                     href={`https://www.google.com/maps/dir/?api=1&destination=${selected.lat},${selected.lng}`}
                     target="_blank"
                     rel="noreferrer"

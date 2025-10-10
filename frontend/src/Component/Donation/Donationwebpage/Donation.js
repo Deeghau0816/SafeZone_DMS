@@ -32,15 +32,15 @@ const ITEM_OPTIONS = [
 /* ---------- Needs bar row ---------- */
 const NeedBar = ({ label, value, max, color, unit, coverage }) => {
   return (
-    <div className="need-row">
-      <div className="need-label">
+    <div className="donation-need-row">
+      <div className="donation-need-label">
         {label}
-        <span className="need-unit">({unit})</span>
+        <span className="donation-need-unit">({unit})</span>
       </div>
-      <div className="need-bar" role="progressbar" aria-valuenow={coverage} aria-valuemin={0} aria-valuemax={100} aria-label={`${label} coverage`}>
-        <div className="need-fill" style={{ width: `${coverage}%`, background: color }} />
+      <div className="donation-need-bar" role="progressbar" aria-valuenow={coverage} aria-valuemin={0} aria-valuemax={100} aria-label={`${label} coverage`}>
+        <div className="donation-need-fill" style={{ width: `${coverage}%`, background: color }} />
       </div>
-      <div className="need-val">{Math.round(coverage)}%</div>
+      <div className="donation-need-val">{Math.round(coverage)}%</div>
     </div>
   );
 };
@@ -64,19 +64,19 @@ const MiniRotator = ({ images = [], interval = 3500, alt = "" }) => {
 
   return (
     <div
-      className="rotator"
+      className="donation-rotator"
       onMouseEnter={() => (paused.current = true)}
       onMouseLeave={() => (paused.current = false)}
     >
       {images.map((src, idx) => (
-        <img key={idx} src={src} alt={alt} className={i === idx ? "show" : ""} />
+        <img key={idx} src={src} alt={alt} className={i === idx ? "donation-show" : ""} />
       ))}
       {images.length > 1 && (
-        <div className="dots" aria-label="Image selector">
+        <div className="donation-dots" aria-label="Image selector">
           {images.map((_, d) => (
             <button
               key={d}
-              className={"dot" + (i === d ? " active" : "")}
+              className={"donation-dot" + (i === d ? " active" : "")}
               onClick={() => setI(d)}
               type="button"
               aria-label={`Show image ${d + 1}`}
@@ -93,14 +93,14 @@ const MiniRotator = ({ images = [], interval = 3500, alt = "" }) => {
 const Modal = ({ open, onClose, children }) => {
   if (!open) return null;
   return createPortal(
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className="donation-modal-backdrop" onClick={onClose}>
       <div
-        className="modal-body"
+        className="donation-modal-body"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
       >
-        <button className="modal-close" onClick={onClose} aria-label="Close" type="button">
+        <button className="donation-modal-close" onClick={onClose} aria-label="Close" type="button">
           ×
         </button>
         {children}
@@ -112,13 +112,13 @@ const Modal = ({ open, onClose, children }) => {
 
 /* ---------- Progress Bar ---------- */
 const PBar = ({ label, value, color }) => (
-  <div className="pbar-wrap">
-    <div className="pbar-top">
+  <div className="donation-pbar-wrap">
+    <div className="donation-pbar-top">
       <strong>{label}</strong>
       <strong>{value}%</strong>
     </div>
-    <div className="pbar" role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={value}>
-      <div className="pbar-fill" style={{ width: `${value}%`, background: color }} />
+    <div className="donation-pbar" role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={value}>
+      <div className="donation-pbar-fill" style={{ width: `${value}%`, background: color }} />
     </div>
   </div>
 );
@@ -614,37 +614,38 @@ export default function Donation() {
   };
 
   return (
-    <div className="don-page">
-      {/* ---------- HERO ---------- */}
-      <section id="don-top" className="hero wrap" aria-label="Donation hero">
-        <div className="hero-bubbles" aria-hidden="true">
-          {bubbles.map((b, i) => (
-            <img className={`bub b${i}`} key={i} src={b} alt="" />
-          ))}
-        </div>
-
-        <h1 className="hero-title">Support Disaster Relief</h1>
-        <p className="hero-sub">
-          Help families with food, medicine, shelter and recovery. Your contribution matters.
-        </p>
-
-        <div className="hero-actions">
-          <Link to="/donation/new" className="pill">Start Fundraising</Link>
-          <Link to="/donation/volunteer" className="pill ghost">Become a volunteer</Link>
-          <button className="pill" onClick={goDonate} type="button">Donate Items</button>
-        </div>
-      </section>
-
-      {/* ---------- OVERVIEW ---------- */}
-      <section className="overview wrap" aria-label="Overview and needs">
-        <div className="panel">
-          <div className="panel-head">
-            <h3>Most Needed Now</h3>
-            <span className="muted small">
-              {selectedDisaster ? selectedDisaster.city : "All locations"}
-            </span>
-            {inventoryError && <div style={{color: '#ef4444', fontSize: '12px', marginTop: '4px'}}>{inventoryError}</div>}
+    <div className="donation-component">
+      <div className="donation-page">
+        {/* ---------- HERO ---------- */}
+        <section id="don-top" className="donation-hero donation-wrap" aria-label="Donation hero">
+          <div className="donation-hero-bubbles" aria-hidden="true">
+            {bubbles.map((b, i) => (
+              <img className={`donation-bub donation-b${i}`} key={i} src={b} alt="" />
+            ))}
           </div>
+
+          <h1 className="donation-hero-title">Support Disaster Relief</h1>
+          <p className="donation-hero-sub">
+            Help families with food, medicine, shelter and recovery. Your contribution matters.
+          </p>
+
+          <div className="donation-hero-actions">
+            <Link to="/donation/new" className="donation-pill">Start Fundraising</Link>
+            <Link to="/donation/volunteer" className="donation-pill ghost">Become a volunteer</Link>
+            <button className="donation-pill" onClick={goDonate} type="button">Donate Items</button>
+          </div>
+        </section>
+
+        {/* ---------- OVERVIEW ---------- */}
+        <section className="donation-overview donation-wrap" aria-label="Overview and needs">
+          <div className="donation-panel">
+            <div className="donation-panel-head">
+              <h3>Most Needed Now</h3>
+              <span className="donation-muted donation-small">
+                {selectedDisaster ? selectedDisaster.city : "All locations"}
+              </span>
+              {inventoryError && <div style={{color: '#ef4444', fontSize: '12px', marginTop: '4px'}}>{inventoryError}</div>}
+            </div>
           
           {inventoryLoading ? (
             <div style={{padding: '20px', textAlign: 'center', color: '#6b7280'}}>
@@ -721,51 +722,51 @@ export default function Donation() {
 
       </section>
 
-      {/* ---------- ACTIVE DISASTERS ---------- */}
-      <section className="wrap" aria-label="Active disasters">
-        <div className="section-head">
-          <h3>Active Disasters</h3>
-          <span className="muted small">Choose a cause to support directly</span>
-          {error && <div style={{color: '#ef4444', fontSize: '14px', marginTop: '8px'}}>{error}</div>}
-        </div>
-
-        {loading ? (
-          <div style={{textAlign: 'center', padding: '40px', color: '#6b7280'}}>
-            Loading disasters...
+        {/* ---------- ACTIVE DISASTERS ---------- */}
+        <section className="donation-wrap" aria-label="Active disasters">
+          <div className="donation-section-head">
+            <h3>Active Disasters</h3>
+            <span className="donation-muted donation-small">Choose a cause to support directly</span>
+            {error && <div style={{color: '#ef4444', fontSize: '14px', marginTop: '8px'}}>{error}</div>}
           </div>
-        ) : disasters.length === 0 ? (
-          <div style={{textAlign: 'center', padding: '40px', color: '#6b7280'}}>
-            No active disasters found. Check back later or contact administration.
-          </div>
-        ) : (
-          <div className="grid">
-            {disasters.map((d) => (
-              <article key={d.key} className="card">
-                <div className="media">
-                  <MiniRotator images={d.imgs} alt={d.name} />
-                  <span className="badge" style={{backgroundColor: getSeverityColor(d.severity)}}>
-                    {d.city}
-                  </span>
-                </div>
 
-                <div className="body">
-                  <h4>{d.name}</h4>
-                  <p className="muted">{d.summary}</p>
-                  <div className="tags">
-                    {d.needs.slice(0, 3).map((n) => (
-                      <span key={n} className="tag">{n}</span>
-                    ))}
-                    {d.needs.length > 3 && (
-                      <span className="tag">+{d.needs.length - 3} more</span>
-                    )}
+          {loading ? (
+            <div style={{textAlign: 'center', padding: '40px', color: '#6b7280'}}>
+              Loading disasters...
+            </div>
+          ) : disasters.length === 0 ? (
+            <div style={{textAlign: 'center', padding: '40px', color: '#6b7280'}}>
+              No active disasters found. Check back later or contact administration.
+            </div>
+          ) : (
+            <div className="donation-grid">
+              {disasters.map((d) => (
+                <article key={d.key} className="donation-card">
+                  <div className="donation-media">
+                    <MiniRotator images={d.imgs} alt={d.name} />
+                    <span className="donation-badge" style={{backgroundColor: getSeverityColor(d.severity)}}>
+                      {d.city}
+                    </span>
                   </div>
-                  <div className="actions">
-                    <button
-                      className="pill"
-                      style={{backgroundColor: d.accentColor}}
-                      onClick={() => {
-                        setSelectedDisaster(d);
-                        setShowDonateSection(true);
+
+                  <div className="donation-body">
+                    <h4>{d.name}</h4>
+                    <p className="donation-muted">{d.summary}</p>
+                    <div className="donation-tags">
+                      {d.needs.slice(0, 3).map((n) => (
+                        <span key={n} className="donation-tag">{n}</span>
+                      ))}
+                      {d.needs.length > 3 && (
+                        <span className="donation-tag">+{d.needs.length - 3} more</span>
+                      )}
+                    </div>
+                    <div className="donation-actions">
+                      <button
+                        className="donation-pill"
+                        style={{backgroundColor: d.accentColor}}
+                        onClick={() => {
+                          setSelectedDisaster(d);
+                          setShowDonateSection(true);
                         setTimeout(() => {
                           document.querySelector("#donate-section")?.scrollIntoView({ behavior: "smooth" });
                         }, 0);
@@ -797,55 +798,55 @@ export default function Donation() {
         )}
       </section>
 
-      {/* ---------- DONATION (centers + map) ---------- */}
-      {showDonateSection && (
-        <section id="donate-section" className="donate-grid wrap" aria-label="Donate items and centers list">
-          <div>
-            {/* Search panel */}
-            <div className="panel search-panel">
-              <div className="toggle-group" role="tablist" aria-label="Search mode">
-                <button
-                  className={"tg " + (searchMode === "hometown" ? "active" : "")}
-                  onClick={() => setSearchMode("hometown")}
-                  type="button"
-                  role="tab"
-                  aria-selected={searchMode === "hometown"}
-                >
-                  Search by hometown
-                </button>
-                <button
-                  className={"tg " + (searchMode === "near" ? "active" : "")}
-                  onClick={() => {
-                    setSearchMode("near");
-                    locateOnce();
-                  }}
-                  type="button"
-                  role="tab"
-                  aria-selected={searchMode === "near"}
-                >
-                  Near me
-                </button>
-              </div>
+        {/* ---------- DONATION (centers + map) ---------- */}
+        {showDonateSection && (
+          <section id="donate-section" className="donation-donate-grid donation-wrap" aria-label="Donate items and centers list">
+            <div>
+              {/* Search panel */}
+              <div className="donation-panel donation-search-panel">
+                <div className="donation-toggle-group" role="tablist" aria-label="Search mode">
+                  <button
+                    className={"donation-tg " + (searchMode === "hometown" ? "active" : "")}
+                    onClick={() => setSearchMode("hometown")}
+                    type="button"
+                    role="tab"
+                    aria-selected={searchMode === "hometown"}
+                  >
+                    Search by hometown
+                  </button>
+                  <button
+                    className={"donation-tg " + (searchMode === "near" ? "active" : "")}
+                    onClick={() => {
+                      setSearchMode("near");
+                      locateOnce();
+                    }}
+                    type="button"
+                    role="tab"
+                    aria-selected={searchMode === "near"}
+                  >
+                    Near me
+                  </button>
+                </div>
 
-              {searchMode === "hometown" && (
-                <>
-                  <label className="search-label" htmlFor="home-city">Hometown / city</label>
-                  <input
-                    id="home-city"
-                    className="input search-input"
-                    placeholder="e.g., Matara"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                  />
-                  <div className="search-hint">
-                    {query.trim() ? (
-                      <>
-                        Showing results for <b>{query}</b>.{" "}
-                        <button className="link-btn" onClick={() => setQuery("")} type="button">
-                          Clear
-                        </button>
-                      </>
-                    ) : (
+                {searchMode === "hometown" && (
+                  <>
+                    <label className="donation-search-label" htmlFor="home-city">Hometown / city</label>
+                    <input
+                      id="home-city"
+                      className="donation-input donation-search-input"
+                      placeholder="e.g., Matara"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <div className="donation-search-hint">
+                      {query.trim() ? (
+                        <>
+                          Showing results for <b>{query}</b>.{" "}
+                          <button className="donation-link-btn" onClick={() => setQuery("")} type="button">
+                            Clear
+                          </button>
+                        </>
+                      ) : (
                       <>Tip: type a city/name/address to filter the list.</>
                     )}
                   </div>
@@ -897,15 +898,15 @@ export default function Donation() {
             </div>
 
             {/* Centers panel */}
-            <div className="centers">
-              <div className="row">
+            <div className="donation-centers">
+              <div className="donation-row">
                 <h3>Donation Centers</h3>
-                <div className="row-actions">
-                  <button className="pill outline accent" onClick={() => setShowPlan(true)} type="button">
+                <div className="donation-row-actions">
+                  <button className="donation-pill outline accent" onClick={() => setShowPlan(true)} type="button">
                     Distribution plan
                   </button>
                   <button
-                    className="link-btn"
+                    className="donation-link-btn"
                     onClick={scrollToTop}
                     type="button"
                     aria-label="Scroll to top of page"
@@ -926,9 +927,9 @@ export default function Donation() {
               </div>
 
               {selectedDisaster && (
-                <div className="notice" role="status" aria-live="polite">
+                <div className="donation-notice" role="status" aria-live="polite">
                   <strong>{selectedDisaster.name}</strong>
-                  <div className="muted small">
+                  <div className="donation-muted donation-small">
                     {selectedDisaster.city} • {selectedDisaster.summary}
                   </div>
                 </div>
@@ -947,7 +948,7 @@ export default function Donation() {
               )}
 
               {!centersLoading && centersFiltered.length === 0 && (
-                <div className="muted">No centers match this view.</div>
+                <div className="donation-muted">No centers match this view.</div>
               )}
 
               {!centersLoading && centersFiltered.map((c) => {
@@ -961,36 +962,36 @@ export default function Donation() {
                 return (
                   <div
                     key={key}
-                    className={`center ${realIndex === centerIdx ? "active" : ""}`}
+                    className={`donation-center ${realIndex === centerIdx ? "active" : ""}`}
                     onClick={() => setCenterIdx(realIndex)}
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setCenterIdx(realIndex)}
                     aria-pressed={realIndex === centerIdx}
                   >
-                    <div className="center-title">{c.name}</div>
-                    <div className="center-meta">
+                    <div className="donation-center-title">{c.name}</div>
+                    <div className="donation-center-meta">
                       <span>{c.address}</span>
                       <span>•</span>
                       <a href={`tel:${(c.phone || "").replace(/\s/g, "")}`}>{c.phone}</a>
                       {showKm && (
                         <>
                           <span>•</span>
-                          <span className="muted">~{km} km</span>
+                          <span className="donation-muted">~{km} km</span>
                         </>
                       )}
                     </div>
                     {Array.isArray(c.tags) && c.tags.length > 0 ? (
-                      <div className="tags">
+                      <div className="donation-tags">
                         {c.tags.map((t) => (
-                          <span className="tag" key={t}>{t}</span>
+                          <span className="donation-tag" key={t}>{t}</span>
                         ))}
                       </div>
                     ) : (
-                      <div className="tags">
-                        <span className="tag">Food</span>
-                        <span className="tag">Medical</span>
-                        <span className="tag">Clothing</span>
+                      <div className="donation-tags">
+                        <span className="donation-tag">Food</span>
+                        <span className="donation-tag">Medical</span>
+                        <span className="donation-tag">Clothing</span>
                       </div>
                     )}
                   </div>
@@ -1000,13 +1001,13 @@ export default function Donation() {
           </div>
 
           {/* RIGHT COLUMN (map) */}
-          <div className="mapwrap">
+          <div className="donation-mapwrap">
             {currentCenter ? (
               <>
-                <div className="map-head">
+                <div className="donation-map-head">
                   <div>
-                    <div className="map-title">{currentCenter.name}</div>
-                    <div className="muted">
+                    <div className="donation-map-title">{currentCenter.name}</div>
+                    <div className="donation-muted">
                       {currentCenter.address} •{" "}
                       <a href={`tel:${(currentCenter.phone || "").replace(/\s/g, "")}`}>
                         {currentCenter.phone}
@@ -1014,7 +1015,7 @@ export default function Donation() {
                     </div>
                   </div>
                   <a
-                    className="pill"
+                    className="donation-pill"
                     target="_blank"
                     rel="noreferrer"
                     href={
@@ -1030,14 +1031,14 @@ export default function Donation() {
                 </div>
                 <iframe
                   title={`map-${currentCenter.id || currentCenter.name}`}
-                  className="map"
+                  className="donation-map"
                   src={mapEmbed}
                   allowFullScreen
                   loading="lazy"
                 />
               </>
             ) : (
-              <div className="muted">No center selected.</div>
+              <div className="donation-muted">No center selected.</div>
             )}
           </div>
         </section>
@@ -1048,19 +1049,19 @@ export default function Donation() {
         <DistributionPlan onClose={() => setShowPlan(false)} />
       </Modal>
 
-      {/* ---------- NGO PAST RECORDS SECTION ---------- */}
-      <section className="ngo-records-section wrap">
-        <div className="ngo-info-panel">
-          <h2 className="ngo-info-title"> Our Recent Work and Impact</h2>
-          <p className="ngo-info-text">
-            In times of disaster, every second counts. Our NGO connects <strong>resources, volunteers, and compassion</strong> 
-            to provide rapid relief for affected families. 
-            By working together, we ensure that no one is left behind - every donation, every helping hand, 
-            and every shared act of kindness fuels <span className="highlight">hope and recovery</span>.
+        {/* ---------- NGO PAST RECORDS SECTION ---------- */}
+        <section className="donation-ngo-records-section donation-wrap">
+          <div className="donation-ngo-info-panel">
+            <h2 className="donation-ngo-info-title"> Our Recent Work and Impact</h2>
+            <p className="donation-ngo-info-text">
+              In times of disaster, every second counts. Our NGO connects <strong>resources, volunteers, and compassion</strong> 
+              to provide rapid relief for affected families. 
+              By working together, we ensure that no one is left behind - every donation, every helping hand, 
+              and every shared act of kindness fuels <span className="donation-highlight">hope and recovery</span>.
           </p>
 
           {/* NGO Records Display */}
-          <div className="ngo-records-display">
+          <div className="donation-ngo-records-display">
             <h3>Recent Activities & Milestones</h3>
             
             {ngoRecordsLoading ? (
@@ -1076,10 +1077,10 @@ export default function Donation() {
                 No recent records to display. Check back soon for updates on our latest activities.
               </div>
             ) : (
-              <div className="ngo-records-grid">
+              <div className="donation-ngo-records-grid">
                 {ngoRecords.map((record) => (
-                  <article key={record._id} className="ngo-record-card">
-                    <div className="record-date">
+                  <article key={record._id} className="donation-ngo-record-card">
+                    <div className="donation-record-date">
                       📅 {record.date ? new Date(record.date).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long', 
@@ -1087,17 +1088,17 @@ export default function Donation() {
                       }) : 'Recent'}
                     </div>
                     
-                    <div className="record-content">
-                      <p className="record-note">{record.note}</p>
+                    <div className="donation-record-content">
+                      <p className="donation-record-note">{record.note}</p>
                       
                       {record.images && record.images.length > 0 && (
-                        <div className="record-images">
+                        <div className="donation-record-images">
                           {record.images.map((img, index) => (
-                            <div key={index} className="record-image-wrapper">
+                            <div key={index} className="donation-record-image-wrapper">
                               <img 
                                 src={`${API_BASE}${img.imageUrl}`} 
                                 alt={`Activity from ${new Date(record.date).toLocaleDateString()}`}
-                                className="record-image"
+                                className="donation-record-image"
                                 onError={(e) => {
                                   e.target.style.display = 'none';
                                 }}
@@ -1113,22 +1114,22 @@ export default function Donation() {
             )}
           </div>
 
-          <div className="ngo-contact">
-            <h3><span className="contact-icon">📞</span> Get in Touch</h3>
-            <div className="contact-grid">
+          <div className="donation-ngo-contact">
+            <h3><span className="donation-contact-icon">📞</span> Get in Touch</h3>
+            <div className="donation-contact-grid">
               
-              <div className="contact-item">
-                <span className="contact-icon">📍</span>
+              <div className="donation-contact-item">
+                <span className="donation-contact-icon">📍</span>
                 <p><strong>Address:</strong> 123 Relief Avenue, Colombo, Sri Lanka</p>
               </div>
               
-              <div className="contact-item">
-                <span className="contact-icon">☎️</span>
+              <div className="donation-contact-item">
+                <span className="donation-contact-icon">☎️</span>
                 <p><strong>Phone:</strong> <a href="tel:+94112345678">+94 11 234 5678</a></p>
               </div>
               
-              <div className="contact-item">
-                <span className="contact-icon">✉️</span>
+              <div className="donation-contact-item">
+                <span className="donation-contact-icon">✉️</span>
                 <p><strong>Email:</strong> <a href="mailto:info@ngo.org">info@ngo.org</a></p>
               </div>
             </div>
@@ -1136,5 +1137,6 @@ export default function Donation() {
         </div>
       </section>
     </div>
+  </div>
   );
 }

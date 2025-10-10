@@ -4,12 +4,14 @@ import DonationSidebar from "./DonationSidebar";
 import "./donationcss/DashboardLayout.css";
 export default function DashboardLayout() {
   return (
-    <div className="dashboard-layout">
-      <DonationSidebar />
-      <div className="dashboard-content">
-        <main className="dashboard-main">
-          <Outlet />
-        </main>
+    <div className="donation-dashboard-component">
+      <div className="dd-dashboard-layout">
+        <DonationSidebar />
+        <div className="dd-main-content">
+          <main className="dd-content-body">
+            <Outlet />
+          </main>
+        </div>
       </div>
     </div>
   );
