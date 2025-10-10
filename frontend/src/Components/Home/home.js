@@ -149,9 +149,14 @@ const SafeZoneHomePage = () => {
 
           <div className="action-card">
             <Users size={48} style={{ color: '#9b59b6', marginBottom: '1rem' }} />
-            <h3>Volunteer Opportunities</h3>
-            <p>Join our community of volunteers and make a difference in disaster preparedness and response.</p>
-            <button style={{ backgroundColor: '#9b59b6' }}>Get Involved</button>
+            <h3>Support Disaster</h3>
+            <p>Join our community of support disaster and make a difference in disaster preparedness and response.</p>
+            <button 
+              onClick={() => navigate('/donation')}
+              style={{ backgroundColor: '#9b59b6' }}
+            >
+              Get Involved
+            </button>
           </div>
 
           <div className="action-card">

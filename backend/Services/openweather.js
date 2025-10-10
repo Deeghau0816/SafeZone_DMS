@@ -1,8 +1,8 @@
 // Services/openweather.js
-const fetch = require("node-fetch");
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const crypto = require("crypto");
 
-const KEY = process.env.OPENWEATHER_KEY;
+const KEY = process.env.OPENWEATHER_KEY || "b9ccd544efb7777665a91f8fd02c6656";
 if (!KEY) throw new Error("OPENWEATHER_KEY missing");
 
 const hash = s => crypto.createHash("sha1").update(s).digest("hex").slice(0, 16);
