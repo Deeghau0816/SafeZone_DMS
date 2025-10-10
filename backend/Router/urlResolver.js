@@ -47,9 +47,24 @@ router.post('/resolve-url', async (req, res) => {
     
   } catch (error) {
     console.error('Error resolving URL:', error);
-    res.status(500).json({
+    
+    // Determine appropriate status code based on error type
+    let statusCode = 500;
+    if (error.message.includes('timeout')) {
+      statusCode = 408; // Request Timeout
+    } else if (error.message.includes('Network error')) {
+      statusCode = 503; // Service Unavailable
+    } else if (error.message.includes('Invalid URL') || error.message.includes('not a recognized')) {
+      statusCode = 400; // Bad Request
+    }
+    
+    res.status(statusCode).json({
       success: false,
-      message: error.message || 'Failed to resolve URL'
+      message: error.message || 'Failed to resolve URL',
+      error: {
+        type: error.name || 'UnknownError',
+        code: error.code || 'UNKNOWN_ERROR'
+      }
     });
   }
 });

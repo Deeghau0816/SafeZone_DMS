@@ -95,7 +95,7 @@ function CentersPanel() {
     setSearchTerm("");
     setFilterCity("");
   };
-  const handleAddCenter = () => navigate("/centers");
+  const handleAddCenter = () => navigate("/donation/centers");
 
   const removeCenter = async (id) => {
     if (!window.confirm("Are you sure you want to delete this center?")) return;

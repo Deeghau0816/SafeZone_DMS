@@ -2,8 +2,10 @@
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const crypto = require("crypto");
 
-const KEY = process.env.OPENWEATHER_API_KEY;
-if (!KEY) throw new Error("OPENWEATHER_API_KEY missing");
+const KEY = process.env.OPENWEATHER_API_KEY || process.env.OPENWEATHER_KEY;
+if (!KEY) {
+  console.warn("[openweather] OPENWEATHER_API_KEY or OPENWEATHER_KEY missing - weather features will be disabled");
+}
 
 const hash = s => crypto.createHash("sha1").update(s).digest("hex").slice(0, 16);
 
@@ -15,6 +17,10 @@ const hash = s => crypto.createHash("sha1").update(s).digest("hex").slice(0, 16)
  */
 
 async function getCurrent({ lat, lon }) {
+  if (!KEY) {
+    console.warn("[openweather] getCurrent called but API key missing");
+    return null;
+  }
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${KEY}&units=metric`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`OpenWeather current ${res.status}`);
@@ -22,6 +28,10 @@ async function getCurrent({ lat, lon }) {
 }
 
 async function getForecast5({ lat, lon }) {
+  if (!KEY) {
+    console.warn("[openweather] getForecast5 called but API key missing");
+    return null;
+  }
   const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${KEY}&units=metric`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`OpenWeather forecast ${res.status}`);
@@ -36,6 +46,11 @@ async function getForecast5({ lat, lon }) {
  */
 function extractAlertsFromFreeEndpoints({ current, forecast }) {
   const alerts = [];
+
+  // Handle null values when API key is missing
+  if (!current || !forecast) {
+    return alerts;
+  }
 
   const steps = forecast.list || [];
   const next6 = steps.slice(0, 2);       // ~6 hours (two 3h blocks)
@@ -90,6 +105,10 @@ function extractAlertsFromFreeEndpoints({ current, forecast }) {
 }
 
 async function getAlertsForLatLon({ lat, lon }) {
+  if (!KEY) {
+    console.warn("[openweather] getAlertsForLatLon called but API key missing");
+    return { current: null, forecast: null, alerts: [] };
+  }
   const [current, forecast] = await Promise.all([
     getCurrent({ lat, lon }),
     getForecast5({ lat, lon }),

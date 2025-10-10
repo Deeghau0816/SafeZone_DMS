@@ -82,7 +82,8 @@ import Volunteer from "./Component/Donation/Donation_volunteer/Volunteer";
 import DonateItemForm from "./Component/Donation/Donaterelief/donateitemform";
 
 
-export default function App() {
+// Public layout with Header and Footer
+function PublicLayout() {
   return (
     <>
       <Header />
@@ -145,6 +146,36 @@ export default function App() {
 
         {/* Public reports page */}
         <Route path="/reports" element={<ReportGenerator />} />
+
+        {/* Donation Pages */}
+        <Route path="/donation" element={<Donation />} />
+        <Route path="/donation/new" element={<Donationform />} />
+        <Route path="/donation/distribution-plan" element={<DistributionPlan />} />
+        <Route path="/donation/donate-money" element={<Donationform />} />
+        <Route path="/donation/active-disasters" element={<Ngodisaster />} />
+        <Route path="/donation/centers" element={<Centers />} />
+        <Route path="/donation/volunteer" element={<Volunteer />} />
+        <Route path="/donation/donate-items" element={<DonateItemForm />} />
+
+        {/* Donation Dashboard Routes */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Overview />} />
+          <Route path="overview" element={<Overview />} />
+          <Route path="donations" element={<DonationsPanel />} />
+          <Route path="disasters/active" element={<ActiveDisasterPanel />} />
+          <Route path="inventory" element={<InventoryPanel />} />
+          <Route path="centers" element={<CentersPanel />} />
+          <Route path="volunteers" element={<VolunteersPanel />} />
+          <Route path="distribution" element={<DistributionPanel />} />
+          <Route path="ngopast" element={<Ngopast />} />
+          <Route path="top-donors" element={<TopDonorsPage />} />
+          <Route path="operation" element={<Operation />} />
+          <Route path="target-inventory" element={<TargetInventory />} />
+          <Route path="distribution-quantity-chart" element={<DistributionQuantityChart />} />
+          <Route path="volunteers/:id/edit" element={<EditVolunteerPage />} />
+          <Route path="donations/:id/edit" element={<DonationEditPage />} />
+          <Route path="centers/:id/edit" element={<EditCenter />} />
+        </Route>
       </Route>
 
       {/* Admin layout (NO Header/Footer) */}

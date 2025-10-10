@@ -7,20 +7,36 @@ const axios = require('axios');
  */
 async function resolveGoogleMapsShortLink(shortUrl) {
   try {
+    // Validate URL format first
+    if (!shortUrl || typeof shortUrl !== 'string') {
+      throw new Error('Invalid URL provided');
+    }
+
+    // Check if URL is properly formatted
+    try {
+      new URL(shortUrl);
+    } catch (urlError) {
+      throw new Error('Invalid URL format');
+    }
+
     // Make a GET request to follow redirects and get the final URL
     const response = await axios.get(shortUrl, {
       maxRedirects: 5,
-      timeout: 10000,
+      timeout: 8000, // Reduced timeout to 8 seconds
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      },
+      validateStatus: function (status) {
+        // Accept redirects and successful responses
+        return status >= 200 && status < 400;
       }
     });
 
     // Extract the final URL from the response
-    const finalUrl = response.request.res.responseUrl || response.config.url;
+    const finalUrl = response.request?.res?.responseUrl || response.config?.url || response.request?.responseURL;
     
     if (!finalUrl) {
-      throw new Error('Could not resolve short link');
+      throw new Error('Could not resolve short link - no final URL found');
     }
 
     // Parse coordinates from the resolved URL
@@ -35,8 +51,20 @@ async function resolveGoogleMapsShortLink(shortUrl) {
       coordinates: coords
     };
   } catch (error) {
-    console.error('Error resolving short link:', error.message);
-    throw new Error(`Failed to resolve short link: ${error.message}`);
+    // Handle specific error types
+    if (error.code === 'ECONNABORTED') {
+      console.error('Timeout resolving short link:', shortUrl);
+      throw new Error('Request timeout - URL resolution took too long');
+    } else if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
+      console.error('Network error resolving short link:', shortUrl);
+      throw new Error('Network error - could not reach the URL');
+    } else if (error.response?.status >= 400) {
+      console.error('HTTP error resolving short link:', error.response.status, shortUrl);
+      throw new Error(`HTTP error ${error.response.status} - URL may be invalid or inaccessible`);
+    } else {
+      console.error('Error resolving short link:', error.message, shortUrl);
+      throw new Error(`Failed to resolve short link: ${error.message}`);
+    }
   }
 }
 

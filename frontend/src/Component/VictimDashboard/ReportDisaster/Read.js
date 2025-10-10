@@ -284,9 +284,7 @@ export default function Read({ victim, onDelete, hideActions, compact, showAssig
                     onClick={() => {
                       setReportStatus('Approved');
                       localStorage.setItem(`report_status_${vid}`, 'Approved');
-                      // Mark as updated to prevent further changes
-                      setHasUpdated(true);
-                      localStorage.setItem(updateKey, 'true');
+                      // Don't mark as updated yet - wait for assign button to be clicked
                     }}
                   >
                     Approve
@@ -296,7 +294,7 @@ export default function Read({ victim, onDelete, hideActions, compact, showAssig
                     onClick={() => {
                       setReportStatus('Rejected');
                       localStorage.setItem(`report_status_${vid}`, 'Rejected');
-                      // Mark as updated to prevent further changes
+                      // Mark as updated since rejected reports don't need assignment
                       setHasUpdated(true);
                       localStorage.setItem(updateKey, 'true');
                     }}

@@ -324,6 +324,9 @@ export default function AdminHome() {
                     <Link className="ah-q" to="/AdminHome/ReportGenerator">
                       Alert Report
                     </Link>
+                    <Link className="ah-q" to="/victim/reports">
+                      Victim Management
+                    </Link>
                   </div>
                 </div>
               </div>
