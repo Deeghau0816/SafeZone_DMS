@@ -288,65 +288,83 @@ function OverviewPanel() {
   }, [centers, operations, assignedVols, allVols]);
 
   if (loading) {
-    return <div className="dd-overview-panel"><div className="dd-loading"><p>Loading...</p></div></div>;
+    return (
+      <div className="donation-dashboard-component">
+        <div className="dd-overview-panel">
+          <div className="dd-loading">
+            <p>Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
   }
   if (error) {
-    return <div className="dd-overview-panel"><div className="dd-error"><p>{error}</p></div></div>;
+    return (
+      <div className="donation-dashboard-component">
+        <div className="dd-overview-panel">
+          <div className="dd-error">
+            <p>{error}</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="dd-overview-panel">
-      <div className="dd-header-top">
-        <div className="dd-title-group">
-          <h1>Operational Dashboard Summary 💡</h1>
-          <p>A high-level, real-time overview of donation centers and field distribution operations.</p>
-        </div>
-        <button className="ngo-btn ngo-btn-ghost dd-refresh-btn" onClick={fetchData}>
-          <span className="dd-icon">🔄</span> Refresh Data
-        </button>
-      </div>
-
-      {/* CHARTS NOW AT TOP */}
-      <h2 className="dd-section-title">Operational Deep Dive</h2>
-      <div className="dd-stats-grid dd-overview-grid dd-row-3">
-        <div className="dd-grid-span-2"><TopVolsChart operations={operations} /></div>
-        <div className="dd-grid-span-1"><TeamRatioChart teamLeads={stats.teamLeads} individualVols={stats.individualVols} /></div>
-        <div className="dd-grid-span-1"><TagDistributionChart centers={centers} /></div>
-      </div>
-
-      <h2 className="dd-section-title">Core Operations Metrics</h2>
-      <div className="dd-stats-grid dd-overview-grid dd-row-1">
-        <div className="dd-stat-card dd-stat-primary dd-stat-large">
-          <div className="dd-stat-icon">📦</div>
-          <div className="dd-stat-number">{stats.totalCenters}</div>
-          <div className="dd-stat-label">Total Collection Centers</div>
-        </div>
-        <div className="dd-stat-card dd-stat-warning dd-stat-large">
-          <div className="dd-stat-icon">🚧</div>
-          <div className="dd-stat-number">{stats.operationsInProgress}</div>
-          <div className="dd-stat-label">Operations In Progress</div>
-        </div>
-        <div className="dd-stat-card dd-stat-success dd-stat-large">
-          <div className="dd-stat-icon">✅</div>
-          <div className="dd-stat-number">{stats.completedOperations}</div>
-          <div className="dd-stat-label">Operations Completed</div>
-        </div>
-      </div>
-
-      <h2 className="dd-section-title">Volunteer and Capacity Analysis</h2>
-      <div className="dd-stats-grid dd-overview-grid dd-row-2">
-        {/* Registered Volunteers */}
-        <div className="dd-stat-card dd-stat-info dd-grid-span-2">
-          <div className="dd-stat-icon">👥</div>
-          <div className="dd-stat-number">{stats.totalRegisteredVolunteers}</div>
-          <div className="dd-stat-label">Total Registered Volunteer Capacity</div>
+    <div className="donation-dashboard-component">
+      <div className="dd-overview-panel">
+        <div className="dd-header-top">
+          <div className="dd-title-group">
+            <h1>Operational Dashboard Summary 💡</h1>
+            <p>A high-level, real-time overview of donation centers and field distribution operations.</p>
+          </div>
+          <button className="dd-btn dd-btn-ghost dd-refresh-btn" onClick={fetchData}>
+            <span className="dd-icon">🔄</span> Refresh Data
+          </button>
         </div>
 
-        {/* Assigned Volunteers */}
-        <div className="dd-stat-card dd-stat-info dd-grid-span-2">
-          <div className="dd-stat-icon">🧑‍🤝‍🧑</div>
-          <div className="dd-stat-number">{stats.totalAssignedVolunteers}</div>
-          <div className="dd-stat-label">Total Assigned Capacity</div>
+        {/* CHARTS NOW AT TOP */}
+        <h2 className="dd-section-title">Operational Deep Dive</h2>
+        <div className="dd-stats-grid dd-overview-grid dd-row-3">
+          <div className="dd-grid-span-2"><TopVolsChart operations={operations} /></div>
+          <div className="dd-grid-span-1"><TeamRatioChart teamLeads={stats.teamLeads} individualVols={stats.individualVols} /></div>
+          <div className="dd-grid-span-1"><TagDistributionChart centers={centers} /></div>
+        </div>
+
+        <h2 className="dd-section-title">Core Operations Metrics</h2>
+        <div className="dd-stats-grid dd-overview-grid dd-row-1">
+          <div className="dd-stat-card dd-stat-primary dd-stat-large">
+            <div className="dd-stat-icon">📦</div>
+            <div className="dd-stat-number">{stats.totalCenters}</div>
+            <div className="dd-stat-label">Total Collection Centers</div>
+          </div>
+          <div className="dd-stat-card dd-stat-warning dd-stat-large">
+            <div className="dd-stat-icon">🚧</div>
+            <div className="dd-stat-number">{stats.operationsInProgress}</div>
+            <div className="dd-stat-label">Operations In Progress</div>
+          </div>
+          <div className="dd-stat-card dd-stat-success dd-stat-large">
+            <div className="dd-stat-icon">✅</div>
+            <div className="dd-stat-number">{stats.completedOperations}</div>
+            <div className="dd-stat-label">Operations Completed</div>
+          </div>
+        </div>
+
+        <h2 className="dd-section-title">Volunteer and Capacity Analysis</h2>
+        <div className="dd-stats-grid dd-overview-grid dd-row-2">
+          {/* Registered Volunteers */}
+          <div className="dd-stat-card dd-stat-info dd-grid-span-2">
+            <div className="dd-stat-icon">👥</div>
+            <div className="dd-stat-number">{stats.totalRegisteredVolunteers}</div>
+            <div className="dd-stat-label">Total Registered Volunteer Capacity</div>
+          </div>
+
+          {/* Assigned Volunteers */}
+          <div className="dd-stat-card dd-stat-info dd-grid-span-2">
+            <div className="dd-stat-icon">🧑‍🤝‍🧑</div>
+            <div className="dd-stat-number">{stats.totalAssignedVolunteers}</div>
+            <div className="dd-stat-label">Total Assigned Capacity</div>
+          </div>
         </div>
       </div>
     </div>

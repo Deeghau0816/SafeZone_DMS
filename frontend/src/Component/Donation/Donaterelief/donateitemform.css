@@ -1,4 +1,23 @@
-.donate-form-overlay {
+/* donateitemform.css - SCOPED CSS
+   Only affects files in Donation folder */
+
+/* Scoped CSS Variables */
+.donation-component {
+  --don-primary: #2563eb;
+  --don-primary-hover: #1d4ed8;
+  --don-danger: #dc2626;
+  --don-success: #16a34a;
+  --don-warning: #f59e0b;
+  --don-muted: #6b7280;
+  --don-border: #e5e7eb;
+  --don-bg: #ffffff;
+  --don-bg-secondary: #f9fafb;
+  --don-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --don-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --don-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.donation-component .donate-form-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
@@ -8,7 +27,7 @@
   z-index: 2000;
 }
 
-.donate-form-container {
+.donation-component .donate-form-container {
   position: relative; /* ✅ Required for close button */
   background: #fff;
   border-radius: 12px;
@@ -19,7 +38,7 @@
   animation: fadeIn 0.3s ease;
 }
 
-.donate-form-container h2 {
+.donation-component .donate-form-container h2 {
   margin-bottom: 1.5rem;
   font-size: 1.4rem;
   font-weight: 600;
@@ -27,101 +46,122 @@
 }
 
 /* ✅ Close button (top-right) */
-.donate-form-close {
+.donation-component .donate-form-close {
   position: absolute;
-  top: 12px;
-  right: 16px;
-  background: transparent;
+  top: 1rem;
+  right: 1rem;
+  background: none;
   border: none;
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: #555;
+  font-size: 1.5rem;
   cursor: pointer;
-  transition: color 0.2s ease;
+  color: #666;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
-.donate-form-close:hover {
-  color: #000;
+.donation-component .donate-form-close:hover {
+  color: #333;
+  background-color: #f5f5f5;
 }
 
-.form-group {
-  margin-bottom: 1.2rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 0.4rem;
-  color: #444;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  padding: 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 0.95rem;
-}
-
-.form-group textarea {
-  resize: vertical;
-  min-height: 60px;
-}
-
-.donate-form-error {
-  background: #fee2e2;
-  color: #b91c1c;
-  padding: 0.8rem;
-  border-radius: 8px;
+/* Form styling */
+.donation-component .donate-form-group {
   margin-bottom: 1rem;
-  font-size: 0.9rem;
 }
 
-.form-actions {
+.donation-component .donate-form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.donation-component .donate-form-group input,
+.donation-component .donate-form-group select,
+.donation-component .donate-form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.donation-component .donate-form-group input:focus,
+.donation-component .donate-form-group select:focus,
+.donation-component .donate-form-group textarea:focus {
+  outline: none;
+  border-color: var(--don-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.donation-component .donate-form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Button styling */
+.donation-component .donate-form-actions {
   display: flex;
+  gap: 0.75rem;
   justify-content: flex-end;
-  gap: 0.8rem;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
-.btn-cancel {
-  background: #e5e7eb;
-  color: #374151;
+.donation-component .donate-form-btn {
+  padding: 0.75rem 1.5rem;
   border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
+  border-radius: 6px;
+  font-weight: 500;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.2s ease;
 }
 
-.btn-cancel:hover {
-  background: #d1d5db;
-}
-
-.btn-save {
-  background: #2563eb;
+.donation-component .donate-form-btn-primary {
+  background-color: var(--don-primary);
   color: white;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.2s;
 }
 
-.btn-save:hover {
-  background: #1d4ed8;
+.donation-component .donate-form-btn-primary:hover {
+  background-color: var(--don-primary-hover);
+  transform: translateY(-1px);
 }
 
+.donation-component .donate-form-btn-secondary {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.donation-component .donate-form-btn-secondary:hover {
+  background-color: #e5e5e5;
+}
+
+/* Animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: scale(0.97);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .donation-component .donate-form-container {
+    width: 95%;
+    padding: 1.5rem;
+  }
+  
+  .donation-component .donate-form-actions {
+    flex-direction: column;
+  }
+  
+  .donation-component .donate-form-btn {
+    width: 100%;
   }
 }

@@ -1,31 +1,47 @@
 /* ===========================
-   Active Disasters (Ngodisaster)
-   Full CSS
+   Active Disasters (Ngodisaster) - SCOPED CSS
+   Only affects files in Donation folder
    =========================== */
 
 /* Headline font to match "Fundraiser" */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800;900&display=swap');
 
-/* Use Inter throughout this page */
-.nd-wrap,
-.nd-wrap * {
+/* Scoped CSS Variables */
+.donation-component {
+  --don-primary: #2563eb;
+  --don-primary-hover: #1d4ed8;
+  --don-danger: #dc2626;
+  --don-success: #16a34a;
+  --don-warning: #f59e0b;
+  --don-muted: #6b7280;
+  --don-border: #e5e7eb;
+  --don-bg: #ffffff;
+  --don-bg-secondary: #f9fafb;
+  --don-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --don-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --don-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Use Inter throughout this page - SCOPED */
+.donation-component .nd-wrap,
+.donation-component .nd-wrap * {
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
                Roboto, "Helvetica Neue", Arial, "Noto Sans",
                "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 
-/* Base layout */
-.nd-wrap {
+/* Base layout - SCOPED */
+.donation-component .nd-wrap {
   max-width: 1100px;
   margin: 0 auto;
   padding: 18px 16px 80px;
   color: #0f172a;
 }
 
-.muted { color: #64748b; }
+.donation-component .muted { color: #64748b; }
 
-/* ===== Hero header ===== */
-.nd-hero {
+/* ===== Hero header - SCOPED ===== */
+.donation-component .nd-hero {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -39,9 +55,9 @@
   box-shadow: 0 10px 24px rgba(15,23,42,.04);
 }
 
-.nd-hero-left { max-width: 720px; }
+.donation-component .nd-hero-left { max-width: 720px; }
 
-.nd-title{
+.donation-component .nd-title{
   font-size: 44px;         /* adjust 40–48px to taste */
   line-height: 1.1;
   font-weight: 900;        /* strong headline like "Fundraiser" */
@@ -50,24 +66,24 @@
   margin: 0 0 6px;
 }
 
-.nd-sub{
+.donation-component .nd-sub{
   font-size: 16.5px;
   color: #475569;
   margin: 0;
 }
 
-.nd-hero-actions { display: flex; gap: 8px; }
+.donation-component .nd-hero-actions { display: flex; gap: 8px; }
 
-/* ===== Form layout ===== */
-.nd-grid2 { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
-@media (max-width: 860px){ .nd-grid2 { grid-template-columns: 1fr; } }
+/* ===== Form layout - SCOPED ===== */
+.donation-component .nd-grid2 { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+@media (max-width: 860px){ .donation-component .nd-grid2 { grid-template-columns: 1fr; } }
 
-.field { margin: 10px 0; }
-.field > label { display:block; font-weight:700; margin-bottom:6px; }
+.donation-component .field { margin: 10px 0; }
+.donation-component .field > label { display:block; font-weight:700; margin-bottom:6px; }
 
-.input,
-textarea.input,
-select.input {
+.donation-component .input,
+.donation-component textarea.input,
+.donation-component select.input {
   width: 100%;
   padding: 12px 14px;
   border: 1px solid #e5e7eb;
@@ -77,17 +93,17 @@ select.input {
   transition: box-shadow .15s ease, border-color .15s ease;
 }
 
-.input:focus,
-textarea.input:focus,
-select.input:focus {
+.donation-component .input:focus,
+.donation-component textarea.input:focus,
+.donation-component select.input:focus {
   border-color:#c7d2fe;
   box-shadow: 0 0 0 4px rgba(79,70,229,.08);
 }
 
-.checkrow { display:flex; align-items:center; gap:8px; }
+.donation-component .checkrow { display:flex; align-items:center; gap:8px; }
 
-.chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
-.chip {
+.donation-component .chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+.donation-component .chip {
   background:#eef2ff;
   color:#4338ca;
   border:1px solid #e0e7ff;
@@ -96,27 +112,27 @@ select.input:focus {
   font-size:12px;
 }
 
-.color-row { display:flex; align-items:center; gap:10px; }
-.color-row input[type="color"] {
+.donation-component .color-row { display:flex; align-items:center; gap:10px; }
+.donation-component .color-row input[type="color"] {
   width: 42px; height: 32px; border: none; background: transparent;
 }
 
-/* ===== Images block ===== */
-.card {
+/* ===== Images block - SCOPED ===== */
+.donation-component .card {
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   padding: 14px;
   background: #fff;
 }
 
-.card-head {
+.donation-component .card-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.bulk-row {
+.donation-component .bulk-row {
   display: flex;
   gap: 12px;
   align-items: center;
@@ -124,11 +140,11 @@ select.input:focus {
   flex-wrap: wrap;
 }
 
-.img-grid { display: grid; gap: 12px; grid-template-columns: repeat(4, 1fr); }
-@media (max-width: 980px) { .img-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 560px) { .img-grid { grid-template-columns: 1fr; } }
+.donation-component .img-grid { display: grid; gap: 12px; grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 980px) { .donation-component .img-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .donation-component .img-grid { grid-template-columns: 1fr; } }
 
-.img-slot {
+.donation-component .img-slot {
   border: 1px solid #e5e7eb;
   border-radius: 14px;
   background: #f8fafc;
@@ -140,14 +156,14 @@ select.input:focus {
   min-height: 210px;
 }
 
-.img-slot img {
+.donation-component .img-slot img {
   width: 100%;
   height: 150px;
   object-fit: cover;
   border-radius: 10px;
 }
 
-.img-empty {
+.donation-component .img-empty {
   width: 100%;
   height: 150px;
   display: grid;
@@ -158,7 +174,7 @@ select.input:focus {
   border-radius: 10px;
 }
 
-.slot-btn {
+.donation-component .slot-btn {
   border: 1px solid #e5e7eb;
   background: #fff;
   border-radius: 10px;
@@ -168,12 +184,12 @@ select.input:focus {
   transition: background .15s ease, border-color .15s ease;
 }
 
-.slot-btn:hover {
+.donation-component .slot-btn:hover {
   border-color: #cbd5e1;
   background: #f8fafc;
 }
 
-.visually-hidden {
+.donation-component .visually-hidden {
   position: absolute !important;
   width: 1px; height: 1px;
   padding: 0; margin: -1px;
@@ -183,8 +199,8 @@ select.input:focus {
   border: 0;
 }
 
-/* ===== Buttons ===== */
-.btn {
+/* ===== Buttons - SCOPED ===== */
+.donation-component .btn {
   padding: 10px 16px;
   border-radius: 12px;
   font-weight: 700;
@@ -193,32 +209,32 @@ select.input:focus {
   transition: transform .04s ease, background .15s ease, color .15s ease, border-color .15s ease;
 }
 
-.btn:active { transform: translateY(1px); }
+.donation-component .btn:active { transform: translateY(1px); }
 
-.btn-ghost {
+.donation-component .btn-ghost {
   background:#f8fafc;
   border:1px solid #e5e7eb;
 }
-.btn-ghost:hover { background:#f1f5f9; }
+.donation-component .btn-ghost:hover { background:#f1f5f9; }
 
-.btn-outline {
+.donation-component .btn-outline {
   background:#fff;
   border:1px solid #dbeafe;
   color:#1e3a8a;
 }
-.btn-outline:hover {
+.donation-component .btn-outline:hover {
   background:#eff6ff;
   border-color:#bfdbfe;
 }
 
-.btn-primary {
+.donation-component .btn-primary {
   background:#2563eb;
   color:#fff;
 }
-.btn-primary:hover { background:#1d4ed8; }
+.donation-component .btn-primary:hover { background:#1d4ed8; }
 
-/* ===== Bottom sticky actions ===== */
-.nd-actions {
+/* ===== Bottom sticky actions - SCOPED ===== */
+.donation-component .nd-actions {
   display:flex;
   justify-content:flex-end;
   gap:10px;

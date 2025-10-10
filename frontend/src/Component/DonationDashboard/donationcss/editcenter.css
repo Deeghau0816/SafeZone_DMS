@@ -1,154 +1,325 @@
-/* --- Unique prefix: ec- (Edit Center) --- */
-
-/* Backdrop */
-.ec-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(17, 24, 39, 0.55); /* dark, slightly stronger */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  padding: 24px;
-  animation: ec-fade-in 120ms ease-out;
+/* Scoped CSS for DonationDashboard Edit Center - Only affects files in DonationDashboard folder */
+.donation-dashboard-component {
+  /* CSS Variables scoped to donation dashboard edit center */
+  --dd-primary: #3b82f6;
+  --dd-primary-hover: #2563eb;
+  --dd-danger: #ef4444;
+  --dd-success: #10b981;
+  --dd-warning: #f59e0b;
+  --dd-muted: #6b7280;
+  --dd-border: #e5e7eb;
+  --dd-bg: #ffffff;
+  --dd-bg-secondary: #f9fafb;
+  --dd-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --dd-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-/* Card */
-.ec-panel {
-  width: min(640px, 100%);
-  max-height: 90vh;
-  overflow: auto;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  padding: 24px;
-  animation: ec-slide-in 160ms ease-out;
+/* Edit Center Container */
+.donation-dashboard-component .dd-edit-center-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-/* Header */
-.ec-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e5e7eb;
-  margin-bottom: 16px;
+.donation-dashboard-component .dd-edit-center-header {
+  margin-bottom: 30px;
 }
 
-.ec-title {
+.donation-dashboard-component .dd-edit-center-header h1 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #111827;
 }
 
-.ec-close {
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  font-size: 20px;
-  line-height: 1;
-  color: #6b7280;
+.donation-dashboard-component .dd-edit-center-header p {
+  margin: 8px 0 0;
+  color: var(--dd-muted);
+  font-size: 1rem;
 }
-.ec-close:hover { background: #f3f4f6; color: #374151; }
 
-/* Error */
-.ec-error {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #b91c1c;
-  border-radius: 8px;
-  padding: 10px 12px;
-  margin: 8px 0 16px;
+/* Form Styles */
+.donation-dashboard-component .dd-edit-center-form {
+  background: var(--dd-bg);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: var(--dd-shadow-md);
+  border: 1px solid var(--dd-border);
+}
+
+.donation-dashboard-component .dd-form-group {
+  margin-bottom: 24px;
+}
+
+.donation-dashboard-component .dd-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
   font-size: 0.95rem;
 }
 
-/* Form */
-.ec-form { display: flex; flex-direction: column; gap: 14px; }
-
-.ec-group { display: flex; flex-direction: column; gap: 6px; }
-
-.ec-label {
-  font-size: 0.9rem;
-  color: #374151;
-  font-weight: 600;
+.donation-dashboard-component .dd-form-group .dd-required {
+  color: var(--dd-danger);
+  margin-left: 4px;
 }
 
-.ec-input {
+.donation-dashboard-component .dd-form-group input,
+.donation-dashboard-component .dd-form-group select,
+.donation-dashboard-component .dd-form-group textarea {
   width: 100%;
-  padding: 12px 12px;
-  border: 1px solid #d1d5db;
+  padding: 12px 16px;
+  border: 1px solid var(--dd-border);
   border-radius: 8px;
   font-size: 1rem;
-  background: #fff;
-  transition: border-color .15s, box-shadow .15s;
+  background: var(--dd-bg);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.ec-input:focus {
+.donation-dashboard-component .dd-form-group input:focus,
+.donation-dashboard-component .dd-form-group select:focus,
+.donation-dashboard-component .dd-form-group textarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59,130,246,.15);
+  border-color: var(--dd-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.ec-input::placeholder { color: #9ca3af; }
+.donation-dashboard-component .dd-form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
 
-/* Two-column grid for coords on ≥640px */
-.ec-grid2 {
+.donation-dashboard-component .dd-form-group .dd-help-text {
+  margin-top: 6px;
+  font-size: 0.875rem;
+  color: var(--dd-muted);
+}
+
+.donation-dashboard-component .dd-form-group .dd-error-text {
+  margin-top: 6px;
+  font-size: 0.875rem;
+  color: var(--dd-danger);
+}
+
+.donation-dashboard-component .dd-form-group.dd-error input,
+.donation-dashboard-component .dd-form-group.dd-error select,
+.donation-dashboard-component .dd-form-group.dd-error textarea {
+  border-color: var(--dd-danger);
+}
+
+.donation-dashboard-component .dd-form-group.dd-error input:focus,
+.donation-dashboard-component .dd-form-group.dd-error select:focus,
+.donation-dashboard-component .dd-form-group.dd-error textarea:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Grid Layout */
+.donation-dashboard-component .dd-form-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-@media (min-width: 640px) {
-  .ec-grid2 { grid-template-columns: 1fr 1fr; }
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
-/* Actions */
-.ec-actions {
+@media (max-width: 768px) {
+  .donation-dashboard-component .dd-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Button Styles */
+.donation-dashboard-component .dd-form-actions {
   display: flex;
   gap: 12px;
   justify-content: flex-end;
-  border-top: 1px solid #e5e7eb;
-  padding-top: 16px;
-  margin-top: 6px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--dd-border);
 }
 
-.ec-btn {
-  -webkit-appearance: none;
-  appearance: none;
-  cursor: pointer;
+.donation-dashboard-component .dd-btn {
+  padding: 12px 24px;
   border-radius: 8px;
-  font-size: 0.95rem;
   font-weight: 600;
-  padding: 11px 18px;
-  border: 1px solid transparent;
-  transition: background-color .15s, border-color .15s, color .15s;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.ec-btn-primary {
-  background: #3b82f6;
-  color: #fff;
-  border-color: #3b82f6;
+.donation-dashboard-component .dd-btn-primary {
+  background: var(--dd-primary);
+  color: #ffffff;
 }
-.ec-btn-primary:hover { background: #2563eb; border-color: #2563eb; }
-.ec-btn-primary:disabled { background: #9ca3af; border-color: #9ca3af; cursor: not-allowed; }
 
-.ec-btn-secondary {
-  background: #fff;
+.donation-dashboard-component .dd-btn-primary:hover {
+  background: var(--dd-primary-hover);
+  transform: translateY(-1px);
+}
+
+.donation-dashboard-component .dd-btn-secondary {
+  background: var(--dd-bg-secondary);
   color: #374151;
-  border-color: #d1d5db;
+  border: 1px solid var(--dd-border);
 }
-.ec-btn-secondary:hover { background: #f9fafb; border-color: #9ca3af; }
 
-/* Number input cleanup */
-.ec-input[type="number"] { -moz-appearance: textfield; }
-.ec-input[type="number"]::-webkit-outer-spin-button,
-.ec-input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.donation-dashboard-component .dd-btn-secondary:hover {
+  background: #f3f4f6;
+}
 
-/* Animations */
-@keyframes ec-fade-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes ec-slide-in { from { transform: translateY(-8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.donation-dashboard-component .dd-btn-danger {
+  background: var(--dd-danger);
+  color: #ffffff;
+}
+
+.donation-dashboard-component .dd-btn-danger:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+.donation-dashboard-component .dd-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading States */
+.donation-dashboard-component .dd-loading {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: dd-spin 1s linear infinite;
+}
+
+@keyframes dd-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Alert Styles */
+.donation-dashboard-component .dd-alert {
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid;
+}
+
+.donation-dashboard-component .dd-alert-success {
+  background: #ecfdf5;
+  border-color: #bbf7d0;
+  color: #065f46;
+}
+
+.donation-dashboard-component .dd-alert-error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.donation-dashboard-component .dd-alert-warning {
+  background: #fffbeb;
+  border-color: #fed7aa;
+  color: #92400e;
+}
+
+.donation-dashboard-component .dd-alert-info {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e40af;
+}
+
+/* Map Container */
+.donation-dashboard-component .dd-map-container {
+  height: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--dd-border);
+  margin-top: 8px;
+}
+
+.donation-dashboard-component .dd-map-container .dd-map {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Image Upload */
+.donation-dashboard-component .dd-image-upload {
+  border: 2px dashed var(--dd-border);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  background: var(--dd-bg-secondary);
+  transition: border-color 0.2s ease;
+}
+
+.donation-dashboard-component .dd-image-upload:hover {
+  border-color: var(--dd-primary);
+}
+
+.donation-dashboard-component .dd-image-upload.dd-dragover {
+  border-color: var(--dd-primary);
+  background: #eff6ff;
+}
+
+.donation-dashboard-component .dd-image-preview {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.donation-dashboard-component .dd-image-preview-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--dd-border);
+}
+
+.donation-dashboard-component .dd-image-preview-item img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.donation-dashboard-component .dd-image-preview-item .dd-remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--dd-danger);
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .donation-dashboard-component .dd-edit-center-container {
+    padding: 15px;
+  }
+  
+  .donation-dashboard-component .dd-edit-center-form {
+    padding: 20px;
+  }
+  
+  .donation-dashboard-component .dd-form-actions {
+    flex-direction: column;
+  }
+  
+  .donation-dashboard-component .dd-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

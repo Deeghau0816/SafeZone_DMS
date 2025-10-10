@@ -1,7 +1,24 @@
-/* Distributionplan.css */
+/* Distributionplan.css - SCOPED CSS
+   Only affects files in Donation folder */
 
-/* Modal shell - ensure highest specificity */
-.dp-modal-backdrop {
+/* Scoped CSS Variables */
+.donation-component {
+  --don-primary: #2563eb;
+  --don-primary-hover: #1d4ed8;
+  --don-danger: #dc2626;
+  --don-success: #16a34a;
+  --don-warning: #f59e0b;
+  --don-muted: #6b7280;
+  --don-border: #e5e7eb;
+  --don-bg: #ffffff;
+  --don-bg-secondary: #f9fafb;
+  --don-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --don-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --don-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Modal shell - ensure highest specificity - SCOPED */
+.donation-component .dp-modal-backdrop {
   position: fixed !important;
   inset: 0 !important;
   display: grid !important;
@@ -12,7 +29,7 @@
   -webkit-backdrop-filter: blur(2px);
 }
 
-.dp-modal-body {
+.donation-component .dp-modal-body {
   position: relative !important;
   background: #fff !important;
   border: 1px solid #e5e7eb !important;
@@ -26,8 +43,8 @@
   margin: auto !important;
 }
 
-/* Close button - highest specificity to prevent override */
-.dp-modal-close {
+/* Close button - highest specificity to prevent override - SCOPED */
+.donation-component .dp-modal-close {
   position: absolute !important;
   top: 12px !important;
   right: 12px !important;

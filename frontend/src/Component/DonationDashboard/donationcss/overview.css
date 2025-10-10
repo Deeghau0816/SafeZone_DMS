@@ -1,34 +1,46 @@
-/* C:\Users\Dell\OneDrive\Desktop\ngo\frontend\src\Component\DonationDashboard\donationcss\overview.css */
+/* Scoped CSS for DonationDashboard Overview - Only affects files in DonationDashboard folder */
+.donation-dashboard-component {
+  /* CSS Variables scoped to donation dashboard */
+  --dd-bg: #f7f9fc;
+  --dd-text: #1a202c;
+  --dd-muted: #718096;
+  --dd-border: #e0e7f7;
+  --dd-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  --dd-primary: #3182ce;
+  --dd-warning: #dd6b20;
+  --dd-success: #38a169;
+  --dd-info: #4a5568;
+}
 
-.dd-overview-panel {
+.donation-dashboard-component .dd-overview-panel {
     padding: 20px 30px;
-    background-color: #f7f9fc; /* Light background for the whole panel */
+    background-color: var(--dd-bg); /* Light background for the whole panel */
     min-height: 100vh;
 }
 
 /* --- Header Styling --- */
-.dd-header-top {
+.donation-dashboard-component .dd-header-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
     padding-bottom: 15px;
-    border-bottom: 2px solid #e0e7f7;
+    border-bottom: 2px solid var(--dd-border);
 }
 
-.dd-title-group h1 {
+.donation-dashboard-component .dd-title-group h1 {
     margin: 0;
     font-size: 2.2em;
-    color: #1a202c;
+    color: var(--dd-text);
 }
 
-.dd-title-group p {
+.donation-dashboard-component .dd-title-group p {
     margin: 5px 0 0;
-    color: #718096;
+    color: var(--dd-muted);
     font-size: 1em;
 }
 
-.dd-refresh-btn {
+.donation-dashboard-component .dd-refresh-btn {
     display: flex;
     align-items: center;
     padding: 8px 15px;
@@ -41,79 +53,78 @@
     font-weight: 600;
 }
 
-.dd-refresh-btn:hover {
+.donation-dashboard-component .dd-refresh-btn:hover {
     background: #edf2f7;
     border-color: #a0aec0;
 }
 
-.dd-section-title {
+.donation-dashboard-component .dd-section-title {
     font-size: 1.5em;
     color: #2d3748;
     margin-top: 35px;
     margin-bottom: 15px;
-    border-left: 4px solid #3182ce;
+    border-left: 4px solid var(--dd-primary);
     padding-left: 10px;
 }
 
 /* --- Stats Grid Styling --- */
 
-.dd-overview-grid {
+.donation-dashboard-component .dd-overview-grid {
     display: grid;
     gap: 20px;
     margin-bottom: 40px;
 }
 
 /* Custom grid for the first row (3 large cards) */
-.dd-row-1 {
+.donation-dashboard-component .dd-row-1 {
     grid-template-columns: repeat(3, 1fr);
 }
 
 /* Custom grid for the second row (2 simple cards, 1 double-span card) */
-.dd-row-2 {
-    grid-template-columns: repeat(4, 1fr);
+.donation-dashboard-component .dd-row-2 {
+    grid-template-columns: repeat(2, 1fr);
 }
 
 /* Custom grid for the third row (1 BarChart (span 2) and 2 PieCharts (span 1)) */
-.dd-row-3 {
+.donation-dashboard-component .dd-row-3 {
     grid-template-columns: repeat(4, 1fr);
 }
 
-.dd-grid-span-2 {
+.donation-dashboard-component .dd-grid-span-2 {
     grid-column: span 2;
 }
-.dd-grid-span-1 {
+.donation-dashboard-component .dd-grid-span-1 {
     grid-column: span 1;
 }
 
-
 /* --- Stat Card Base --- */
-.dd-stat-card {
+.donation-dashboard-component .dd-stat-card {
     background: #ffffff;
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--dd-shadow);
     transition: transform 0.2s, box-shadow 0.2s;
     text-align: center;
     border-left: 5px solid; /* For colored side border */
 }
 
-.dd-stat-card:hover {
+.donation-dashboard-component .dd-stat-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
-.dd-stat-icon {
+.donation-dashboard-component .dd-stat-icon {
     font-size: 2em;
     margin-bottom: 8px;
 }
 
-.dd-stat-number {
+.donation-dashboard-component .dd-stat-number {
     font-size: 2.8em;
     font-weight: 800;
     line-height: 1.1;
 }
 
-.dd-stat-label {
+.donation-dashboard-component .dd-stat-label {
     font-size: 0.9em;
     color: #666;
     margin-top: 5px;
@@ -122,35 +133,35 @@
 }
 
 /* --- Stat Card Colors --- */
-.dd-stat-primary { border-left-color: #3182ce; } /* Blue */
-.dd-stat-primary .dd-stat-number { color: #3182ce; }
+.donation-dashboard-component .dd-stat-primary { border-left-color: var(--dd-primary); } /* Blue */
+.donation-dashboard-component .dd-stat-primary .dd-stat-number { color: var(--dd-primary); }
 
-.dd-stat-warning { border-left-color: #dd6b20; } /* Orange */
-.dd-stat-warning .dd-stat-number { color: #dd6b20; }
+.donation-dashboard-component .dd-stat-warning { border-left-color: var(--dd-warning); } /* Orange */
+.donation-dashboard-component .dd-stat-warning .dd-stat-number { color: var(--dd-warning); }
 
-.dd-stat-success { border-left-color: #38a169; } /* Green */
-.dd-stat-success .dd-stat-number { color: #38a169; }
+.donation-dashboard-component .dd-stat-success { border-left-color: var(--dd-success); } /* Green */
+.donation-dashboard-component .dd-stat-success .dd-stat-number { color: var(--dd-success); }
 
-.dd-stat-info { border-left-color: #4a5568; } /* Gray/Info */
-.dd-stat-info .dd-stat-number { color: #4a5568; }
+.donation-dashboard-component .dd-stat-info { border-left-color: var(--dd-info); } /* Gray/Info */
+.donation-dashboard-component .dd-stat-info .dd-stat-number { color: var(--dd-info); }
 
-.dd-stat-bold .dd-stat-number {
+.donation-dashboard-component .dd-stat-bold .dd-stat-number {
     font-size: 3.2em;
 }
 
 /* --- Chart Card Styling --- */
 
-.dd-chart-card {
+.donation-dashboard-component .dd-chart-card {
     background: #ffffff;
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--dd-shadow);
     height: 100%; /* Important for grid spanning */
     display: flex;
     flex-direction: column;
 }
 
-.dd-chart-title {
+.donation-dashboard-component .dd-chart-title {
     font-size: 1.1em;
     color: #2d3748;
     margin-top: 0;
@@ -160,7 +171,7 @@
     text-align: center;
 }
 
-.dd-chart-footer {
+.donation-dashboard-component .dd-chart-footer {
     font-size: 0.75rem;
     color: #a0aec0;
     text-align: center;
@@ -168,7 +179,8 @@
 }
 
 /* Loading/Error Styles */
-.dd-loading, .dd-error {
+.donation-dashboard-component .dd-loading, 
+.donation-dashboard-component .dd-error {
     text-align: center;
     padding: 100px 20px;
     font-size: 1.2em;
@@ -176,21 +188,53 @@
     background: #ffffff;
     border-radius: 12px;
     margin: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--dd-shadow);
 }
 
-.dd-error p {
+.donation-dashboard-component .dd-error p {
     color: #e53e3e;
     font-weight: 600;
 }
 
-.dd-loading p {
-    color: #3182ce;
-}
-.dd-row-2 {
-  grid-template-columns: repeat(2, 1fr);
+.donation-dashboard-component .dd-loading p {
+    color: var(--dd-primary);
 }
 
-.dd-grid-span-2 {
-  grid-column: span 2;  /* Each card now takes the full row */
+/* Responsive Design */
+@media (max-width: 768px) {
+    .donation-dashboard-component .dd-row-1,
+    .donation-dashboard-component .dd-row-2,
+    .donation-dashboard-component .dd-row-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    .donation-dashboard-component .dd-grid-span-2 {
+        grid-column: span 1;
+    }
+    
+    .donation-dashboard-component .dd-overview-panel {
+        padding: 15px 20px;
+    }
+    
+    .donation-dashboard-component .dd-header-top {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .donation-dashboard-component .dd-title-group h1 {
+        font-size: 1.8em;
+    }
+    
+    .donation-dashboard-component .dd-section-title {
+        font-size: 1.3em;
+    }
+    
+    .donation-dashboard-component .dd-stat-number {
+        font-size: 2.2em;
+    }
+    
+    .donation-dashboard-component .dd-chart-card {
+        padding: 15px;
+    }
 }
