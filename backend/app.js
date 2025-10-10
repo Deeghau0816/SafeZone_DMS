@@ -43,11 +43,15 @@ const PORT = process.env.PORT || 5000;
 app.set("trust proxy", 1);
 
 // Accept both 3000 (CRA) and 5173 (Vite) in dev
+// ✅ CHANGED: include APP_BASE_URL from .env and your LAN URLs
 const ALLOWED_ORIGINS = [
+  process.env.APP_BASE_URL,                  // from .env (e.g., http://192.168.136.99:3000)
   process.env.FRONTEND_ORIGIN || "http://localhost:3000",
   "http://localhost:3001",
-  "http://localhost:5173"
-];
+  "http://localhost:5173",
+  "http://192.168.136.99:3000",             // your LAN FE
+  "http://192.168.136.99:5173"              // if you use Vite on LAN
+].filter(Boolean);
 
 // Prefer DB from .env; fall back to local dev
 const MONGO_URL =
@@ -101,7 +105,7 @@ app.use(session({
 const UPLOAD_DIR = path.join(process.cwd(), "uploads");
 const DAMAGE_UPLOAD_DIR = path.join(UPLOAD_DIR, "damage");
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-if (!fs.existsSync(DAMAGE_UPLOAD_DIR)) fs.mkdirSync(DAMAGE_UPLOAD_DIR, { recursive: true });
+if (!fs.existsSync(DAMAGE_UPLOAD_DIR)) fs.mkdirMakeDirs?.(DAMAGE_UPLOAD_DIR) || fs.mkdirSync(DAMAGE_UPLOAD_DIR, { recursive: true });
 app.use("/uploads", express.static(UPLOAD_DIR));
 
 /* ---------------- Health check -------------------------- */
@@ -237,10 +241,14 @@ let reconnectAttempts = 0;
 const maxReconnectAttempts = 5;
 const reconnectDelay = 5000;
 
+// ✅ CHANGED: bind to 0.0.0.0 and log API_BASE_URL if present
 function startServer() {
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
-    console.log(`📊 Health: http://localhost:${PORT}/health`);
+  const HOST = "0.0.0.0";
+  const base = process.env.API_BASE_URL || `http://localhost:${PORT}`;
+
+  app.listen(PORT, HOST, () => {
+    console.log(`🚀 Server running at ${base}`);
+    console.log(`📊 Health: ${base}/health`);
   });
 
   // start the Sri Lanka country-wide broadcast cron
