@@ -4,6 +4,17 @@ import axios from "axios";
 import success from "../images/success.png";
 import "./Everify.css";
 
+function getApiBase() {
+  // Vite first, then CRA, then a safe fallback using the current host on port 5000
+  const vite = typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_URL;
+  const cra  = typeof process !== "undefined" && process.env && process.env.REACT_APP_API_URL;
+
+  // If neither env is set, build http://<current-host>:5000
+  const fallback = `${window.location.protocol}//${window.location.hostname}:5000`;
+
+  return (vite || cra || fallback).replace(/\/+$/, "");
+}
+
 const Everify = () => {
   const [status, setStatus] = useState("loading"); // "loading" | "success" | "error"
   const { id, token } = useParams();
@@ -11,18 +22,32 @@ const Everify = () => {
 
   useEffect(() => {
     let timer;
+
     const verifyEmailUrl = async () => {
       try {
-        const url = `http://localhost:5000/users/${id}/verify/${token}`;
-        const { data } = await axios.get(url);
-        console.log("✅ Verification response:", data);
+        if (!id || !token) {
+          setStatus("error");
+          return;
+        }
 
-        setStatus("success");
+        const apiBase = getApiBase();
+        const url = `${apiBase}/users/${id}/verify/${token}`;
 
-        // redirect after 3 sec
-        timer = setTimeout(() => navigate("/UserLogin"), 3000);
+        // withCredentials in case your API uses cookie sessions
+        const res = await axios.get(url, { withCredentials: true, timeout: 15000 });
+
+        // Treat any 2xx (and even 3xx followed by axios auto-follow) as success
+        if (res && res.status >= 200 && res.status < 400) {
+          console.log("✅ Verification response:", res.data);
+          setStatus("success");
+          // redirect after a short delay
+          timer = setTimeout(() => navigate("/UserLogin"), 1500);
+        } else {
+          console.warn("Unexpected verification status:", res?.status);
+          setStatus("error");
+        }
       } catch (error) {
-        console.error("Verification error:", error);
+        console.error("Verification error:", error?.response?.data || error.message);
         setStatus("error");
       }
     };

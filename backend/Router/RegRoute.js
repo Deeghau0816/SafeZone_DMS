@@ -1,3 +1,4 @@
+// Router/RegRoute.js
 const express = require("express");
 const router = express.Router();
 const crypto = require("crypto");
@@ -7,7 +8,7 @@ const Token = require("../models/token");
 const sendEmail = require("../utils/sendEmail");
 const User = require("../models/RegModel"); // model exports the User directly
 
-// ---------- helpers ----------
+/* ---------------- Helpers ---------------- */
 function isEmail(s = "") {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s));
 }
@@ -19,13 +20,30 @@ function requireUser(req, res, next) {
   return res.status(401).json({ ok: false, message: "Not authenticated" });
 }
 
-// ---------- session whoami ----------
+/**
+ * Safely build an absolute URL:
+ * - Prefer API_BASE_URL (backend host) for backend routes
+ * - If missing, fall back to APP_BASE_URL / FRONTEND_ORIGIN / current host
+ * - Joins segments without double slashes
+ */
+function buildUrl(req, ...parts) {
+  const base =
+    process.env.API_BASE_URL ||                 // e.g., http://192.168.136.99:5000  (or your tunnel)
+    process.env.APP_BASE_URL ||                 // optional, if you prefer frontend host
+    process.env.FRONTEND_ORIGIN ||
+    `${req.protocol}://${req.get("host")}`;
+
+  const segs = parts.map((p) => String(p).replace(/^\/+|\/+$/g, ""));
+  return [base.replace(/\/+$/, ""), ...segs].join("/");
+}
+
+/* ---------------- Session whoami ---------------- */
 router.get("/me", (req, res) => {
   if (req.session?.user) return res.json({ ok: true, user: req.session.user });
   return res.status(401).json({ ok: false, user: null });
 });
 
-// ---------- LOGIN ----------
+/* ---------------- LOGIN ---------------- */
 router.post("/login", async (req, res) => {
   try {
     const email = String(req.body.email || "").toLowerCase().trim();
@@ -72,7 +90,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// ---------- LOGOUT ----------
+/* ---------------- LOGOUT ---------------- */
 router.post("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) return res.status(500).json({ ok: false, message: "Logout failed" });
@@ -81,7 +99,7 @@ router.post("/logout", (req, res) => {
   });
 });
 
-// ---------- REGISTER ----------
+/* ---------------- REGISTER ---------------- */
 router.post("/", async (req, res) => {
   try {
     const required = [
@@ -119,7 +137,9 @@ router.post("/", async (req, res) => {
             token: crypto.randomBytes(32).toString("hex"),
           }).save();
         }
-        const url = `${process.env.BASE_URL}/users/${user.id}/verify/${token.token}`;
+
+        // Build backend verify URL (users/:id/verify/:token)
+        const url = buildUrl(req, "users", user.id, "verify", token.token);
 
         try {
           await sendEmail(user.email, "Verify Email", url);
@@ -160,7 +180,8 @@ router.post("/", async (req, res) => {
       token: crypto.randomBytes(32).toString("hex"),
     }).save();
 
-    const url = `${process.env.BASE_URL}/users/${user.id}/verify/${token.token}`;
+    // Build backend verify URL (users/:id/verify/:token)
+    const url = buildUrl(req, "users", user.id, "verify", token.token);
 
     try {
       await sendEmail(user.email, "Verify Email", url);
@@ -182,7 +203,10 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ---------- VERIFY EMAIL ----------
+/* ---------------- VERIFY EMAIL ----------------
+   Clicking the email link hits the BACKEND verify route.
+   On success, we redirect to your login page.
+------------------------------------------------ */
 router.get("/:id/verify/:token", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -194,6 +218,17 @@ router.get("/:id/verify/:token", async (req, res) => {
     await User.updateOne({ _id: user._id }, { $set: { verified: true } });
     await Token.deleteOne({ _id: token._id });
 
+    // Redirect to FE login page
+    const appBase =
+      process.env.APP_BASE_URL ||
+      process.env.FRONTEND_ORIGIN ||
+      ""; // fallback to JSON if not set
+
+    if (appBase) {
+      const to = `${appBase.replace(/\/+$/, "")}/UserLogin?verified=1`;
+      return res.redirect(302, to);
+    }
+
     return res.status(200).json({ ok: true, message: "Email verified successfully" });
   } catch (error) {
     console.error("[VERIFY] error:", error);
@@ -201,12 +236,11 @@ router.get("/:id/verify/:token", async (req, res) => {
   }
 });
 
-/* ---------------------------------------------------
-   SELF-DELETE (must be BEFORE the param :userId routes)
----------------------------------------------------- */
+/* ---------------- SELF-DELETE ---------------- */
 /**
  * DELETE /users/me
  * Deletes the currently logged-in user's account and logs them out.
+ * (must be BEFORE the param :userId routes)
  */
 router.delete("/me", requireUser, async (req, res) => {
   try {
@@ -224,7 +258,7 @@ router.delete("/me", requireUser, async (req, res) => {
   }
 });
 
-// ---------- CRUD (admin/utility) ----------
+/* ---------------- CRUD (admin/utility) ---------------- */
 // NOTE: keep fixed routes above; param route last to avoid conflicts.
 const RegControl = require("../Controllers/RegControl");
 router.get("/", RegControl.getAllUsers);
