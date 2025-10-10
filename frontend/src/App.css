@@ -77,3 +77,6 @@ code {
   background-color: #0056b3;
 }
 
+.main-content {
+  margin-top: 64px; /* Adjust this value to match your header's height */
+}

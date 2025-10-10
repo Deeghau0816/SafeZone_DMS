@@ -1,6 +1,6 @@
 // src/App.js
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import "./App.css";
 
 /* ----------- Shared layout ----------- */
@@ -19,6 +19,9 @@ import AdminRegitration from "./Components/Admins/AdminRegitration";
 import AdminLogin from "./Components/Admins/AdminLogin";
 import AdminProfile from "./Components/Admins/AdminProfile";
 
+/* ----------- Reports ----------- */
+import ReportGenerator from "./Components/Reports/ReportGenarator";
+
 /* ----------- User features ----------- */
 import UserAlerts from "./Components/UserAlertFolder/UserAlerts";
 import Registration from "./Components/UserRegFolder/Registation";
@@ -30,12 +33,12 @@ import UserProfile from "./Components/UserRegFolder/UserProfile";
 import MapComponent from "./Components/map/map";
 import UserMap from "./Components/map/UserMap";
 import PinDetails from "./Components/map/PinDetails";
-import ContactForm from "./Components/Conatct/ContactForm";   // note: 'Conatct'
+import ContactForm from "./Components/Conatct/ContactForm";
 import ContactList from "./Components/Conatct/ContactList";
 import SimpleDashboard from "./Components/Dashboard/SimpleDashboard";
 
 /* ----------- Victim Dashboard ----------- */
-import Dashboard from "./Component/VictimDashboard/Dashboard"; // note: 'Component'
+import Dashboard from "./Component/VictimDashboard/Dashboard";
 import Report from "./Component/VictimDashboard/ReportDisaster/Report";
 import ReadReport from "./Component/VictimDashboard/ReportDisaster/ReadReport";
 import EditReport from "./Component/VictimDashboard/ReportDisaster/EditReport";
@@ -83,10 +86,24 @@ export default function App() {
   return (
     <>
       <Header />
-      <Routes>
+      <Outlet />
+      <Footer />
+    </>
+  );
+}
+
+// Admin area without global Header/Footer (you can add a dedicated AdminHeader later)
+function AdminLayout() {
+  return <Outlet />;
+}
+
+export default function App() {
+  return (
+    <Routes>
+      {/* Public site layout (shows Header + Footer) */}
+      <Route element={<PublicLayout />}>
         {/* Root home */}
         <Route path="/" element={<MainHome />} />
-
         {/* Old /Home links → redirect to root */}
         <Route path="/Home" element={<Navigate to="/" replace />} />
 
@@ -96,20 +113,6 @@ export default function App() {
         <Route path="/UserLogin" element={<UserLogin />} />
         <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
         <Route path="/UserProfile" element={<UserProfile />} />
-
-        {/* Admin auth */}
-        <Route path="/AdminLogin" element={<AdminLogin />} />
-
-        {/* Admin dashboard (nested) */}
-        <Route path="/AdminHome" element={<AdminHome />}>
-          <Route index element={<AdminAlert />} />
-          <Route path="toAlerts" element={<AdminAlert />} />
-          <Route path="alerts/:severity" element={<AdminAlert />} />
-          <Route path="AlertAdd" element={<AlertAdd />} />
-          <Route path="UpdateAlert/:id" element={<UpdateAlert />} />
-          <Route path="AdminRegitration" element={<AdminRegitration />} />
-          <Route path="AdminProfile" element={<AdminProfile />} />
-        </Route>
 
         {/* Map / Contact / Simple dashboard */}
         <Route path="/admin-dashboard" element={<SimpleDashboard />} />
@@ -140,57 +143,30 @@ export default function App() {
         <Route path="/deployments" element={<Deployments />} />
         <Route path="/response" element={<ResponseDashboard />} />
 
-        {/* Donation Dashboard Routes */}
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          {/* Default dashboard page */}
-          <Route index element={<Overview />} />
-          <Route path="overview" element={<Overview />} />
+        {/* Public reports page */}
+        <Route path="/reports" element={<ReportGenerator />} />
+      </Route>
 
-          {/* Donations */}
-          <Route path="donations" element={<DonationsPanel />} />
-          <Route path="donations/top" element={<TopDonorsPage />} />
-          <Route path="donations/:id/edit" element={<DonationEditPage />} />
-
-          {/* Disasters */}
-          <Route path="disasters" element={<Navigate to="disasters/active" replace />} />
-          <Route path="disasters/active" element={<ActiveDisasterPanel />} />
-
-          {/* Inventory & Centers */}
-          <Route path="inventory" element={<InventoryPanel />} />
-          <Route path="centers" element={<CentersPanel />} />
-          <Route path="centers/:id/edit" element={<EditCenter />} />
-
-          {/* Volunteers */}
-          <Route path="volunteers" element={<VolunteersPanel />} />
-          <Route path="volunteers/:id/edit" element={<EditVolunteerPage />} />
-
-          {/* Distribution */}
-          <Route path="distribution" element={<DistributionPanel />} />
-
-          {/* Operations */}
-          <Route path="operations" element={<Operation />} />
-          
-          {/* NGO Past */}
-          <Route path="ngopast" element={<Ngopast />} />
+      {/* Admin layout (NO Header/Footer) */}
+      <Route element={<AdminLayout />}>
+        {/* Admin auth */}
+        <Route path="/AdminLogin" element={<AdminLogin />} />
+        
+        {/* Admin dashboard (nested) */}
+        <Route path="/AdminHome" element={<AdminHome />}>
+          <Route index element={<AdminAlert />} />
+          <Route path="toAlerts" element={<AdminAlert />} />
+          <Route path="alerts/:severity" element={<AdminAlert />} />
+          <Route path="AlertAdd" element={<AlertAdd />} />
+          <Route path="UpdateAlert/:id" element={<UpdateAlert />} />
+          <Route path="AdminRegitration" element={<AdminRegitration />} />
+          <Route path="AdminProfile" element={<AdminProfile />} />
+          <Route path="ReportGenerator" element={<ReportGenerator />} />
         </Route>
+      </Route>
 
-        {/* Standalone donation dashboard routes */}
-        <Route path="/dashboard/target-inventory" element={<TargetInventory />} />
-        <Route path="/distributionquantitychart" element={<DistributionQuantityChart />} />
-
-        {/* Public Donation Pages */}
-        <Route path="/donation" element={<Donation />} />
-        <Route path="/donation/new" element={<Donationform />} />
-        <Route path="/donation/disasters/admin" element={<Ngodisaster />} />
-        <Route path="/donateitemform" element={<DonateItemForm />} />
-        <Route path="/distribution" element={<DistributionPlan />} />
-        <Route path="/centers" element={<Centers />} />
-        <Route path="/volunteers" element={<Volunteer />} />
-
-        {/* Fallback → root */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-      <Footer />
-    </>
+      {/* Fallback → root */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }

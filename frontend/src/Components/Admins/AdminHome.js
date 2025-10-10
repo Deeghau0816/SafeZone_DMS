@@ -321,6 +321,9 @@ export default function AdminHome() {
                     <Link className="ah-q" to="/AdminHome/AdminRegitration">
                       Admin Registration
                     </Link>
+                    <Link className="ah-q" to="/AdminHome/ReportGenerator">
+                      Alert Report
+                    </Link>
                   </div>
                 </div>
               </div>

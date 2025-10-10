@@ -1,154 +1,183 @@
-/* Re-using your existing styles and a tiny active state */
+/* Admin top bar */
 .nav {
-    background: #1e293b;
-    color: #fff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  background: #1e293b;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+
+  /* prevent margin-collapsing/top gap; keep bar stuck on top */
+  display: flow-root;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* simple wrapper to avoid accidental margins */
+.wrap {
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
 .nav-in {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
 }
 
 .brand {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.2rem;
 }
 
-.logo {
-    background: #3b82f6;
-    color: #fff;
-    font-weight: 700;
-    padding: 6px 10px;
-    border-radius: 8px;
+/* image logo */
+.logo-img {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .links {
-    display: flex;
-    align-items: center;
-    gap: 18px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
 }
 
 .link {
-    color: #e2e8f0;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s;
+  color: #e2e8f0;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
 }
 
 .link:hover,
 .link.active {
-    color: #22c55e;
+  color: #22c55e;
 }
 
+/* generic button from your set; still used elsewhere */
 .btn {
-    background: #3b82f6;
-    color: white;
-    padding: 6px 14px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: background 0.2s;
+  background: #3b82f6;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s;
 }
 
 .btn:hover {
-    background: #2563eb;
+  background: #2563eb;
 }
 
-.user {
-    position: relative;
-}
+.user { position: relative; }
 
 .ubtn {
-    background: transparent;
-    border: none;
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
+  background: transparent;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
 }
 
 .ava {
-    width: 32px;
-    height: 32px;
-    background: #3b82f6;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    font-weight: 700;
-    color: white;
+  width: 32px;
+  height: 32px;
+  background: #3b82f6;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: white;
 }
 
-.ava.big {
-    width: 48px;
-    height: 48px;
-    font-size: 1.2rem;
-}
+.ava.big { width: 48px; height: 48px; font-size: 1.2rem; }
 
 .menu {
-    position: absolute;
-    top: 48px;
-    right: 0;
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    width: 220px;
-    z-index: 10;
-    animation: fadeIn 0.2s ease;
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  width: 220px;
+  z-index: 10;
+  animation: fadeIn 0.2s ease;
 }
 
 .umeta {
-    display: flex;
-    gap: 10px;
-    padding: 14px;
-    border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  gap: 10px;
+  padding: 14px;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-.uname {
-    font-weight: 600;
-}
-
-.usub {
-    font-size: 0.82rem;
-    color: #64748b;
-}
+.uname { font-weight: 600; }
+.usub { font-size: 0.82rem; color: #64748b; }
 
 .mitem {
-    display: block;
-    padding: 10px 16px;
-    text-decoration: none;
-    color: #1e293b;
-    font-size: 0.9rem;
-    transition: background 0.2s;
-    width: 100%;
-    text-align: left;
+  display: block;
+  padding: 10px 16px;
+  text-decoration: none;
+  color: #1e293b;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+  width: 100%;
+  text-align: left;
 }
 
-.mitem:hover {
-    background: #f1f5f9;
-}
-
-.mitem.bad {
-    color: #dc2626;
-}
+.mitem:hover { background: #f1f5f9; }
+.mitem.bad { color: #dc2626; }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-5px);
-    }
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* ================================
+   Uiverse-style teal LOGIN button
+   ================================ */
+.btn-admin-login {
+  background-color: #00BFA6;
+  padding: 14px 40px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 2px dashed #00BFA6;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+              rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  transition: .4s;
+  text-decoration: none;         /* because it's a Link */
+  font-weight: 700;
+  display: inline-flex;          /* match provided look */
+  align-items: center;
+  gap: 8px;
+  line-height: 1;                /* match button baseline */
+}
+
+/* the original pattern hides the last span; included for parity */
+.btn-admin-login span:last-child {
+  display: none;
+}
+
+.btn-admin-login:hover {
+  transition: .4s;
+  border: 2px dashed #00BFA6;
+  background-color: #fff;
+  color: #00BFA6;
+}
+
+.btn-admin-login:active {
+  background-color: #87dbd0;
 }

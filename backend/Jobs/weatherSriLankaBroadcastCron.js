@@ -10,6 +10,11 @@ const sendEmail = require("../utils/sendEmail");
 const { getAlertsForLatLon } = require("../Services/openweather");
 const { countryDigestHTML } = require("../Services/templates");
 
+// ---- Configs / Flags --------------------------------------------------------
+const KEY = "LKA_COUNTRY_ALERT_HASH";
+const TZ = process.env.LKA_TZ || "Asia/Colombo"; // schedule in Sri Lanka time
+const ALWAYS_EMAIL_NO_ALERTS = process.env.LKA_ALWAYS_EMAIL_NO_ALERTS === "true";
+
 // 25 districts (representative lat/lon)
 const DISTRICT_LL = {
   Ampara:{lat:7.3018,lon:81.6747}, Anuradhapura:{lat:8.3114,lon:80.4037},
@@ -27,12 +32,14 @@ const DISTRICT_LL = {
   Vavuniya:{lat:8.7542,lon:80.4989}
 };
 
-const KEY = "LKA_COUNTRY_ALERT_HASH";
-
-// stable short hash for objects
+// ---- Helpers ----------------------------------------------------------------
 const hash = (obj) =>
   crypto.createHash("sha1").update(JSON.stringify(obj)).digest("hex").slice(0, 16);
 
+const isValidEmail = (s) =>
+  typeof s === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+
+// Build national digest
 async function scanSriLanka() {
   const digest = [];
 
@@ -46,8 +53,8 @@ async function scanSriLanka() {
             source: a.source,
             event: a.event,
             description: a.description,
-            severity: a.severity,
-          })),
+            severity: a.severity
+          }))
         });
       }
     } catch (e) {
@@ -55,7 +62,6 @@ async function scanSriLanka() {
     }
   }
 
-  // sort for stable ordering
   digest.sort((a, b) => a.district.localeCompare(b.district));
   return { digest, countryHash: hash(digest) };
 }
@@ -76,45 +82,58 @@ async function runBroadcastCycle({ force = false } = {}) {
     return;
   }
 
-  // Update stored state
+  // Update stored state (even if empty)
   await SystemState.findOneAndUpdate(
     { key: KEY },
     { $set: { value: { hash: countryHash, at: new Date().toISOString(), digest } } },
     { upsert: true }
   );
 
-  if (!digest.length) {
-    console.log("[weatherLKA] no active alerts; not emailing (by design).");
+  // If there are no alerts, only proceed when forced or env flag says to
+  if (!digest.length && !force && !ALWAYS_EMAIL_NO_ALERTS) {
+    console.log("[weatherLKA] no active alerts; not emailing (by design). Set LKA_ALWAYS_EMAIL_NO_ALERTS=true or use force.");
     return;
   }
 
-  // build digest email
+  // Build digest email (footer reason optional if your template supports it)
   const html = countryDigestHTML({
     title: force ? "⚠️ Sri Lanka Weather Alerts (Forced Update)" : "⚠️ Sri Lanka Weather Alerts Update",
-    items: digest,
+    items: digest
+    // reason: force ? "forced update" : (!digest.length ? "daily status (no active alerts)" : "alerts update")
   });
 
-  const users = await User.find({ alertsEnabled: true }, { email: 1, firstName: 1 });
-  console.log(`[weatherLKA] broadcasting to users: ${users.length}`);
+  // 🔔 SEND TO ALL USERS (not just alertsEnabled)
+  const usersRaw = await User.find({}, { email: 1, firstName: 1 }).lean();
+  const users = usersRaw.filter(u => isValidEmail(u.email));
+  const invalid = usersRaw.length - users.length;
+  console.log(`[weatherLKA] recipients discovered: ${usersRaw.length}, valid: ${users.length}, invalid: ${invalid}`);
 
+  let sent = 0, failed = 0;
   for (const u of users) {
     try {
       await sendEmail(u.email, "⚠️ Sri Lanka Weather Alerts Update", html);
       console.log(`[weatherLKA] sent -> ${u.email}`);
+      sent++;
     } catch (e) {
       console.error("[weatherLKA] send error:", u.email, e.message);
+      failed++;
     }
   }
 
-  console.log("[weatherLKA] broadcast cycle end");
+  console.log("[weatherLKA] broadcast cycle end", { sent, failed });
 }
 
 function startSriLankaBroadcastCron() {
   console.log("[weatherLKA] scheduler starting (*/30 * * * *)");
-  cron.schedule("*/30 * * * *", () => {
-    console.log("[weatherLKA] cron tick");
-    runBroadcastCycle().catch(err => console.error("[weatherLKA] run error:", err));
-  });
+  cron.schedule(
+    "*/30 * * * *",
+    () => {
+      console.log("[weatherLKA] cron tick");
+      runBroadcastCycle().catch(err => console.error("[weatherLKA] run error:", err));
+    },
+    { timezone: TZ } // ✅ run on Sri Lanka time
+  );
+
   // also run once on boot
   runBroadcastCycle().catch(err => console.error("[weatherLKA] initial run error:", err));
 }
@@ -132,5 +151,5 @@ module.exports = {
   startSriLankaBroadcastCron,
   __runOnceLKA: runBroadcastCycle,
   __forceBroadcastOnce: forceBroadcastOnce,
-  __clearCountryState: clearCountryState,
+  __clearCountryState: clearCountryState
 };

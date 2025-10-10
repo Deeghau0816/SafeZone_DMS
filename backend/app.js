@@ -1,5 +1,3 @@
-// app.js (merged)
-// -------------------------------------------------
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, ".env") });
 
@@ -25,18 +23,28 @@ const teamLocationRoutes = require("./Router/TeamLocationRoutes");
 const { listAids } = require("./Controllers/AidController");
 const damageCtrl = require("./Controllers/DamageController");
 
-// ---------------- Theirs (+ your project) routers ----------
-const adminAuthRoutes = require("./Router/AdminRoute");
-const alertRoutes     = require("./Router/AlertRoute");
-const userRoutes      = require("./Router/RegRoute");
-const testRoutes      = require("./Router/testRoute");
+/* Aliases / controllers exposed as plain handlers */
+const { listAids }       = require("./Controllers/AidController");
+const damageCtrl         = require("./Controllers/DamageController");
 
-// Country-wide broadcast cron
+/* Legacy/external groups */
+const adminAuthRoutes    = require("./Router/AdminRoute");
+const alertRoutes        = require("./Router/AlertRoute");
+const userRoutes         = require("./Router/RegRoute");
+const testRoutes         = require("./Router/testRoute");
+
+/* Reports API */
+const reportsRoutes      = require("./Router/ReportRoute");
+
+/* Country-wide broadcast cron */
 const { startSriLankaBroadcastCron } = require("./Jobs/weatherSriLankaBroadcastCron");
 
-// ---------------- Config ----------------------------------
-const app = express();
+/* ---------------- Config -------------------------------- */
+const app  = express();
 const PORT = process.env.PORT || 5000;
+
+// If you ever run behind a proxy/HTTPS (nginx, vercel), keep cookies working.
+app.set("trust proxy", 1);
 
 // Accept both 3000 (CRA) and 5173 (Vite) in dev
 const ALLOWED_ORIGINS = [
@@ -55,46 +63,52 @@ const MONGO_URL =
 const redactCreds = (s = "") => s.replace(/\/\/.*?:.*?@/, "//***:***@");
 console.log("[BOOT] Using Mongo URL:", redactCreds(MONGO_URL));
 
-// ---------------- Core middleware -------------------------
-app.use(
-  cors({
-    origin: ALLOWED_ORIGINS,
-    credentials: true,
-  })
-);
+/* ---------------- Core middleware ----------------------- */
+// CORS: allow your FE origins; also allow no-origin tools (curl/Postman)
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true); // curl / Postman
+    if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    return cb(new Error(`CORS blocked for origin: ${origin}`));
+  },
+  credentials: true,
+}));
+app.use((req, res, next) => {
+  // helpful for tricky CORS debugging
+  res.header("Vary", "Origin");
+  next();
+});
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
-// Sessions (needs Mongo)
-app.use(
-  session({
-    name: "sid",
-    secret: process.env.SESSION_SECRET || "change-this-secret",
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: MONGO_URL,
-      collectionName: "sessions",
-      ttl: 60 * 60 * 24 * 7, // 7 days (in seconds)
-    }),
-    cookie: {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false, // set true behind HTTPS/proxy
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days (in ms)
-    },
-  })
-);
+// Sessions (uses a Mongo-backed store)
+app.use(session({
+  name: "sid",
+  secret: process.env.SESSION_SECRET || "change-this-secret",
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: MONGO_URL,
+    collectionName: "sessions",
+    ttl: 60 * 60 * 24 * 7, // 7 days
+  }),
+  cookie: {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false, // set true behind HTTPS/proxy with app.set('trust proxy', 1)
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+  },
+}));
 
-// ---------------- Static uploads --------------------------
+/* ---------------- Static uploads ------------------------ */
 const UPLOAD_DIR = path.join(process.cwd(), "uploads");
 const DAMAGE_UPLOAD_DIR = path.join(UPLOAD_DIR, "damage");
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 if (!fs.existsSync(DAMAGE_UPLOAD_DIR)) fs.mkdirSync(DAMAGE_UPLOAD_DIR, { recursive: true });
 app.use("/uploads", express.static(UPLOAD_DIR));
 
-// ---------------- Health check ----------------------------
+/* ---------------- Health check -------------------------- */
 let isConnected = false;
 app.get("/health", (_req, res) => {
   const healthStatus = {
@@ -104,8 +118,7 @@ app.get("/health", (_req, res) => {
     mongodb: {
       connected: isConnected,
       state: mongoose.connection.readyState,
-      host: mongoose.connection.host || "unknown",
-      port: mongoose.connection.port || "unknown",
+      name: mongoose.connection?.name || "unknown",
     },
     uptime: process.uptime(),
     memory: process.memoryUsage(),
@@ -113,7 +126,7 @@ app.get("/health", (_req, res) => {
   res.status(isConnected ? 200 : 503).json(healthStatus);
 });
 
-// ---------------- Gate requests if DB is down -------------
+/* ---------------- Gate requests if DB is down ----------- */
 app.use((req, res, next) => {
   // allow health + static even if DB is down
   if (req.path === "/health" || req.path.startsWith("/uploads")) return next();
@@ -140,22 +153,43 @@ app.use("/requests", requestsRoutes);
 app.use("/teamLocations", teamLocationRoutes);
 
 // Aliases
-app.get("/aids",    listAids);
-app.get("/damages", damageCtrl.listDamages);
+app.get("/aids",           listAids);
+app.get("/damages",        damageCtrl.listDamages);
 
-// ---------------- Routes (theirs) -------------------------
-app.use("/tools",  testRoutes); // debug helpers
+// ---------------- Reports -------------------------------
+app.use("/reports", reportsRoutes);
 
-// Session probe
+// ---------------- Legacy / tools ------------------------
+app.use("/tools",   testRoutes); // debug helpers
+
+// Unified session probe for both admin and user
 app.get("/auth/me", (req, res) => {
-  if (req.session?.user) return res.json({ ok: true, user: req.session.user });
-  return res.status(401).json({ ok: false, user: null });
+  // Admin session?
+  if (req.session?.admin) {
+    return res.json({
+      ok: true,
+      role: "admin",
+      admin: req.session.admin,
+      user: null,
+    });
+  }
+  // User session?
+  if (req.session?.user) {
+    return res.json({
+      ok: true,
+      role: "user",
+      user: req.session.user,
+      admin: null,
+    });
+  }
+  // Neither present
+  return res.status(401).json({ ok: false, role: null, user: null, admin: null });
 });
 
 // API groups
-app.use("/admin",  adminAuthRoutes);
-app.use("/alerts", alertRoutes);
-app.use("/users",  userRoutes);
+app.use("/admin",   adminAuthRoutes);
+app.use("/alerts",  alertRoutes);
+app.use("/users",   userRoutes);
 
 // Root
 app.get("/", (_req, res) => res.json({ ok: true, msg: "API up" }));
@@ -177,13 +211,18 @@ app.use((err, _req, res, _next) => {
     return res.status(400).json({ ok: false, message: "File too large", error: "FILE_TOO_LARGE" });
   }
 
+  // CORS errors will bubble here too
+  if (err?.message?.startsWith("CORS blocked")) {
+    return res.status(403).json({ ok: false, message: err.message });
+  }
+
   res.status(err.status || 500).json({
     ok: false,
     message: err.message || "Server error",
   });
 });
 
-// ---------------- Mongo connection & server ---------------
+/* ---------------- Mongo connection & server ------------- */
 const mongooseOptions = {
   serverSelectionTimeoutMS: 30000,
   socketTimeoutMS: 45000,
@@ -296,7 +335,7 @@ function attemptReconnection() {
 // Boot
 connectToMongoDB();
 
-// ---------------- Global error listeners ------------------
+/* ---------------- Global error listeners ---------------- */
 process.on("unhandledRejection", (reason) => {
   console.error("unhandledRejection:", reason);
 });

@@ -1,3 +1,5 @@
+// Services/templates.js
+
 function esc(s = "") {
   return String(s)
     .replace(/&/g, "&amp;")
@@ -5,17 +7,34 @@ function esc(s = "") {
     .replace(/>/g, "&gt;");
 }
 
+const nl2br = (s = "") => esc(s).replace(/\r?\n/g, "<br/>");
+const fmtDate = (d) => {
+  try {
+    return new Date(d).toLocaleString();
+  } catch {
+    return "";
+  }
+};
+
 /**
  * ONE alert email body
+ * a: {
+ *   level|alertType, title|topic, district, disLocation, adminName,
+ *   createdAt, message
+ * }
  */
-function alertEmailHTML(a = {}) {
+function alertEmailHTML(a = {}, opts = {}) {
+  const {
+    reason = "alert notification", // footer copy; e.g., "alert notification" / "manual test"
+  } = opts;
+
   const level = esc((a.level || a.alertType || "INFO").toString().toUpperCase());
   const title = esc(a.title || a.topic || "Alert");
   const district = esc(a.district || "All Districts");
   const location = esc(a.disLocation || "");
   const admin = esc(a.adminName || "System Admin");
-  const time = a.createdAt ? new Date(a.createdAt).toLocaleString() : "";
-  const msg = (a.message || "").split("\n").map(esc).join("<br/>");
+  const time = a.createdAt ? fmtDate(a.createdAt) : "";
+  const msg = nl2br(a.message || "");
 
   return `
   <div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.5;color:#0f172a">
@@ -40,29 +59,51 @@ function alertEmailHTML(a = {}) {
       </div>
 
       <div style="padding:12px 18px;background:#f8fafc;border-top:1px solid #e5e7eb;font-size:12px;color:#6b7280">
-        You are receiving this email because alerts are enabled in SafeZone.
+        This is a SafeZone ${esc(reason)}.
       </div>
     </div>
   </div>`;
 }
 
-function countryDigestHTML({ title = "Sri Lanka Weather Update", items = [] } = {}) {
-  const section = (items || []).map(({ district, alerts = [] }) => {
-    const list = alerts.map(a => `
-      <li style="margin:0 0 8px 0">
-        <strong>${esc(a.event || "Alert")}</strong> — <em>${esc(a.source || "")}</em><br/>
-        <span>${esc(a.description || "").replace(/\n/g, "<br/>")}</span>
-        ${a.start ? `<div>Start: ${new Date(a.start).toLocaleString()}</div>` : ""}
-        ${a.end   ? `<div>End: ${new Date(a.end).toLocaleString()}</div>` : ""}
-      </li>
-    `).join("");
+/**
+ * Country digest (multiple districts). Items format:
+ * [{ district, alerts: [{ source, event, description, start, end }] }]
+ */
+function countryDigestHTML(
+  {
+    title = "Sri Lanka Weather Update",
+    items = [],
+    reason = "alerts update", // e.g., "forced update", "daily status (no active alerts)"
+  } = {}
+) {
+  const section = (items || [])
+    .map(({ district, alerts = [] }) => {
+      const list = alerts
+        .map((a) => {
+          const start = a.start ? `<div>Start: ${fmtDate(a.start)}</div>` : "";
+          const end = a.end ? `<div>End: ${fmtDate(a.end)}</div>` : "";
+          const desc = nl2br(a.description || "");
+          return `
+            <li style="margin:0 0 8px 0">
+              <strong>${esc(a.event || "Alert")}</strong> — <em>${esc(a.source || "")}</em><br/>
+              <span>${desc}</span>
+              ${start}${end}
+            </li>`;
+        })
+        .join("");
 
-    return `
-      <div style="margin:0 0 18px 0">
-        <h3 style="margin:0 0 8px 0">${esc(district || "Unknown")}</h3>
-        <ul style="padding-left:18px;margin:0">${list}</ul>
-      </div>`;
-  }).join("");
+      return `
+        <div style="margin:0 0 18px 0">
+          <h3 style="margin:0 0 8px 0">${esc(district || "Unknown")}</h3>
+          <ul style="padding-left:18px;margin:0">${list}</ul>
+        </div>`;
+    })
+    .join("");
+
+  const body =
+    items?.length
+      ? section
+      : `<p>No active alerts detected across Sri Lanka.</p>`;
 
   return `
   <div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.5;color:#0f172a">
@@ -71,10 +112,10 @@ function countryDigestHTML({ title = "Sri Lanka Weather Update", items = [] } = 
         <div style="font-size:20px;font-weight:700">${esc(title)}</div>
       </div>
       <div style="padding:18px">
-        ${items?.length ? section : "<p>No active alerts detected across Sri Lanka.</p>"}
+        ${body}
       </div>
       <div style="padding:12px 18px;background:#f8fafc;border-top:1px solid #e5e7eb;font-size:12px;color:#6b7280">
-        You are receiving this email because alerts are enabled in SafeZone.
+        This is a SafeZone ${esc(reason)}.
       </div>
     </div>
   </div>`;
