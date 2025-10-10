@@ -45,10 +45,11 @@ const ALLOWED_ORIGINS = [
   "http://localhost:5173"
 ];
 
-// Use MongoDB Atlas connection - try direct connection if SRV fails
-const MONGO_URL_SRV = "mongodb+srv://admin:y59JHr1UwxN8ONkF@cluster0.bch8cu9.mongodb.net/safezone?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true";
-const MONGO_URL_DIRECT = "mongodb://admin:y59JHr1UwxN8ONkF@cluster0-shard-00-00.bch8cu9.mongodb.net:27017,cluster0-shard-00-01.bch8cu9.mongodb.net:27017,cluster0-shard-00-02.bch8cu9.mongodb.net:27017/safezone?ssl=true&replicaSet=atlas-14b8cu9-shard-0&authSource=admin&retryWrites=true&w=majority&tlsAllowInvalidCertificates=true";
-const MONGO_URL = MONGO_URL_SRV; // Start with SRV, fallback to direct if needed
+// Prefer DB from .env; fall back to local dev
+const MONGO_URL =
+  (process.env.DB && process.env.DB.trim()) ||
+  (process.env.MONGO_URI && process.env.MONGO_URI.trim()) ||
+  "mongodb://127.0.0.1:27017/itpDB";
 
 // redact password in logs
 const redactCreds = (s = "") => s.replace(/\/\/.*?:.*?@/, "//***:***@");

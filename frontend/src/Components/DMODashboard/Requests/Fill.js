@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import jsPDF from "jspdf";
 
 export default function Fill() {
   const [filledRequests, setFilledRequests] = useState([]);
@@ -72,6 +73,187 @@ ${request.special ? `\n*Special Instructions:*\n${request.special}` : ""}
     window.open(whatsappUrl, '_blank');
   };
 
+  // Generate PDF report for all filled requests
+  const generateAllRequestsReport = () => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    const leftCol = margin;
+    const rightCol = margin + 50;
+    let yPosition = 25;
+
+    // Header background box
+    doc.setFillColor(34, 197, 94);
+    doc.rect(0, 0, pageWidth, 50, 'F');
+
+    // Main Title
+    doc.setFontSize(26);
+    doc.setFont(undefined, 'bold');
+    doc.setTextColor(255, 255, 255);
+    doc.text('Filled Requests Report', pageWidth / 2, yPosition, { align: 'center' });
+    yPosition += 12;
+
+    // Report Date
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.setTextColor(240, 240, 240);
+    doc.text(`Generated on: ${new Date().toLocaleString()}`, pageWidth / 2, yPosition, { align: 'center' });
+    yPosition += 8;
+
+    // Total count
+    doc.setFontSize(10);
+    doc.text(`Total Filled Requests: ${filledRequests.length}`, pageWidth / 2, yPosition, { align: 'center' });
+    yPosition += 25;
+
+    // Loop through all requests
+    filledRequests.forEach((request, index) => {
+      // Check if we need a new page
+      if (yPosition > pageHeight - 80) {
+        doc.addPage();
+        yPosition = 25;
+      }
+
+      // Request number badge
+      doc.setFillColor(34, 197, 94);
+      doc.roundedRect(leftCol, yPosition - 5, 30, 10, 2, 2, 'F');
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'bold');
+      doc.setTextColor(255, 255, 255);
+      doc.text(`#${index + 1}`, leftCol + 15, yPosition + 2, { align: 'center' });
+      yPosition += 12;
+
+      // Request header with background
+      doc.setFillColor(245, 247, 250);
+      doc.roundedRect(leftCol, yPosition - 6, pageWidth - 2 * margin, 14, 3, 3, 'F');
+      doc.setFontSize(16);
+      doc.setFont(undefined, 'bold');
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Request #${request._id.substring(0, 6)}`, leftCol + 5, yPosition + 2);
+      
+      // Priority badge on the right
+      const priorityText = request.priority || "Medium";
+      const priorityColor = priorityText === "High" ? [239, 68, 68] : priorityText === "Medium" ? [251, 146, 60] : [34, 197, 94];
+      doc.setFillColor(priorityColor[0], priorityColor[1], priorityColor[2]);
+      doc.roundedRect(pageWidth - margin - 35, yPosition - 5, 35, 10, 2, 2, 'F');
+      doc.setFontSize(9);
+      doc.setTextColor(255, 255, 255);
+      doc.text(priorityText, pageWidth - margin - 17.5, yPosition + 1, { align: 'center' });
+      yPosition += 10;
+
+      // Date
+      doc.setFontSize(9);
+      doc.setFont(undefined, 'normal');
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Date: ${new Date(request.fulfilledAt || request.updatedAt).toLocaleString()}`, leftCol + 5, yPosition);
+      yPosition += 10;
+
+      // Separator line
+      doc.setDrawColor(200, 200, 200);
+      doc.setLineWidth(0.3);
+      doc.line(leftCol, yPosition, pageWidth - margin, yPosition);
+      yPosition += 10;
+
+      // Reset text color for content
+      doc.setTextColor(0, 0, 0);
+
+      // Information box background
+      doc.setFillColor(250, 251, 252);
+      doc.roundedRect(leftCol, yPosition - 3, pageWidth - 2 * margin, 38, 2, 2, 'F');
+      yPosition += 3;
+
+      // Organization
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'bold');
+      doc.setTextColor(55, 65, 81);
+      doc.text('Organization:', leftCol + 3, yPosition);
+      doc.setFont(undefined, 'normal');
+      doc.setTextColor(0, 0, 0);
+      doc.text(request.org || 'Not specified', rightCol, yPosition);
+      yPosition += 7;
+
+      // Resources
+      doc.setFont(undefined, 'bold');
+      doc.setTextColor(55, 65, 81);
+      doc.text('Resources:', leftCol + 3, yPosition);
+      doc.setFont(undefined, 'normal');
+      doc.setTextColor(0, 0, 0);
+      doc.text(request.resources || 'Not specified', rightCol, yPosition);
+      yPosition += 7;
+
+      // Contact
+      doc.setFont(undefined, 'bold');
+      doc.setTextColor(55, 65, 81);
+      doc.text('Contact:', leftCol + 3, yPosition);
+      doc.setFont(undefined, 'normal');
+      doc.setTextColor(0, 0, 0);
+      doc.text(request.contact || 'Not provided', rightCol, yPosition);
+      yPosition += 15;
+
+      // Victim Details section
+      doc.setFontSize(11);
+      doc.setFont(undefined, 'bold');
+      doc.setTextColor(0, 0, 0);
+      doc.text('Victim Details:', leftCol, yPosition);
+      yPosition += 6;
+      doc.setFillColor(255, 251, 235);
+      const victimText = request.victim || 'No details provided';
+      const victimLines = doc.splitTextToSize(victimText, pageWidth - 2 * margin - 6);
+      const victimHeight = victimLines.length * 5 + 6;
+      doc.roundedRect(leftCol, yPosition - 3, pageWidth - 2 * margin, victimHeight, 2, 2, 'F');
+      doc.setFont(undefined, 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(55, 65, 81);
+      doc.text(victimLines, leftCol + 3, yPosition);
+      yPosition += victimHeight + 5;
+
+      // Check for page break before special instructions
+      if (yPosition > pageHeight - 50 && request.special) {
+        doc.addPage();
+        yPosition = 25;
+      }
+
+      // Special Instructions
+      if (request.special) {
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'bold');
+        doc.setTextColor(0, 0, 0);
+        doc.text('Special Instructions:', leftCol, yPosition);
+        yPosition += 6;
+        doc.setFillColor(254, 242, 242);
+        const specialLines = doc.splitTextToSize(request.special, pageWidth - 2 * margin - 6);
+        const specialHeight = specialLines.length * 5 + 6;
+        doc.roundedRect(leftCol, yPosition - 3, pageWidth - 2 * margin, specialHeight, 2, 2, 'F');
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(55, 65, 81);
+        doc.text(specialLines, leftCol + 3, yPosition);
+        yPosition += specialHeight + 8;
+      }
+
+      // Add spacing between requests
+      yPosition += 5;
+
+      // Draw separator line between requests (except for last one)
+      if (index < filledRequests.length - 1) {
+        doc.setDrawColor(229, 231, 235);
+        doc.setLineWidth(1);
+        doc.line(leftCol, yPosition, pageWidth - margin, yPosition);
+        yPosition += 18;
+      }
+    });
+
+    // Footer on last page
+    const finalY = doc.internal.pageSize.getHeight() - 15;
+    doc.setFontSize(9);
+    doc.setTextColor(128, 128, 128);
+    doc.text('Generated from SafeZone Disaster Management System', pageWidth / 2, finalY, { align: 'center' });
+
+    // Save the PDF
+    const timestamp = new Date().toISOString().split('T')[0];
+    doc.save(`Filled_Requests_Report_${timestamp}.pdf`);
+  };
+
   if (loading) {
     return <div>Loading filled requests...</div>;
   }
@@ -86,7 +268,24 @@ ${request.special ? `\n*Special Instructions:*\n${request.special}` : ""}
 
   return (
     <div className="filled-requests">
-      <h2>Filled Requests</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h2 style={{ margin: 0 }}>Filled Requests</h2>
+        <button 
+          onClick={generateAllRequestsReport}
+          className="ra-btn ra-btn--primary"
+          style={styles.generateReportButton}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "translateY(-2px) scale(1.02)";
+            e.currentTarget.style.boxShadow = "0 10px 15px -3px rgba(59, 130, 246, 0.3), 0 4px 6px -2px rgba(59, 130, 246, 0.2)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "translateY(0) scale(1)";
+            e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)";
+          }}
+        >
+          Generate Report
+        </button>
+      </div>
       
       <div className="request-list">
         {filledRequests.map((request) => (
@@ -258,5 +457,18 @@ const styles = {
     boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
     transition: "all 0.3s ease",
     transform: "translateZ(0)"
+  },
+  generateReportButton: {
+    background: "#3b82f6",
+    color: "white",
+    border: "none",
+    padding: "10px 20px",
+    borderRadius: "6px",
+    cursor: "pointer",
+    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+    transition: "all 0.3s ease",
+    transform: "translateZ(0)",
+    fontSize: "14px",
+    fontWeight: "600"
   }
 };
