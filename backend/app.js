@@ -47,7 +47,7 @@ const ALLOWED_ORIGINS = [
 // Prefer DB from .env; fall back to local dev
 const MONGO_URL =
   (process.env.DB && process.env.DB.trim()) ||
-  (process.env.MONGO_URL && process.env.MONGO_URL.trim()) ||
+  (process.env.MONGO_URI && process.env.MONGO_URI.trim()) ||
   "mongodb://127.0.0.1:27017/itpDB";
 
 // redact password in logs

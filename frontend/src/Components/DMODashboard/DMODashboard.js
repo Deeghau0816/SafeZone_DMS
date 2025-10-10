@@ -455,10 +455,12 @@ export default function DMODashboard() {
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-4px) translateZ(0)";
                 e.currentTarget.style.boxShadow = "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)";
+                e.currentTarget.style.border = "2px solid #3b82f6";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0) translateZ(0)";
                 e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)";
+                e.currentTarget.style.border = "1px solid #e5e9f1";
               }}
             >
               <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 6 }}>Total Disaster Reports</div>
@@ -469,10 +471,12 @@ export default function DMODashboard() {
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-4px) translateZ(0)";
                 e.currentTarget.style.boxShadow = "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)";
+                e.currentTarget.style.border = "2px solid #3b82f6";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0) translateZ(0)";
                 e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)";
+                e.currentTarget.style.border = "1px solid #e5e9f1";
               }}
             >
               <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 6 }}>Total Aid Requests</div>
@@ -483,10 +487,12 @@ export default function DMODashboard() {
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-4px) translateZ(0)";
                 e.currentTarget.style.boxShadow = "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)";
+                e.currentTarget.style.border = "2px solid #3b82f6";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0) translateZ(0)";
                 e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)";
+                e.currentTarget.style.border = "1px solid #e5e9f1";
               }}
             >
               <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 6 }}>Pending Disaster Reports</div>
@@ -497,10 +503,12 @@ export default function DMODashboard() {
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-4px) translateZ(0)";
                 e.currentTarget.style.boxShadow = "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)";
+                e.currentTarget.style.border = "2px solid #3b82f6";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0) translateZ(0)";
                 e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)";
+                e.currentTarget.style.border = "1px solid #e5e9f1";
               }}
             >
               <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 6 }}>Approved Disaster Reports</div>
@@ -511,10 +519,12 @@ export default function DMODashboard() {
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-4px) translateZ(0)";
                 e.currentTarget.style.boxShadow = "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)";
+                e.currentTarget.style.border = "2px solid #3b82f6";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0) translateZ(0)";
                 e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)";
+                e.currentTarget.style.border = "1px solid #e5e9f1";
               }}
             >
               <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 6 }}>Rejected Disaster Reports</div>
