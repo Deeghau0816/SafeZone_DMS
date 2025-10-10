@@ -152,10 +152,22 @@ export default function RequestAid() {
 
     try {
       // Clean and prepare data for API submission
-      // Trim all string values to remove extra whitespace
-      const payload = Object.fromEntries(
-        Object.entries(form).map(([k, v]) => [k, typeof v === "string" ? v.trim() : v])
-      );
+      // Only send the fields that the backend expects
+      const payload = {
+        name: form.name.trim(),
+        nic: form.nic.trim(),
+        phone: form.phone.trim(), // This should be the combined countryCode + phoneDigits
+        email: form.email.trim(),
+        address: form.address.trim(),
+        location: form.location.trim(),
+        aidType: form.aidType,
+        urgency: form.urgency,
+        description: form.description.trim() || "",
+        requestedAt: new Date().toISOString()
+      };
+
+      console.log("Form state:", form); // Debug log
+      console.log("Sending payload:", payload); // Debug log
 
       // Send data to backend API
       await axios.post("http://localhost:5000/aid", payload);
@@ -183,8 +195,21 @@ export default function RequestAid() {
       setErrors({}); // Clear any errors
       setGeoMsg(""); // Clear geolocation messages
     } catch (err) {
-      console.error(err); // Log error for debugging
-      alert("Error submitting aid request."); // Show user-friendly error
+      console.error("Aid request error:", err); // Log error for debugging
+      
+      // Show more specific error message
+      let errorMessage = "Error submitting aid request.";
+      if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.response?.status === 400) {
+        errorMessage = "Please check your form data and try again.";
+      } else if (err.response?.status === 500) {
+        errorMessage = "Server error. Please try again later.";
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      alert(errorMessage);
     } finally {
       setSubmitting(false); // Always reset loading state
     }

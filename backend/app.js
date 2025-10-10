@@ -23,10 +23,6 @@ const teamLocationRoutes = require("./Router/TeamLocationRoutes");
 const { listAids } = require("./Controllers/AidController");
 const damageCtrl = require("./Controllers/DamageController");
 
-/* Aliases / controllers exposed as plain handlers */
-const { listAids }       = require("./Controllers/AidController");
-const damageCtrl         = require("./Controllers/DamageController");
-
 /* Legacy/external groups */
 const adminAuthRoutes    = require("./Router/AdminRoute");
 const alertRoutes        = require("./Router/AlertRoute");

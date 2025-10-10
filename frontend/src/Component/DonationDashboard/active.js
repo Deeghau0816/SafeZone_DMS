@@ -247,7 +247,7 @@ export default function ActiveDisasterPanel() {
     load();
   }, []);
 
-  const openCreateForm = () => nav("/donation/disasters/admin");
+  const openCreateForm = () => nav("/donation/active-disasters");
 
   const openEdit = (x) => {
     setEdit(emptyEdit(x));

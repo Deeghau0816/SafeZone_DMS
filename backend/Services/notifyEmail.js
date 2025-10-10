@@ -8,7 +8,7 @@ const User = require("../models/RegModel");
 const SystemState = require("../models/SystemState");
 const sendEmail = require("../utils/sendEmail");
 const { getAlertsForLatLon } = require("../Services/openweather");
-const { countryDigestHTML } = require("../Services/templates");
+const { countryDigestHTML, alertEmailHTML } = require("../Services/templates");
 
 // ---- Configs / Flags --------------------------------------------------------
 const KEY = "LKA_COUNTRY_ALERT_HASH";
@@ -195,9 +195,43 @@ async function clearCountryState() {
   console.log("[weatherLKA] state cleared");
 }
 
+/**
+ * Send alert email to multiple recipients
+ * @param {Array} emails - Array of email addresses
+ * @param {Object} alertData - Alert data object
+ * @returns {Promise} - Promise that resolves when emails are sent
+ */
+async function sendAlertEmail(emails, alertData) {
+  if (!Array.isArray(emails) || emails.length === 0) {
+    console.log("[sendAlertEmail] No emails provided, skipping");
+    return;
+  }
+
+  // Generate email content
+  const html = alertEmailHTML(alertData, { reason: "alert notification" });
+  const subject = `⚠️ SafeZone Alert — ${alertData.district || "All Districts"}`;
+
+  let sent = 0, failed = 0;
+  
+  for (const email of emails) {
+    try {
+      await sendEmail(email, subject, html);
+      console.log(`[sendAlertEmail] sent -> ${email}`);
+      sent++;
+    } catch (e) {
+      console.error(`[sendAlertEmail] send error: ${email}`, e.message);
+      failed++;
+    }
+  }
+
+  console.log(`[sendAlertEmail] completed: ${sent} sent, ${failed} failed`);
+  return { sent, failed };
+}
+
 module.exports = {
   startSriLankaBroadcastCron,
   __runOnceLKA: runBroadcastCycle,
   __forceBroadcastOnce: forceBroadcastOnce,
-  __clearCountryState: clearCountryState
+  __clearCountryState: clearCountryState,
+  sendAlertEmail
 };

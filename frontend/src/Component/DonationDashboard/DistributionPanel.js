@@ -1042,7 +1042,7 @@ const activeOperations = useMemo(
 
  <button
   className="distribution-quantity-btn"
-  onClick={() => navigate("/distributionquantitychart")}
+  onClick={() => navigate("/dashboard/distribution-quantity-chart")}
 >
   📈 See Distribution Quantity Records
 </button>

@@ -630,7 +630,7 @@ export default function Donation() {
 
         <div className="hero-actions">
           <Link to="/donation/new" className="pill">Start Fundraising</Link>
-          <Link to="/volunteers" className="pill ghost">Become a volunteer</Link>
+          <Link to="/donation/volunteer" className="pill ghost">Become a volunteer</Link>
           <button className="pill" onClick={goDonate} type="button">Donate Items</button>
         </div>
       </section>
