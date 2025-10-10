@@ -1,11 +1,9 @@
 // src/pages/UserLogin/UserLogin.jsx
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "../../api/axios";
 import Nav from "../../HeaderFotter/Header";
 import "./UserLogin.css";
-
-const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:5000";
 
 export default function UserLogin() {
   const navigate = useNavigate();
@@ -22,14 +20,12 @@ export default function UserLogin() {
   };
 
   const sendRequest = async () => {
-    const url = `${API_BASE}/users/login`;
     const res = await axios.post(
-      url,
+      "/users/login",
       {
         email: (user.email || "").toLowerCase().trim(),
         password: user.password || "",
-      },
-      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+      }
     );
     return res.data;
   };
@@ -59,16 +55,16 @@ export default function UserLogin() {
         );
       }
 
-      // Optional: cache if you use this elsewhere (doesn't affect header)
+      // Optional local cache if you use it elsewhere
       if (data?.token) localStorage.setItem("token", data.token);
       if (data?.user) localStorage.setItem("user", JSON.stringify(data.user));
 
-      // ✅ Confirm session cookie is live (no header change needed)
-      await axios.get(`${API_BASE}/auth/me`, { withCredentials: true });
+      // Confirm the session cookie is live
+      await axios.get("/auth/me");
 
-      // Go to Home and hard refresh so Header re-runs its /auth/me
+      // Navigate to Home and hard refresh so Header re-runs its /auth/me
       navigate("/Home");
-      window.location.reload(); // <- ensures header picks up logged-in user
+      window.location.reload();
     } catch (err) {
       const status = err?.response?.status;
       const serverMsg =

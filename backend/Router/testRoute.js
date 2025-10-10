@@ -10,7 +10,7 @@ const {
 } = require("../Jobs/weatherSriLankaBroadcastCron");
 
 const User = require("../models/RegModel");
-const sendEmail = require("../utils/sendEmail");
+const { sendEmail } = require("../utils/mailer");
 const { alertEmailHTML } = require("../Services/templates");
 
 // Simple email validator

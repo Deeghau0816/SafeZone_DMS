@@ -1,9 +1,11 @@
+// src/pages/Registation/Registation.jsx
 import React, { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 import "./Registation.css";
 
 /* =========================
-   Module-scope constants (lint-safe)
+   Module-scope constants
    ========================= */
 const EMAIL_RX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 const PHONE_HINT = "+94XXXXXXXXX or 0XXXXXXXXX";
@@ -69,6 +71,8 @@ const scorePassword = (pw = "") => {
 };
 
 function Registation() {
+  const navigate = useNavigate();
+
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -162,7 +166,7 @@ function Registation() {
     }
 
     try {
-      await axios.post("http://localhost:5000/users", {
+      await axios.post("/users", {
         firstName: user.firstName,
         lastName: user.lastName,
         nic: user.nic,
@@ -173,7 +177,9 @@ function Registation() {
         postalCode: user.postalCode,
         password: user.password,
       });
-      alert("Please check your email to verify your account!");
+      // ✅ No email verification. Plain success and redirect to Login.
+      alert("Registration successful. You can log in now.");
+      navigate("/UserLogin");
     } catch (err) {
       alert(err?.response?.data?.message || err.message);
     }

@@ -6,7 +6,10 @@ const regSchema = new mongoose.Schema(
     firstName:     { type: String, required: true, trim: true },
     lastName:      { type: String, required: true, trim: true },
     nic:           { type: String, required: true, trim: true },
+
+    // keep unique constraint; email is stored lowercase
     email:         { type: String, required: true, unique: true, lowercase: true, trim: true },
+
     contactNumber: { type: String, required: true, trim: true },
 
     district: {
@@ -22,10 +25,11 @@ const regSchema = new mongoose.Schema(
 
     city:        { type: String, required: true, trim: true },
     postalCode:  { type: String, required: true, trim: true },
-    password:    { type: String, required: true, select: false },
-    verified:    { type: Boolean, default: false },
 
-    // 🔹 Email alert prefs
+    // password is not selected by default for safety
+    password:    { type: String, required: true, select: false },
+
+    // 🔔 optional alert prefs
     emailAlerts:   { type: Boolean, default: true },
     lastAlertHash: { type: String, default: "" },
     lat:           { type: Number },
@@ -33,5 +37,8 @@ const regSchema = new mongoose.Schema(
   },
   { timestamps: true, versionKey: false }
 );
+
+// Ensure a proper unique index on email (lowercased)
+regSchema.index({ email: 1 }, { unique: true });
 
 module.exports = mongoose.model("User", regSchema);
