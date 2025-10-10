@@ -32,7 +32,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently -s first -n DEV,OPEN \"react-scripts start\" \"wait-on http://localhost:3000 && open-cli http://localhost:3000/AdminHome\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -54,5 +54,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "open-cli": "^8.0.0",
+    "wait-on": "^9.0.1"
   }
 }

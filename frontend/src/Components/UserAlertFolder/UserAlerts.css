@@ -64,10 +64,8 @@ body, .ua-page{
 .ua-card-body{ padding: 14px; }
 
 /* ===== Live dot (severity-aware) ===== */
-/* Base */
 .ua-live-dot{
-  --dot:#22c55e;                  /* default = green */
-  --halo:rgba(34,197,94,.15);
+  --dot:#22c55e; --halo:rgba(34,197,94,.15);
   display:inline-flex; align-items:center; gap:8px;
   font-weight: 800; color:#64748b;
 }
@@ -77,11 +75,10 @@ body, .ua-page{
   box-shadow: 0 0 0 8px var(--halo);
   animation: ua-pulse 1.6s infinite ease-in-out;
 }
-/* Explicit class overrides */
 .ua-live-dot.green{ --dot:#22c55e; --halo:rgba(34,197,94,.15); }
 .ua-live-dot.orange{ --dot:#f59e0b; --halo:rgba(245,158,11,.16); }
 .ua-live-dot.red{ --dot:#ef4444; --halo:rgba(239,68,68,.16); }
-/* Inherit from alert card severity without adding a class on the dot */
+
 .ua-item.green .ua-live-dot{ --dot:#22c55e; --halo:rgba(34,197,94,.15); }
 .ua-item.orange .ua-live-dot{ --dot:#f59e0b; --halo:rgba(245,158,11,.16); }
 .ua-item.red .ua-live-dot{ --dot:#ef4444; --halo:rgba(239,68,68,.16); }
@@ -98,12 +95,10 @@ body, .ua-page{
 .ua-item.red{ border-left-color: var(--ua-danger); }
 
 .ua-row{ display:flex; align-items:flex-start; justify-content:space-between; gap: 12px; margin-bottom: 8px; }
-
-/* Formal, bold topics + color by severity */
 .ua-topic{ margin:0; font-size:1.1rem; font-weight: 900; letter-spacing:-.01em; }
-.ua-item.green .ua-topic{ color:#065f46; }   /* deep teal */
-.ua-item.orange .ua-topic{ color:#b45309; }  /* amber-700 */
-.ua-item.red .ua-topic{ color:#b91c1c; }     /* red-700 */
+.ua-item.green .ua-topic{ color:#065f46; }
+.ua-item.orange .ua-topic{ color:#b45309; }
+.ua-item.red .ua-topic{ color:#b91c1c; }
 
 .ua-time{ font-size:.85rem; color: var(--ua-muted); background: var(--ua-bg-soft); border:1px solid var(--ua-border); padding: 6px 10px; border-radius: 10px; white-space:nowrap; }
 
@@ -168,4 +163,63 @@ body, .ua-page{
   0%{ box-shadow: 0 0 0 0 var(--halo); }
   70%{ box-shadow: 0 0 0 10px rgba(0,0,0,0); }
   100%{ box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+}
+
+/* ------------------------------------------------------------------
+   NEW: Metrics (Green, Red, Total) + polished Tips & Contacts
+------------------------------------------------------------------- */
+
+/* Metrics table look */
+.ua-card-metrics .ua-card-body{ padding: 0; }
+.ua-table.ua-metrics { width:100%; border-collapse: separate; border-spacing: 0; }
+.ua-table.ua-metrics thead th{
+  background:#f8fafc; font-weight:900; padding:12px 14px; border-bottom:1px solid var(--ua-border);
+}
+.ua-table.ua-metrics td{ padding:12px 14px; }
+.ua-row-green td{ background: linear-gradient(180deg,#f0fdf4, #ecfeff 0) }
+.ua-row-red   td{ background: linear-gradient(180deg,#fef2f2, #fff 0) }
+.ua-total-row td{ background:#ffffff; font-weight:900; }
+
+.ua-k{
+  display:inline-block; font-size:.72rem; font-weight:900; letter-spacing:.04em;
+  padding:6px 10px; border-radius:999px; color:#fff;
+}
+.ua-k-green{ background: linear-gradient(135deg,#10b981,#047857); }
+.ua-k-red{ background: linear-gradient(135deg,#ef4444,#b91c1c); }
+.ua-k-total{
+  background: linear-gradient(135deg,#111827,#334155);
+}
+
+/* Safety Tips */
+.ua-card-tips .ua-card-body{ padding: 12px 14px; }
+.ua-tips{ display:flex; flex-direction:column; gap:10px; }
+.ua-tip{
+  display:flex; gap:10px; align-items:flex-start;
+  background: #f8fafc; border:1px solid var(--ua-border);
+  padding:10px 12px; border-radius:12px;
+}
+.ua-tip-ico{
+  flex:0 0 28px; height:28px; width:28px; display:grid; place-items:center;
+  border-radius:999px; background:#ffffff; border:1px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgba(2,8,23,.06);
+}
+.ua-tip-text{ font-weight:700; color:#0f172a; line-height:1.5; }
+
+/* Emergency Contacts */
+.ua-card-contacts .ua-card-body{ padding: 10px; }
+.ua-contacts{
+  display:grid; grid-template-columns: 1fr 1fr; gap:10px;
+}
+@media (max-width: 520px){
+  .ua-contacts{ grid-template-columns: 1fr; }
+}
+.ua-contact{
+  display:flex; align-items:center; justify-content:space-between;
+  background:#ffffff; border:1px solid var(--ua-border); border-radius:12px;
+  padding:10px 12px; box-shadow: var(--ua-shadow);
+}
+.ua-contact-label{ color:#0f172a; font-weight:800; }
+.ua-contact-num{
+  font-weight:900; color:#b91c1c; background:#fef2f2; border:1px solid #fecaca;
+  padding:6px 10px; border-radius:10px; letter-spacing:.02em;
 }

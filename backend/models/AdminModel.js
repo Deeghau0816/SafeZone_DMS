@@ -1,22 +1,26 @@
-const mongoose = require("mongoose");
+// models/AdminModel.js
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-const adminSchema = new mongoose.Schema(
-  {
-    name:          { type: String, required: true, trim: true },
-    email:         { type: String, required: true, unique: true, lowercase: true, trim: true },
-    contactNumber: { type: String, required: true, trim: true, match: [/^[0-9+\-\s()]{7,20}$/, "Invalid contact number"] },
-    adminName:     { type: String, required: true, enum: ["System Admin", "Disaster Management Officer", "Other"] },
-    password:      { type: String, required: true, select: false }, 
+const AdminSchema = new mongoose.Schema({
+  name:          { type: String, required: true, trim: true },
+  email:         { type: String, required: true, unique: true, lowercase: true, trim: true },
+  contactNumber: { type: String, required: true, trim: true },
+  adminName: {
+    type: String,
+    required: true,
+    enum: ["System Admin", "Disaster Management Officer", "Other"],
   },
-  { timestamps: true, versionKey: false }
-);
+  // hidden by default; explicitly select with .select('+password')
+  password:      { type: String, required: true, select: false, minlength: 6 },
+}, { timestamps: true });
 
-
-adminSchema.set("toJSON", {
-  transform(_doc, ret) { delete ret.password; return ret; }
+// Hash password automatically when modified/created
+AdminSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
 });
-adminSchema.set("toObject", {
-  transform(_doc, ret) { delete ret.password; return ret; }
-});
 
-module.exports = mongoose.model("Admin", adminSchema);
+module.exports = mongoose.model('Admin', AdminSchema);

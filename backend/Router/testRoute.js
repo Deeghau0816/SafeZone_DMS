@@ -1,4 +1,4 @@
-// Routes/testRoute.js
+// Router/testRoute.js
 const express = require("express");
 const router = express.Router();
 console.log("[TestRoute] loaded");
@@ -13,13 +13,17 @@ const User = require("../models/RegModel");
 const sendEmail = require("../utils/sendEmail");
 const { alertEmailHTML } = require("../Services/templates");
 
+// Simple email validator
+const isValidEmail = (s) =>
+  typeof s === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+
 // sanity
 router.get("/ping", (_req, res) => {
   console.log("[TestRoute] /tools/ping hit");
   res.json({ ok: true, ping: "pong" });
 });
 
-// run country scan once (normal behavior)
+// run country scan once (normal behavior) — will SKIP if hash unchanged
 router.get("/check-lka-now", async (_req, res) => {
   try {
     console.log("[TestRoute] /tools/check-lka-now hit");
@@ -30,7 +34,7 @@ router.get("/check-lka-now", async (_req, res) => {
   }
 });
 
-// run country scan once AND broadcast even if no change
+// run country scan once AND broadcast even if no change / even if empty digest (see env/guard in job)
 router.get("/check-lka-now-force", async (_req, res) => {
   try {
     console.log("[TestRoute] /tools/check-lka-now-force hit");
@@ -61,17 +65,23 @@ router.post("/send-test-alert", async (req, res) => {
       message = "This is a manual test alert."
     } = req.body || {};
 
-    const html = alertEmailHTML({
-      name: (to || "").split("@")[0] || "User",
-      place,
-      alerts: [{
-        source: "SafeZone",
-        event,
-        description: message,
-        start: new Date().toISOString(),
-        end: null,
-      }],
-    });
+    if (!isValidEmail(to)) {
+      return res.status(400).json({ ok: false, error: "Invalid 'to' email address." });
+    }
+
+    // Build SINGLE-alert email with the fields your template expects
+    const html = alertEmailHTML(
+      {
+        level: "INFO",
+        title: event,
+        district: place,
+        disLocation: "",
+        adminName: "SafeZone",
+        createdAt: new Date().toISOString(),
+        message
+      },
+      { reason: "manual test" } // harmless if your template ignores this
+    );
 
     const subject = `⚠️ Weather Alert (TEST) — ${place}`;
     const r = await sendEmail(to, subject, html);
@@ -83,24 +93,29 @@ router.post("/send-test-alert", async (req, res) => {
   }
 });
 
-// === NEW: send a manual test alert to ALL users
+// === send a manual test alert to ALL users
 router.post("/send-test-alert-all", async (req, res) => {
   try {
     const {
       place = "Sri Lanka",
       event = "Auto Alert System of SafeZone",
-      message = "heavy rain incomming to your area.",
-      limit,             
-      onlyEnabled = true 
+      message = "Heavy rain incoming to your area.",
+      limit,
+      onlyEnabled = true
     } = req.body || {};
 
-    // select recipients
+    // select recipients (optionally only enabled)
     const query = onlyEnabled ? { alertsEnabled: true } : {};
-    let users = await User.find(query, { email: 1, firstName: 1 }).lean();
+    let usersRaw = await User.find(query, { email: 1, firstName: 1 }).lean();
+
+    // filter invalid/missing emails
+    const invalid = usersRaw.filter(u => !isValidEmail(u.email)).map(u => u.email);
+    let users = usersRaw.filter(u => isValidEmail(u.email));
 
     if (!users.length) {
-      return res.json({ ok: false, msg: "No users found for broadcast." });
+      return res.json({ ok: false, msg: "No valid recipient emails found.", invalidCount: invalid.length, invalidSample: invalid.slice(0, 5) });
     }
+
     if (Number.isFinite(Number(limit)) && Number(limit) > 0) {
       users = users.slice(0, Number(limit));
     }
@@ -112,17 +127,18 @@ router.post("/send-test-alert-all", async (req, res) => {
     // send sequentially (simple & avoids SMTP throttling bursts)
     for (const u of users) {
       try {
-        const html = alertEmailHTML({
-          name: u.firstName || (u.email?.split("@")[0] || "User"),
-          place,
-          alerts: [{
-            source: "SafeZone Manual",
-            event,
-            description: message,
-            start: new Date().toISOString(),
-            end: null,
-          }],
-        });
+        const html = alertEmailHTML(
+          {
+            level: "INFO",
+            title: event,
+            district: place,
+            disLocation: "",
+            adminName: "SafeZone",
+            createdAt: new Date().toISOString(),
+            message
+          },
+          { reason: "manual test broadcast" }
+        );
         const r = await sendEmail(u.email, subject, html);
         sent.push({ email: u.email, id: r?.messageId || null });
       } catch (err) {
@@ -135,8 +151,10 @@ router.post("/send-test-alert-all", async (req, res) => {
       attempted: users.length,
       sent: sent.length,
       failed: fails.length,
+      invalidCount: invalid.length,
+      sampleInvalid: invalid.slice(0, 5),
       sampleSent: sent.slice(0, 5),
-      sampleFailed: fails.slice(0, 5),
+      sampleFailed: fails.slice(0, 5)
     });
   } catch (e) {
     res.status(500).json({ ok: false, error: e.message });

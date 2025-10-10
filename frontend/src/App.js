@@ -1,6 +1,6 @@
 // src/App.js
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import "./App.css";
 
 /* ----------- Shared layout ----------- */
@@ -19,6 +19,9 @@ import AdminRegitration from "./Components/Admins/AdminRegitration";
 import AdminLogin from "./Components/Admins/AdminLogin";
 import AdminProfile from "./Components/Admins/AdminProfile";
 
+/* ----------- Reports ----------- */
+import ReportGenerator from "./Components/Reports/ReportGenarator";
+
 /* ----------- User features ----------- */
 import UserAlerts from "./Components/UserAlertFolder/UserAlerts";
 import Registration from "./Components/UserRegFolder/Registation";
@@ -30,12 +33,12 @@ import UserProfile from "./Components/UserRegFolder/UserProfile";
 import MapComponent from "./Components/map/map";
 import UserMap from "./Components/map/UserMap";
 import PinDetails from "./Components/map/PinDetails";
-import ContactForm from "./Components/Conatct/ContactForm";   // note: 'Conatct'
+import ContactForm from "./Components/Conatct/ContactForm";
 import ContactList from "./Components/Conatct/ContactList";
 import SimpleDashboard from "./Components/Dashboard/SimpleDashboard";
 
 /* ----------- Victim Dashboard ----------- */
-import Dashboard from "./Component/VictimDashboard/Dashboard"; // note: 'Component'
+import Dashboard from "./Component/VictimDashboard/Dashboard";
 import Report from "./Component/VictimDashboard/ReportDisaster/Report";
 import ReadReport from "./Component/VictimDashboard/ReportDisaster/ReadReport";
 import EditReport from "./Component/VictimDashboard/ReportDisaster/EditReport";
@@ -51,15 +54,29 @@ import DMODashboard from "./Components/DMODashboard/DMODashboard";
 import ResponseDashboard from "./Components/ResponseDashboard/ResponseDashboard";
 import Deployments from "./Components/DMODashboard/Reports/Deployments";
 
-
-export default function App() {
+/* ---------- Layouts ---------- */
+function PublicLayout() {
   return (
     <>
       <Header />
-      <Routes>
+      <Outlet />
+      <Footer />
+    </>
+  );
+}
+
+// Admin area without global Header/Footer (you can add a dedicated AdminHeader later)
+function AdminLayout() {
+  return <Outlet />;
+}
+
+export default function App() {
+  return (
+    <Routes>
+      {/* Public site layout (shows Header + Footer) */}
+      <Route element={<PublicLayout />}>
         {/* Root home */}
         <Route path="/" element={<MainHome />} />
-
         {/* Old /Home links → redirect to root */}
         <Route path="/Home" element={<Navigate to="/" replace />} />
 
@@ -69,20 +86,6 @@ export default function App() {
         <Route path="/UserLogin" element={<UserLogin />} />
         <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
         <Route path="/UserProfile" element={<UserProfile />} />
-
-        {/* Admin auth */}
-        <Route path="/AdminLogin" element={<AdminLogin />} />
-
-        {/* Admin dashboard (nested) */}
-        <Route path="/AdminHome" element={<AdminHome />}>
-          <Route index element={<AdminAlert />} />
-          <Route path="toAlerts" element={<AdminAlert />} />
-          <Route path="alerts/:severity" element={<AdminAlert />} />
-          <Route path="AlertAdd" element={<AlertAdd />} />
-          <Route path="UpdateAlert/:id" element={<UpdateAlert />} />
-          <Route path="AdminRegitration" element={<AdminRegitration />} />
-          <Route path="AdminProfile" element={<AdminProfile />} />
-        </Route>
 
         {/* Map / Contact / Simple dashboard */}
         <Route path="/admin-dashboard" element={<SimpleDashboard />} />
@@ -108,14 +111,35 @@ export default function App() {
         <Route path="/victim/reports" element={<ReportsHub />} />
         <Route path="/victim/records" element={<Records />} />
 
-        {/* Fallback → root */}
-        <Route path="*" element={<Navigate to="/" replace />} />
         {/* DMO and Response Dashboard Routes */}
         <Route path="/dmo" element={<DMODashboard />} />
         <Route path="/deployments" element={<Deployments />} />
         <Route path="/response" element={<ResponseDashboard />} />
-      </Routes>
-      <Footer />
-    </>
+
+        {/* Public reports page */}
+        <Route path="/reports" element={<ReportGenerator />} />
+      </Route>
+
+      {/* Admin layout (NO Header/Footer) */}
+      <Route element={<AdminLayout />}>
+        {/* Admin auth */}
+        <Route path="/AdminLogin" element={<AdminLogin />} />
+        
+        {/* Admin dashboard (nested) */}
+        <Route path="/AdminHome" element={<AdminHome />}>
+          <Route index element={<AdminAlert />} />
+          <Route path="toAlerts" element={<AdminAlert />} />
+          <Route path="alerts/:severity" element={<AdminAlert />} />
+          <Route path="AlertAdd" element={<AlertAdd />} />
+          <Route path="UpdateAlert/:id" element={<UpdateAlert />} />
+          <Route path="AdminRegitration" element={<AdminRegitration />} />
+          <Route path="AdminProfile" element={<AdminProfile />} />
+          <Route path="ReportGenerator" element={<ReportGenerator />} />
+        </Route>
+      </Route>
+
+      {/* Fallback → root */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }

@@ -1,3 +1,4 @@
+// src/pages/UserLogin/UserLogin.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
@@ -45,6 +46,7 @@ export default function UserLogin() {
     setLoading(true);
     try {
       const data = await sendRequest();
+
       const ok =
         data?.status === "ok" ||
         data?.success === true ||
@@ -57,11 +59,16 @@ export default function UserLogin() {
         );
       }
 
+      // Optional: cache if you use this elsewhere (doesn't affect header)
       if (data?.token) localStorage.setItem("token", data.token);
       if (data?.user) localStorage.setItem("user", JSON.stringify(data.user));
 
-      alert("Login Success");
+      // ✅ Confirm session cookie is live (no header change needed)
+      await axios.get(`${API_BASE}/auth/me`, { withCredentials: true });
+
+      // Go to Home and hard refresh so Header re-runs its /auth/me
       navigate("/Home");
+      window.location.reload(); // <- ensures header picks up logged-in user
     } catch (err) {
       const status = err?.response?.status;
       const serverMsg =
@@ -85,10 +92,8 @@ export default function UserLogin() {
 
   return (
     <>
-      {/* Keep Nav outside the login shell so it isn't affected */}
       <Nav />
 
-      {/* Only this shell gets the login styles */}
       <div className="sz-login">
         <div className="sz-card">
           <h1 className="sz-title">User Login</h1>

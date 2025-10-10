@@ -260,60 +260,34 @@
 
 /* --- Responsive Design --- */
 @media (max-width: 768px) {
-  .sz-container {
-    padding: 0 1rem;
-  }
-  
-  .sz-nav-inner {
-    gap: 1rem;
-  }
-  
-  .sz-links {
-    gap: 1rem;
-  }
-  
-  .sz-link {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
-  }
-  
-  .sz-btn {
-    padding: 0.4rem 1rem;
-    font-size: 0.85rem;
-  }
-  
-  .sz-hello {
-    display: none;
-  }
-  
-  .sz-user-menu {
-    right: -1rem;
-    left: -1rem;
-    min-width: auto;
-  }
+  .sz-container { padding: 0 1rem; }
+  .sz-nav-inner { gap: 1rem; }
+  .sz-links { gap: 1rem; }
+  .sz-link { padding: 0.4rem 0.8rem; font-size: 0.9rem; }
+  .sz-btn { padding: 0.4rem 1rem; font-size: 0.85rem; }
+  .sz-hello { display: none; }
+  .sz-user-menu { right: -1rem; left: -1rem; min-width: auto; }
 }
 
 @media (max-width: 480px) {
-  .sz-brand-text {
-    font-size: 1.1rem;
-  }
-  
-  .sz-links {
-    gap: 0.5rem;
-  }
-  
-  .sz-link {
-    padding: 0.3rem 0.6rem;
-    font-size: 0.85rem;
-  }
-  
-  .sz-btn {
-    padding: 0.3rem 0.8rem;
-    font-size: 0.8rem;
-  }
+  .sz-brand-text { font-size: 1.1rem; }
+  .sz-links { gap: 0.5rem; }
+  .sz-link { padding: 0.3rem 0.6rem; font-size: 0.85rem; }
+  .sz-btn { padding: 0.3rem 0.8rem; font-size: 0.8rem; }
 }
 
-/* --- Body padding for fixed header --- */
+/* --- Spacer to offset fixed header (user side only) --- */
+.sz-header-spacer {
+  height: 80px; /* match the real header height */
+}
+
+@media (max-width: 640px) {
+  .sz-header-spacer { height: 64px; }
+}
+
+/* IMPORTANT: Do NOT add global body padding here */
+/*
 body {
   padding-top: 80px;
 }
+*/

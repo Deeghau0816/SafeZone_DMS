@@ -2,10 +2,11 @@ import React, { useEffect, useMemo, useState, useMemo as useMemo2 } from "react"
 import "./UserAlerts.css";
 import Nav from "../../HeaderFotter/Header";
 
+const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:5000";
+
 /* --------------------- Helpers (stable, outside component) ------------------ */
 
 function classifyAlert(a) {
-  // Normalize any string-like severity field
   const raw = (
     a?.alertType ??
     a?.severity ??
@@ -18,7 +19,6 @@ function classifyAlert(a) {
     .trim()
     .toLowerCase();
 
-  // Numeric severity (0–100 or 1–10 etc.)
   if (typeof a?.severity === "number") {
     const s = a.severity;
     if (s >= 80 || s >= 4) return "red";
@@ -33,10 +33,9 @@ function classifyAlert(a) {
     return "orange";
   if (has("green") || has("info") || has("normal") || has("low")) return "green";
 
-  // Other hints
   if (a?.isCritical || a?.priority === "high") return "red";
   if (a?.priority === "medium") return "orange";
-  return "green"; // safe default
+  return "green";
 }
 
 function computeStatsFromList(list) {
@@ -85,24 +84,33 @@ export default function UserAlerts() {
     return p.toString();
   }, [page]);
 
-  // Session user
+  // Session user — try /users/me first, then /auth/me
   useEffect(() => {
     let cancelled = false;
+
+    const tryFetch = async (path) => {
+      try {
+        const res = await fetch(`${API_BASE}${path}`, { credentials: "include" });
+        if (!res.ok) return null;
+        return await res.json();
+      } catch {
+        return null;
+      }
+    };
+
     (async () => {
       try {
-        const res = await fetch("http://localhost:5000/auth/me", { credentials: "include" });
-        if (res.ok) {
-          const data = await res.json();
-          if (!cancelled) setUser(data.user || null);
-        } else if (!cancelled) {
-          setUser(null);
-        }
-      } catch {
-        if (!cancelled) setUser(null);
+        let data = await tryFetch("/users/me");
+        if (!data) data = await tryFetch("/auth/me");
+        const foundUser =
+          data?.user ||
+          (data?.role === "user" ? data.user : null);
+        if (!cancelled) setUser(foundUser || null);
       } finally {
         if (!cancelled) setAuthChecked(true);
       }
     })();
+
     return () => { cancelled = true; };
   }, []);
 
@@ -120,7 +128,6 @@ export default function UserAlerts() {
     setLoading(true);
     setErr("");
 
-    const base = "http://localhost:5000";
     let url;
     if (mode === "mine") {
       if (!user) {
@@ -128,12 +135,12 @@ export default function UserAlerts() {
         setLoading(false);
         return;
       }
-      url = `${base}/alerts/my?${query}`;
+      url = `${API_BASE}/alerts/my?${query}`;
     } else if (mode === "pick") {
       const d = pickedDistrict.trim();
-      url = `${base}/alerts?${d ? `district=${encodeURIComponent(d)}&` : ""}${query}`;
+      url = `${API_BASE}/alerts?${d ? `district=${encodeURIComponent(d)}&` : ""}${query}`;
     } else {
-      url = `${base}/alerts?${query}`;
+      url = `${API_BASE}/alerts?${query}`;
     }
 
     (async () => {
@@ -181,7 +188,6 @@ export default function UserAlerts() {
   useEffect(() => {
     if (!authChecked) return;
     let cancelled = false;
-    const base = "http://localhost:5000";
 
     (async () => {
       try {
@@ -189,10 +195,10 @@ export default function UserAlerts() {
         if (mode === "mine" && user?.district) params.set("district", user.district);
         if (mode === "pick" && pickedDistrict) params.set("district", pickedDistrict);
 
-        const res = await fetch(`${base}/alerts/stats${params.toString() ? `?${params}` : ""}`, {
+        const res = await fetch(`${API_BASE}/alerts/stats${params.toString() ? `?${params}` : ""}`, {
           credentials: "include",
         });
-        if (!res.ok) return; // silently keep fallback
+        if (!res.ok) return;
 
         const j = await res.json().catch(() => ({}));
         const s = {
@@ -214,8 +220,17 @@ export default function UserAlerts() {
     return () => { cancelled = true; };
   }, [authChecked, mode, pickedDistrict, user]);
 
-  // Last submitted (from current page only — matches your screenshot)
+  // Last submitted (from current page only)
   const lastByType = useMemo2(() => latestByTypeFrom(alerts), [alerts]);
+
+  // Overall last submitted across all severities we show in table
+  const lastOverall = useMemo2(() => {
+    const arr = [lastByType.green, lastByType.red, lastByType.orange].filter(Boolean);
+    if (!arr.length) return null;
+    const maxTs = Math.max(...arr.map(d => d.getTime()));
+    return new Date(maxTs);
+  }, [lastByType]);
+
   const fmt = (d) => (d ? d.toLocaleString() : "—");
 
   const districts = [
@@ -231,7 +246,7 @@ export default function UserAlerts() {
         <Nav />
       </div>
 
-      {/* ===== Toolbar only (hero & quick cards removed) ===== */}
+      {/* ===== Toolbar only ===== */}
       <section className="ua-toolbar-out">
         <div className="ua-container">
           <div className="ua-toolbar" role="region" aria-label="Alerts toolbar">
@@ -322,56 +337,77 @@ export default function UserAlerts() {
 
           {/* RIGHT: summary + tips + contacts */}
           <aside className="ua-right" aria-label="Sidebar">
-            {/* Recent Alerts summary */}
-            <section className="ua-card">
+            {/* Recent Alerts (Green, Red, Total) */}
+            <section className="ua-card ua-card-metrics">
               <header className="ua-card-head ua-between">
                 <h3>Recent Alerts</h3>
                 <span className="ua-live-label"><span className="ua-live-dot green" /> Live</span>
               </header>
               <div className="ua-card-body">
-                <table className="ua-table">
+                <table className="ua-table ua-metrics">
                   <thead>
                     <tr><th>Type</th><th>Count</th><th>Last Submitted</th></tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td><span className="ua-tag red">CRITICAL</span></td>
+                    <tr className="ua-row-green">
+                      <td><span className="ua-k ua-k-green">GREEN</span></td>
+                      <td><span className="ua-count">{stats.green}</span></td>
+                      <td>{fmt(lastByType.green)}</td>
+                    </tr>
+                    <tr className="ua-row-red">
+                      <td><span className="ua-k ua-k-red">RED</span></td>
                       <td><span className="ua-count">{stats.red}</span></td>
                       <td>{fmt(lastByType.red)}</td>
                     </tr>
-                    <tr>
-                      <td><span className="ua-tag orange">WARNING</span></td>
-                      <td><span className="ua-count">{stats.orange}</span></td>
-                      <td>{fmt(lastByType.orange)}</td>
-                    </tr>
-                    <tr>
-                      <td><span className="ua-tag green">INFO</span></td>
-                      <td><span className="ua-count">{stats.green}</span></td>
-                      <td>{fmt(lastByType.green)}</td>
+                    <tr className="ua-total-row">
+                      <td><span className="ua-k ua-k-total">TOTAL</span></td>
+                      <td><span className="ua-count">{stats.total}</span></td>
+                      <td>{fmt(lastOverall)}</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </section>
 
-            {/* Safety Tips */}
-            <section className="ua-card">
+            {/* Safety Tips (polished) */}
+            <section className="ua-card ua-card-tips">
               <header className="ua-card-head"><h3>Safety Tips</h3></header>
               <div className="ua-card-body ua-tips">
-                <div className="ua-tip"><span className="ua-tip-ico">🔋</span><span>Keep your phone charged and carry a power bank.</span></div>
-                <div className="ua-tip"><span className="ua-tip-ico">🌊</span><span>Move to higher ground during flood warnings.</span></div>
-                <div className="ua-tip"><span className="ua-tip-ico">🧳</span><span>Prepare a 3-day emergency kit with water & food.</span></div>
+                <div className="ua-tip">
+                  <span className="ua-tip-ico">🔋</span>
+                  <div className="ua-tip-text">Keep your phone charged and carry a power bank.</div>
+                </div>
+                <div className="ua-tip">
+                  <span className="ua-tip-ico">🌊</span>
+                  <div className="ua-tip-text">Move to higher ground during flood warnings.</div>
+                </div>
+                <div className="ua-tip">
+                  <span className="ua-tip-ico">🧳</span>
+                  <div className="ua-tip-text">Prepare a 3-day emergency kit with water &amp; food.</div>
+                </div>
               </div>
             </section>
 
-            {/* Emergency Contacts */}
-            <section className="ua-card">
+            {/* Emergency Contacts (polished) */}
+            <section className="ua-card ua-card-contacts">
               <header className="ua-card-head"><h3>Emergency Contacts</h3></header>
-              <div className="ua-card-body">
-                <div className="ua-rowline"><span>Police Emergency</span><strong className="ua-emph red">119</strong></div>
-                <div className="ua-rowline"><span>Fire & Rescue</span><strong className="ua-emph red">110</strong></div>
-                <div className="ua-rowline"><span>Medical Emergency</span><strong className="ua-emph red">1990</strong></div>
-                <div className="ua-rowline"><span>Disaster Management</span><strong className="ua-emph red">117</strong></div>
+              <div className="ua-card-body ua-contacts">
+                <div className="ua-contact">
+                  <span className="ua-contact-label">Police Emergency</span>
+                  <strong className="ua-contact-num">119</strong>
+                </div>
+                <div className="ua-contact">
+                  <span className="ua-contact-label">Fire &amp; Rescue</span>
+                  <strong className="ua-contact-num">110</strong>
+                </div>
+                <div className="ua-contact">
+                  <span className="ua-contact-label">Medical Emergency</span>
+                  <strong className="ua-contact-num">1990</strong>
+                </div>
+                <div className="ua-contact">
+                  <span className="ua-contact-label">Disaster Management</span>
+                  <strong className="ua-contact-num">117</strong>
+                </div>
               </div>
             </section>
           </aside>
