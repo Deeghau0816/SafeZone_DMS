@@ -1,4 +1,4 @@
-// Controlers/RegControl.js
+// Controllers/RegControl.js
 const User = require("../models/RegModel");
 
 // GET: all users
@@ -24,7 +24,7 @@ const getUserById = async (req, res) => {
   }
 };
 
-//  update user 
+// UPDATE user
 const updateUser = async (req, res) => {
   try {
     const updateData = {

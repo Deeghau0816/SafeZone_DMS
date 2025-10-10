@@ -6,7 +6,7 @@ const crypto = require("crypto");
 
 const User = require("../models/RegModel");
 const SystemState = require("../models/SystemState");
-const sendEmail = require("../utils/sendEmail");
+const { sendEmail } = require("../utils/mailer");
 const { getAlertsForLatLon } = require("../Services/openweather");
 const { countryDigestHTML, alertEmailHTML } = require("../Services/templates");
 
@@ -159,7 +159,7 @@ async function runBroadcastCycle({ force = false } = {}) {
   let sent = 0, failed = 0;
   for (const u of users) {
     try {
-      await sendEmail(u.email, "⚠️ Sri Lanka Weather Alerts Update", html);
+  await sendEmail({ to: u.email, subject: "⚠️ Sri Lanka Weather Alerts Update", html });
       console.log(`[weatherLKA] sent -> ${u.email}`);
       sent++;
     } catch (e) {
@@ -215,7 +215,7 @@ async function sendAlertEmail(emails, alertData) {
   
   for (const email of emails) {
     try {
-      await sendEmail(email, subject, html);
+  await sendEmail({ to: email, subject, html });
       console.log(`[sendAlertEmail] sent -> ${email}`);
       sent++;
     } catch (e) {

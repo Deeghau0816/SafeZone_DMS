@@ -6,7 +6,7 @@ const crypto = require("crypto");
 
 const User = require("../models/RegModel");
 const SystemState = require("../models/SystemState");
-const sendEmail = require("../utils/sendEmail");
+const { sendEmail } = require("../utils/mailer");
 const { getAlertsForLatLon } = require("../Services/openweather");
 const { countryDigestHTML } = require("../Services/templates");
 
@@ -66,6 +66,14 @@ async function scanSriLanka() {
   return { digest, countryHash: hash(digest) };
 }
 
+// Ensure we only email on RED (unless forced / explicit)
+function hasRedAlerts(digest) {
+  return digest.some(d =>
+    Array.isArray(d.alerts) &&
+    d.alerts.some(a => String(a.severity || "").toLowerCase() === "red")
+  );
+}
+
 // ⬇️ Accepts { force } to send even if no state change
 async function runBroadcastCycle({ force = false } = {}) {
   console.log("[weatherLKA] broadcast cycle start");
@@ -89,38 +97,77 @@ async function runBroadcastCycle({ force = false } = {}) {
     { upsert: true }
   );
 
-  // If there are no alerts, only proceed when forced or env flag says to
-  if (!digest.length && !force && !ALWAYS_EMAIL_NO_ALERTS) {
-    console.log("[weatherLKA] no active alerts; not emailing (by design). Set LKA_ALWAYS_EMAIL_NO_ALERTS=true or use force.");
+  // Only email if there's a RED alert, unless forced, or always-email flag is set
+  const redNow = hasRedAlerts(digest);
+  if (!redNow && !force && !ALWAYS_EMAIL_NO_ALERTS) {
+    console.log("[weatherLKA] no RED alerts; email suppressed (by design).");
     return;
   }
 
-  // Build digest email (footer reason optional if your template supports it)
-  const html = countryDigestHTML({
-    title: force ? "⚠️ Sri Lanka Weather Alerts (Forced Update)" : "⚠️ Sri Lanka Weather Alerts Update",
-    items: digest
-    // reason: force ? "forced update" : (!digest.length ? "daily status (no active alerts)" : "alerts update")
+  // Build digest email safely
+  const subject = force
+    ? "⚠️ Sri Lanka Weather Alerts (Forced Update)"
+    : "⚠️ Sri Lanka Weather Alerts Update";
+
+  const htmlFromTpl = countryDigestHTML
+    ? countryDigestHTML({
+        title: subject,
+        items: digest
+      })
+    : null;
+
+  const html =
+    (typeof htmlFromTpl === "string" && htmlFromTpl.trim())
+      ? htmlFromTpl
+      : `<h2>${subject}</h2><pre>${JSON.stringify(digest, null, 2)}</pre>`;
+
+  // 🔔 SEND TO OPTED-IN USERS (emailAlerts !== false)
+  const usersRaw = await User.find(
+    { $or: [{ emailAlerts: { $exists: false } }, { emailAlerts: { $ne: false } }] },
+    { email: 1 }
+  ).lean();
+
+  const emails = Array.from(
+    new Set(
+      usersRaw
+        .map(u => (u.email || "").toLowerCase().trim())
+        .filter(isValidEmail)
+    )
+  );
+
+  console.log("[alerts] broadcasting", {
+    type: redNow ? "red" : "digest",
+    recipients: emails.length,
+    sample: emails.slice(0, 3)
   });
 
-  // 🔔 SEND TO ALL USERS (not just alertsEnabled)
-  const usersRaw = await User.find({}, { email: 1, firstName: 1 }).lean();
-  const users = usersRaw.filter(u => isValidEmail(u.email));
-  const invalid = usersRaw.length - users.length;
-  console.log(`[weatherLKA] recipients discovered: ${usersRaw.length}, valid: ${users.length}, invalid: ${invalid}`);
+  if (emails.length === 0) {
+    console.log("[weatherLKA] no valid recipients; skipping email send.");
+    return;
+  }
 
+  // Send in BCC batches
+  const chunkSize = 50;
   let sent = 0, failed = 0;
-  for (const u of users) {
+
+  for (let i = 0; i < emails.length; i += chunkSize) {
+    const bcc = emails.slice(i, i + chunkSize);
     try {
-      await sendEmail(u.email, "⚠️ Sri Lanka Weather Alerts Update", html);
-      console.log(`[weatherLKA] sent -> ${u.email}`);
-      sent++;
+      await sendEmail({
+        to: "alerts@safezone.local", // some SMTP providers require a non-empty "to"
+        bcc,
+        subject,
+        html
+      });
+      sent += bcc.length;
     } catch (e) {
-      console.error("[weatherLKA] send error:", u.email, e.message);
-      failed++;
+      failed += bcc.length;
+      console.error("[sendAlertEmail] batch error:", e.message);
     }
   }
 
-  console.log("[weatherLKA] broadcast cycle end", { sent, failed });
+  console.log("[sendAlertEmail] completed:", `${sent} sent, ${failed} failed`);
+  console.log("[weatherLKA] broadcast cycle end");
 }
 
 function startSriLankaBroadcastCron() {

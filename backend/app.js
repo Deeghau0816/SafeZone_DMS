@@ -26,7 +26,7 @@ const damageCtrl = require("./Controllers/DamageController");
 /* Legacy/external groups */
 const adminAuthRoutes    = require("./Router/AdminRoute");
 const alertRoutes        = require("./Router/AlertRoute");
-const userRoutes         = require("./Router/RegRoute");
+const userRoutes         = require("./Router/RegRoute"); // may contain verify/resend routes
 const testRoutes         = require("./Router/testRoute");
 
 /* Reports API */
@@ -43,14 +43,13 @@ const PORT = process.env.PORT || 5000;
 app.set("trust proxy", 1);
 
 // Accept both 3000 (CRA) and 5173 (Vite) in dev
-// ✅ CHANGED: include APP_BASE_URL from .env and your LAN URLs
 const ALLOWED_ORIGINS = [
-  process.env.APP_BASE_URL,                  // from .env (e.g., http://192.168.136.99:3000)
+  process.env.APP_BASE_URL,
   process.env.FRONTEND_ORIGIN || "http://localhost:3000",
   "http://localhost:3001",
   "http://localhost:5173",
-  "http://192.168.136.99:3000",             // your LAN FE
-  "http://192.168.136.99:5173"              // if you use Vite on LAN
+  "http://192.168.136.99:3000",
+  "http://192.168.136.99:5173"
 ].filter(Boolean);
 
 // Prefer DB from .env; fall back to local dev
@@ -64,7 +63,7 @@ const redactCreds = (s = "") => s.replace(/\/\/.*?:.*?@/, "//***:***@");
 console.log("[BOOT] Using Mongo URL:", redactCreds(MONGO_URL));
 
 /* ---------------- Core middleware ----------------------- */
-// CORS: allow your FE origins; also allow no-origin tools (curl/Postman)
+// CORS
 app.use(cors({
   origin: (origin, cb) => {
     if (!origin) return cb(null, true); // curl / Postman
@@ -74,7 +73,6 @@ app.use(cors({
   credentials: true,
 }));
 app.use((req, res, next) => {
-  // helpful for tricky CORS debugging
   res.header("Vary", "Origin");
   next();
 });
@@ -82,7 +80,7 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
-// Sessions (uses a Mongo-backed store)
+// Sessions
 app.use(session({
   name: "sid",
   secret: process.env.SESSION_SECRET || "change-this-secret",
@@ -105,7 +103,10 @@ app.use(session({
 const UPLOAD_DIR = path.join(process.cwd(), "uploads");
 const DAMAGE_UPLOAD_DIR = path.join(UPLOAD_DIR, "damage");
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-if (!fs.existsSync(DAMAGE_UPLOAD_DIR)) fs.mkdirMakeDirs?.(DAMAGE_UPLOAD_DIR) || fs.mkdirSync(DAMAGE_UPLOAD_DIR, { recursive: true });
+// compat helper for older snippets
+if (!fs.existsSync(DAMAGE_UPLOAD_DIR)) {
+  try { fs.mkdirSync(DAMAGE_UPLOAD_DIR, { recursive: true }); } catch {}
+}
 app.use("/uploads", express.static(UPLOAD_DIR));
 
 /* ---------------- Health check -------------------------- */
@@ -128,7 +129,6 @@ app.get("/health", (_req, res) => {
 
 /* ---------------- Gate requests if DB is down ----------- */
 app.use((req, res, next) => {
-  // allow health + static even if DB is down
   if (req.path === "/health" || req.path.startsWith("/uploads")) return next();
   if (!isConnected) {
     return res.status(503).json({
@@ -140,7 +140,29 @@ app.use((req, res, next) => {
   next();
 });
 
-// ---------------- Routes (yours) --------------------------
+/* ------------- HARD KILL-SWITCH: email verification ------ */
+/* This blocks ALL verify/resend endpoints before any router. */
+app.use((req, res, next) => {
+  const p = req.path.toLowerCase();
+  if (
+    p === "/verify" ||
+    p.startsWith("/verify/") ||
+    p.includes("/verify/") ||
+    p.endsWith("/verify") ||
+    p.includes("/resend") ||
+    p.includes("/email/verify") ||
+    /^\/users\/[^/]+\/verify\/[^/]+$/i.test(req.path)
+  ) {
+    return res.status(410).json({
+      ok: false,
+      message: "Email verification is disabled.",
+      code: "VERIFICATION_DISABLED"
+    });
+  }
+  next();
+});
+
+/* ---------------- Routes (yours) -------------------------- */
 app.use("/pins", pinRouter);
 app.use("/api/contact", contactRoutes);
 app.use("/api/shelters", shelterRoutes);
@@ -164,37 +186,24 @@ app.use("/tools",   testRoutes); // debug helpers
 
 // Unified session probe for both admin and user
 app.get("/auth/me", (req, res) => {
-  // Admin session?
   if (req.session?.admin) {
-    return res.json({
-      ok: true,
-      role: "admin",
-      admin: req.session.admin,
-      user: null,
-    });
+    return res.json({ ok: true, role: "admin", admin: req.session.admin, user: null });
   }
-  // User session?
   if (req.session?.user) {
-    return res.json({
-      ok: true,
-      role: "user",
-      user: req.session.user,
-      admin: null,
-    });
+    return res.json({ ok: true, role: "user", user: req.session.user, admin: null });
   }
-  // Neither present
   return res.status(401).json({ ok: false, role: null, user: null, admin: null });
 });
 
 // API groups
 app.use("/admin",   adminAuthRoutes);
 app.use("/alerts",  alertRoutes);
-app.use("/users",   userRoutes);
+app.use("/users",   userRoutes); // verification endpoints under /users/* will be blocked by kill-switch above
 
 // Root
 app.get("/", (_req, res) => res.json({ ok: true, msg: "API up" }));
 
-// 404s for known api groups (helps clients)
+// 404s for known api groups
 app.use(["/admin", "/alerts", "/users"], (req, res) => {
   res.status(404).json({
     error: "API_NOT_FOUND",
@@ -205,21 +214,13 @@ app.use(["/admin", "/alerts", "/users"], (req, res) => {
 // ---------------- Error handler ---------------------------
 app.use((err, _req, res, _next) => {
   console.error("Unhandled error:", err);
-
-  // multer size error
   if (err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE") {
     return res.status(400).json({ ok: false, message: "File too large", error: "FILE_TOO_LARGE" });
   }
-
-  // CORS errors will bubble here too
   if (err?.message?.startsWith("CORS blocked")) {
     return res.status(403).json({ ok: false, message: err.message });
   }
-
-  res.status(err.status || 500).json({
-    ok: false,
-    message: err.message || "Server error",
-  });
+  res.status(err.status || 500).json({ ok: false, message: err.message || "Server error" });
 });
 
 /* ---------------- Mongo connection & server ------------- */
@@ -232,7 +233,7 @@ const mongooseOptions = {
   maxIdleTimeMS: 30000,
   retryWrites: true,
   retryReads: true,
-  family: 4, // prefer IPv4
+  family: 4,
   tls: true,
   tlsAllowInvalidCertificates: true,
 };
@@ -241,17 +242,13 @@ let reconnectAttempts = 0;
 const maxReconnectAttempts = 5;
 const reconnectDelay = 5000;
 
-// ✅ CHANGED: bind to 0.0.0.0 and log API_BASE_URL if present
 function startServer() {
   const HOST = "0.0.0.0";
   const base = process.env.API_BASE_URL || `http://localhost:${PORT}`;
-
   app.listen(PORT, HOST, () => {
     console.log(`🚀 Server running at ${base}`);
     console.log(`📊 Health: ${base}/health`);
   });
-
-  // start the Sri Lanka country-wide broadcast cron
   try {
     startSriLankaBroadcastCron();
   } catch (e) {
@@ -289,23 +286,6 @@ async function connectToMongoDB() {
     startServer();
   } catch (error) {
     console.error("❌ Failed to connect to MongoDB:", error.message);
-    
-    // If SRV connection fails due to DNS, try direct connection
-    if (error.code === 'ENOTFOUND' && MONGO_URL === MONGO_URL_SRV) {
-      console.log("🔄 SRV connection failed due to DNS. Trying direct connection...");
-      try {
-        await mongoose.connect(MONGO_URL_DIRECT, mongooseOptions);
-        isConnected = true;
-        reconnectAttempts = 0;
-        console.log("✅ Successfully connected to MongoDB via direct connection:", redactCreds(MONGO_URL_DIRECT));
-        wireMongoEvents();
-        startServer();
-        return;
-      } catch (directError) {
-        console.error("❌ Direct connection also failed:", directError.message);
-      }
-    }
-    
     if (error.name === "MongoServerSelectionError" || error.name === "MongoNetworkError") {
       console.error("🌐 Network/DNS issue detected. Attempting reconnection...");
       attemptReconnection();
@@ -349,7 +329,6 @@ process.on("uncaughtException", (err) => {
 });
 
 // ---------------- Personal Routes Integration -----------------
-// Additional routes for personal features
 try {
   const volunteerRoutes = require("./Router/VolunteerRoutes");
   const operationRoutes = require("./Router/OperationRoutes");
@@ -361,7 +340,6 @@ try {
   const activeDisasterRoutes = require("./Router/ActiveDisasterRoutes");
   const ngopastRoutes = require("./Router/NgopastRoutes");
 
-  // Personal routes
   app.use("/api/volunteer", volunteerRoutes);
   app.use("/api/volunteers", volunteerRoutes);
   app.use("/api/operations", operationRoutes);
@@ -382,35 +360,22 @@ try {
 app.post("/api/uploads/deposit-proof", (req, res) => {
   const multer = require("multer");
   const path = require("path");
-  
+
   const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, path.join(process.cwd(), "uploads"));
-    },
-    filename: (req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname));
-    },
+    destination: (req, file, cb) => cb(null, path.join(process.cwd(), "uploads")),
+    filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
   });
 
-  const upload = multer({
-    storage: storage,
-    limits: { fileSize: 2 * 1024 * 1024 },
-  }).single("file");
+  const upload = multer({ storage, limits: { fileSize: 2 * 1024 * 1024 } }).single("file");
 
   upload(req, res, (err) => {
     if (err) {
-      if (err instanceof multer.MulterError) {
-        if (err.code === "LIMIT_FILE_SIZE") {
-          return res.status(400).json({ message: "File too large. Maximum size is 2MB." });
-        }
+      if (err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE") {
+        return res.status(400).json({ message: "File too large. Maximum size is 2MB." });
       }
-      return res.status(500).json({ message: err.message || "File upload failed" });
+    return res.status(500).json({ message: err.message || "File upload failed" });
     }
-
-    res.status(200).json({
-      message: "File uploaded successfully",
-      filePath: `/uploads/${req.file.filename}`,
-    });
+    res.status(200).json({ message: "File uploaded successfully", filePath: `/uploads/${req.file.filename}` });
   });
 });
 

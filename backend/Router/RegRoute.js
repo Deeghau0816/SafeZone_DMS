@@ -1,12 +1,9 @@
 // Router/RegRoute.js
 const express = require("express");
 const router = express.Router();
-const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 
-const Token = require("../models/token");
-const sendEmail = require("../utils/sendEmail");
-const User = require("../models/RegModel"); // model exports the User directly
+const User = require("../models/RegModel");
 
 /* ---------------- Helpers ---------------- */
 function isEmail(s = "") {
@@ -18,23 +15,6 @@ function requiredFields(body, keys) {
 function requireUser(req, res, next) {
   if (req.session?.user?.id) return next();
   return res.status(401).json({ ok: false, message: "Not authenticated" });
-}
-
-/**
- * Safely build an absolute URL:
- * - Prefer API_BASE_URL (backend host) for backend routes
- * - If missing, fall back to APP_BASE_URL / FRONTEND_ORIGIN / current host
- * - Joins segments without double slashes
- */
-function buildUrl(req, ...parts) {
-  const base =
-    process.env.API_BASE_URL ||                 // e.g., http://192.168.136.99:5000  (or your tunnel)
-    process.env.APP_BASE_URL ||                 // optional, if you prefer frontend host
-    process.env.FRONTEND_ORIGIN ||
-    `${req.protocol}://${req.get("host")}`;
-
-  const segs = parts.map((p) => String(p).replace(/^\/+|\/+$/g, ""));
-  return [base.replace(/\/+$/, ""), ...segs].join("/");
 }
 
 /* ---------------- Session whoami ---------------- */
@@ -56,18 +36,10 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ ok: false, message: "Invalid email" });
     }
 
-    // IMPORTANT: explicitly select password (schema may hide it)
+    // explicitly include password (schema hides it)
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
       return res.status(400).json({ ok: false, message: "Invalid email or password" });
-    }
-
-    if (user.verified === false) {
-      return res.status(403).json({ ok: false, message: "Please verify your email first." });
-    }
-
-    if (typeof user.password !== "string" || user.password.length === 0) {
-      return res.status(500).json({ ok: false, message: "User has no password set. Please reset your password." });
     }
 
     const ok = await bcrypt.compare(plain, user.password);
@@ -103,15 +75,8 @@ router.post("/logout", (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const required = [
-      "firstName",
-      "lastName",
-      "nic",
-      "email",
-      "contactNumber",
-      "district",
-      "city",
-      "postalCode",
-      "password",
+      "firstName","lastName","nic","email","contactNumber",
+      "district","city","postalCode","password",
     ];
     const missing = requiredFields(req.body, required);
     if (missing.length) {
@@ -126,44 +91,16 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ ok: false, message: "Password must be at least 6 characters" });
     }
 
-    let user = await User.findOne({ email });
-    if (user) {
-      if (!user.verified) {
-        // resend verification
-        let token = await Token.findOne({ userId: user._id });
-        if (!token) {
-          token = await new Token({
-            userId: user._id,
-            token: crypto.randomBytes(32).toString("hex"),
-          }).save();
-        }
-
-        // Build backend verify URL (users/:id/verify/:token)
-        const url = buildUrl(req, "users", user.id, "verify", token.token);
-
-        try {
-          await sendEmail(user.email, "Verify Email", url);
-          return res.status(200).json({
-            ok: true,
-            message: "Verification email resent to your account. Please verify.",
-          });
-        } catch (e) {
-          console.error("[REGISTER] resend email failed:", e?.message || e);
-          return res.status(200).json({
-            ok: true,
-            message: "Verification email could not be sent. Use verifyLink in dev.",
-            verifyLink: url,
-          });
-        }
-      }
+    // Check existing user
+    const existing = await User.findOne({ email }).lean();
+    if (existing) {
       return res.status(409).json({ ok: false, message: "User with given email already exists!" });
     }
 
     const saltRounds = Number(process.env.SALT || 10);
-    const salt = await bcrypt.genSalt(saltRounds);
-    const hashPassword = await bcrypt.hash(String(req.body.password), salt);
+    const hashPassword = await bcrypt.hash(String(req.body.password), saltRounds);
 
-    user = await new User({
+    const user = await User.create({
       firstName: String(req.body.firstName).trim(),
       lastName: String(req.body.lastName).trim(),
       nic: String(req.body.nic).trim(),
@@ -173,83 +110,38 @@ router.post("/", async (req, res) => {
       city: String(req.body.city).trim(),
       postalCode: String(req.body.postalCode).trim(),
       password: hashPassword,
-    }).save();
+    });
 
-    const token = await new Token({
-      userId: user._id,
-      token: crypto.randomBytes(32).toString("hex"),
-    }).save();
+    // ✅ No email verification: either return success
+    // OR auto-login by creating a session (uncomment if desired)
+    req.session.user = {
+      id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      district: user.district,
+    };
 
-    // Build backend verify URL (users/:id/verify/:token)
-    const url = buildUrl(req, "users", user.id, "verify", token.token);
-
-    try {
-      await sendEmail(user.email, "Verify Email", url);
-      return res.status(201).json({
-        ok: true,
-        message: "An email has been sent to your account. Please verify.",
-      });
-    } catch (e) {
-      console.error("[REGISTER] email send failed:", e?.message || e);
-      return res.status(201).json({
-        ok: true,
-        message: "User registered. Email failed to send; use verifyLink in dev.",
-        verifyLink: url,
-      });
-    }
+    return res.status(201).json({ ok: true, user: req.session.user });
   } catch (error) {
+    // Handle duplicate key errors cleanly
+    if (error?.code === 11000 && error?.keyPattern?.email) {
+      return res.status(409).json({ ok: false, message: "User with given email already exists!" });
+    }
+
     console.error("[REGISTER] error:", error);
     return res.status(500).json({ ok: false, message: "Internal Server Error" });
   }
 });
 
-/* ---------------- VERIFY EMAIL ----------------
-   Clicking the email link hits the BACKEND verify route.
-   On success, we redirect to your login page.
------------------------------------------------- */
-router.get("/:id/verify/:token", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(400).json({ ok: false, message: "Invalid link" });
-
-    const token = await Token.findOne({ userId: user._id, token: req.params.token });
-    if (!token) return res.status(400).json({ ok: false, message: "Invalid link" });
-
-    await User.updateOne({ _id: user._id }, { $set: { verified: true } });
-    await Token.deleteOne({ _id: token._id });
-
-    // Redirect to FE login page
-    const appBase =
-      process.env.APP_BASE_URL ||
-      process.env.FRONTEND_ORIGIN ||
-      ""; // fallback to JSON if not set
-
-    if (appBase) {
-      const to = `${appBase.replace(/\/+$/, "")}/UserLogin?verified=1`;
-      return res.redirect(302, to);
-    }
-
-    return res.status(200).json({ ok: true, message: "Email verified successfully" });
-  } catch (error) {
-    console.error("[VERIFY] error:", error);
-    return res.status(500).json({ ok: false, message: "Internal Server Error" });
-  }
-});
-
 /* ---------------- SELF-DELETE ---------------- */
-/**
- * DELETE /users/me
- * Deletes the currently logged-in user's account and logs them out.
- * (must be BEFORE the param :userId routes)
- */
 router.delete("/me", requireUser, async (req, res) => {
   try {
     const userId = req.session.user.id;
     await User.findByIdAndDelete(userId);
 
-    // end session
     req.session.destroy(() => {
-      res.clearCookie("sid"); // cookie name defined in app.js session config
+      res.clearCookie("sid");
       return res.json({ ok: true, message: "Account deleted" });
     });
   } catch (e) {
@@ -259,7 +151,6 @@ router.delete("/me", requireUser, async (req, res) => {
 });
 
 /* ---------------- CRUD (admin/utility) ---------------- */
-// NOTE: keep fixed routes above; param route last to avoid conflicts.
 const RegControl = require("../Controllers/RegControl");
 router.get("/", RegControl.getAllUsers);
 router.get("/:userId", RegControl.getUserById);
