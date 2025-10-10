@@ -41,7 +41,8 @@ const pickArray = (payload) => {
  * @returns {Date|null} Most recent date found, or null if none
  */
 const getLastDate = (arr) => {
-  const FIELDS = ["occurredAt", "createdAt", "updatedAt", "submittedAt", "date", "timestamp"];
+  // For reports, prioritize creation/submission dates, not incident dates
+  const FIELDS = ["createdAt", "date"];
   let best = null;
   
   for (const it of arr) {
@@ -401,10 +402,10 @@ export default function Dashboard() {
    * Fetches statistics from all service APIs
    * Updates the stats state with counts and last submission dates
    */
-  useEffect(() => {
-    (async () => {
-      setLoadingReqs(true);
-      
+  const fetchStats = useCallback(async () => {
+    setLoadingReqs(true);
+    
+    try {
       // Fetch data from all services in parallel
       const [reports, aids, claims] = await Promise.all([
         fetchFirst(REPORT_URLS),
@@ -413,15 +414,33 @@ export default function Dashboard() {
       ]);
       
       // Update statistics with counts and last dates
-      setStats({
-        report: { count: reports.length, last: getLastDate(reports) },
-        aid: { count: aids.length, last: getLastDate(aids) },
-        claim: { count: claims.length, last: getLastDate(claims) },
-      });
+      const reportLast = getLastDate(reports);
+      const aidLast = getLastDate(aids);
+      const claimLast = getLastDate(claims);
       
+      
+      setStats({
+        report: { count: reports.length, last: reportLast },
+        aid: { count: aids.length, last: aidLast },
+        claim: { count: claims.length, last: claimLast },
+      });
+
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    } finally {
       setLoadingReqs(false);
-    })();
+    }
   }, []);
+
+  useEffect(() => {
+    // Initial load
+    fetchStats();
+    
+    // Auto-refresh every 30 seconds to keep Last Submitted data current
+    const statsInterval = setInterval(fetchStats, 30000);
+    
+    return () => clearInterval(statsInterval);
+  }, [fetchStats]);
 
   /**
    * Fetches weather data on component mount
@@ -464,17 +483,15 @@ export default function Dashboard() {
             <span>New Report</span>
           </Link>
 
-          {/* Secondary Action: View Existing Reports */}
-          <Link to="/victim/reports" className="btn btn--ghost" aria-label="View submitted disaster reports">
+          {/* Secondary Action: Request Aid */}
+          <Link to="/victim/aid" className="btn btn--primary" aria-label="Request aid for disaster relief">
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden>
               <g fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
-                <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
-                <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
-                <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                <path d="M12 16v-4M12 8h.01"></path>
               </g>
             </svg>
-            <span>View Reports</span>
+            <span>Request Aid</span>
           </Link>
 
           {/* Profile Access: Conditional based on victim ID */}

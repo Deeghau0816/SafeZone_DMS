@@ -7,7 +7,7 @@ html, body, .edit-wrap, .card, .btn, .input, .select, .textarea, .side, .side-gr
 }
 
 /* shell */
-.edit-wrap { margin-top: 25px !important; }
+.edit-wrap { margin-top: 0 !important; padding-top: 0 !important; }
 .container { max-width: 1200px; margin: 0 auto; padding: 16px 20px 28px; }
 
 /* header (light theme) */

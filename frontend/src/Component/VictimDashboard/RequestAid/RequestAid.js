@@ -2,16 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./RequestAid.css";
-
-/* ---- Input Validation Patterns ---- */
-// Name validation: letters only (including spaces and hyphens for compound names)
-const NAME_REGEX = /^[a-zA-Z\s\-']+$/;                // Letters, spaces, hyphens, apostrophes
-// NIC validation: supports both old format (9 digits + V/X) and new format (12 digits)
-const NIC_REGEX = /^(\d{9}[VvXx]|\d{12})$/;           // 123456789V or 200123456789
-// Phone validation: Sri Lankan mobile numbers starting with 7
-const PHONE_REGEX = /^7\d{8}$/;                       // 7XXXXXXXX
-// Basic email validation pattern
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/; // Basic email validation
+import { validateNIC, validatePhone, validateName, validateEmail, validateAddress } from "../utils/validation";
 
 export default function RequestAid() {
   const navigate = useNavigate(); // React Router hook for navigation
@@ -66,21 +57,21 @@ export default function RequestAid() {
   const validate = () => {
     const er = {}; // Error object to store validation messages
 
-    // Name validation: must be at least 2 characters and letters only
-    if (!form.name.trim() || form.name.trim().length < 2) er.name = "Enter your full name.";
-    else if (!NAME_REGEX.test(form.name.trim())) er.name = "Name should contain only letters, spaces, hyphens, and apostrophes.";
+    // Use enhanced validation functions
+    const nameValidation = validateName(form.name);
+    if (!nameValidation.isValid) er.name = nameValidation.error;
     
-    // NIC validation: must match Sri Lankan NIC format
-    if (!NIC_REGEX.test(form.nic.trim())) er.nic = "Invalid NIC (use 9 digits + V/X or 12 digits).";
+    const nicValidation = validateNIC(form.nic);
+    if (!nicValidation.isValid) er.nic = nicValidation.error;
     
-    // Phone validation: must be Sri Lankan mobile format
-    if (!PHONE_REGEX.test(form.phoneDigits.trim())) er.phone = "Enter a valid phone number (7XXXXXXXX).";
+    const phoneValidation = validatePhone(form.phoneDigits);
+    if (!phoneValidation.isValid) er.phone = phoneValidation.error;
     
-    // Email validation: must be valid email format
-    if (!EMAIL_REGEX.test(form.email.trim())) er.email = "Enter a valid email address.";
+    const emailValidation = validateEmail(form.email);
+    if (!emailValidation.isValid) er.email = emailValidation.error;
     
-    // Address validation: must be at least 5 characters
-    if (!form.address.trim() || form.address.trim().length < 5) er.address = "Enter your home address.";
+    const addressValidation = validateAddress(form.address);
+    if (!addressValidation.isValid) er.address = addressValidation.error;
     
     // Location validation: must be provided
     if (!form.location.trim()) er.location = "Share or type your current location.";
@@ -106,20 +97,24 @@ export default function RequestAid() {
 
     switch (name) {
       case "name":
-        if (!value.trim() || value.trim().length < 2) error = "Enter your full name.";
-        else if (!NAME_REGEX.test(value.trim())) error = "Name should contain only letters, spaces, hyphens, and apostrophes.";
+        const nameValidation = validateName(value);
+        if (!nameValidation.isValid) error = nameValidation.error;
         break;
       case "nic":
-        if (!NIC_REGEX.test(value.trim())) error = "Invalid NIC (use 9 digits + V/X or 12 digits).";
+        const nicValidation = validateNIC(value);
+        if (!nicValidation.isValid) error = nicValidation.error;
         break;
       case "phoneDigits":
-        if (!PHONE_REGEX.test(value.trim())) error = "Enter a valid phone number (7XXXXXXXX).";
+        const phoneValidation = validatePhone(value);
+        if (!phoneValidation.isValid) error = phoneValidation.error;
         break;
       case "email":
-        if (!EMAIL_REGEX.test(value.trim())) error = "Enter a valid email address.";
+        const emailValidation = validateEmail(value);
+        if (!emailValidation.isValid) error = emailValidation.error;
         break;
       case "address":
-        if (!value.trim() || value.trim().length < 5) error = "Enter your home address.";
+        const addressValidation = validateAddress(value);
+        if (!addressValidation.isValid) error = addressValidation.error;
         break;
       case "location":
         if (!value.trim()) error = "Share or type your current location.";

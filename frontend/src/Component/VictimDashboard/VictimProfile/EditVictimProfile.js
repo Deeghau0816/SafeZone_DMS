@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "./VictimProfile.css";
+import { validateNIC, validatePhone, validateName, validateEmail } from "../utils/validation";
 
 const API = "http://localhost:5000/victims";
 const ALLOWED = [
@@ -14,12 +15,6 @@ const ALLOWED = [
   "video/quicktime",
   "video/webm",
 ];
-
-// Validators (aligned with create/edit forms)
-const NIC_REGEX = /^(?:\d{12}|\d{9}[VX])$/i;
-const NAME_REGEX = /^[A-Za-z\s]+$/;
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const LK_PHONE_DIGITS = /^[0-9]{9,10}$/;
 
 // Helpers
 function splitPhone(full) {
@@ -130,8 +125,8 @@ export default function EditVictimProfile() {
     if (name === "name") {
       const v = value;
       setForm((s) => ({ ...s, name: v }));
-      if (!v.trim()) setError("name", "Reporter name is required");
-      else if (!NAME_REGEX.test(v)) setError("name", "Letters and spaces only");
+      const nameValidation = validateName(v);
+      if (!nameValidation.isValid) setError("name", nameValidation.error);
       else clearError("name");
       return;
     }
@@ -139,7 +134,8 @@ export default function EditVictimProfile() {
     if (name === "email") {
       const v = value.trim();
       setForm((s) => ({ ...s, email: v }));
-      if (v && !EMAIL_REGEX.test(v)) setError("email", "Enter a valid email");
+      const emailValidation = validateEmail(v);
+      if (!emailValidation.isValid) setError("email", emailValidation.error);
       else clearError("email");
       return;
     }
@@ -147,9 +143,8 @@ export default function EditVictimProfile() {
     if (name === "nic") {
       const v = (value || "").toUpperCase();
       setForm((s) => ({ ...s, nic: v }));
-      if (!v) setError("nic", "NIC is required");
-      else if (!NIC_REGEX.test(v))
-        setError("nic", "Use 123456789V or 200012345678");
+      const nicValidation = validateNIC(v);
+      if (!nicValidation.isValid) setError("nic", nicValidation.error);
       else clearError("nic");
       return;
     }
@@ -157,8 +152,8 @@ export default function EditVictimProfile() {
     if (name === "phoneDigits") {
       const v = value.replace(/[^\d]/g, "");
       setForm((s) => ({ ...s, phoneDigits: v }));
-      if (!v) setError("phone", "Phone is required");
-      else if (!LK_PHONE_DIGITS.test(v)) setError("phone", "Enter 9–10 digits");
+      const phoneValidation = validatePhone(v);
+      if (!phoneValidation.isValid) setError("phone", phoneValidation.error);
       else clearError("phone");
       return;
     }
@@ -247,27 +242,22 @@ export default function EditVictimProfile() {
   function validateAll() {
     let ok = true;
 
-    if (!form.name?.trim()) {
-      setError("name", "Reporter name is required");
-      ok = false;
-    } else if (!NAME_REGEX.test(form.name)) {
-      setError("name", "Letters and spaces only");
-      ok = false;
-    }
-
-    if (!form.phoneDigits) {
-      setError("phone", "Phone is required");
-      ok = false;
-    } else if (!LK_PHONE_DIGITS.test(form.phoneDigits)) {
-      setError("phone", "Enter 9–10 digits");
+    // Use enhanced validation functions
+    const nameValidation = validateName(form.name);
+    if (!nameValidation.isValid) {
+      setError("name", nameValidation.error);
       ok = false;
     }
 
-    if (!form.nic) {
-      setError("nic", "NIC is required");
+    const phoneValidation = validatePhone(form.phoneDigits);
+    if (!phoneValidation.isValid) {
+      setError("phone", phoneValidation.error);
       ok = false;
-    } else if (!NIC_REGEX.test(form.nic.toUpperCase())) {
-      setError("nic", "Use 123456789V or 200012345678");
+    }
+
+    const nicValidation = validateNIC(form.nic);
+    if (!nicValidation.isValid) {
+      setError("nic", nicValidation.error);
       ok = false;
     }
 
@@ -284,8 +274,9 @@ export default function EditVictimProfile() {
       ok = false;
     }
 
-    if (form.email && !EMAIL_REGEX.test(form.email)) {
-      setError("email", "Enter a valid email");
+    const emailValidation = validateEmail(form.email);
+    if (!emailValidation.isValid) {
+      setError("email", emailValidation.error);
       ok = false;
     }
 

@@ -184,14 +184,21 @@ export default function ReportsHub() {
     }
   };
 
+  // Auto-refresh data every 30 seconds to keep Last Submitted data current
+  useEffect(() => {
+    // Initial load
+    load();
+    
+    // Set up auto-refresh interval
+    const refreshInterval = setInterval(load, 30000);
+    
+    // Cleanup interval on unmount
+    return () => clearInterval(refreshInterval);
+  }, []);
+
   // ========================================
   // Effects
   // ========================================
-
-  /** Load data on component mount */
-  useEffect(() => { 
-    load(); 
-  }, []);
 
   // ========================================
   // Utility Functions
@@ -223,13 +230,14 @@ export default function ReportsHub() {
   // ========================================
 
   /** Most recent report timestamp */
-  const reportLast = last(reportList);
+  const reportLast = last(reportList, ["createdAt", "date"]);
   
   /** Most recent aid request timestamp */
   const aidLast = last(aidList, ["createdAt"]);
   
   /** Most recent damage claim timestamp */
   const claimLast = last(claimList, ["createdAt"]);
+
 
   /**
    * Gets the location string from the most recent report of a specific type
@@ -393,7 +401,16 @@ export default function ReportsHub() {
       {/* ========================================
            Action Cards Section
            ======================================== */}
-      <section className="cards" aria-label="Record type cards">
+      <section 
+        className="cards" 
+        aria-label="Record type cards"
+        style={{
+          display: 'grid !important',
+          gridTemplateColumns: 'repeat(3, 1fr) !important',
+          gap: 'var(--space-xl) !important',
+          width: '100% !important'
+        }}
+      >
         
         {/* Disaster Reports Card */}
         <article className="card">
