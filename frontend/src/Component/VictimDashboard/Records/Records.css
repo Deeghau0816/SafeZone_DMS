@@ -124,7 +124,7 @@
   margin: 0 auto;
   padding: var(--space-xl) var(--space-lg);
   background: var(--bg-secondary);
-  min-height: calc(100vh - 84px);
+  min-height: calc(100vh - 80px) !important;
 }
 
 /* Records dashboard main wrapper */
@@ -140,15 +140,21 @@
 
 /* Records header */
 .records-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
   margin-bottom: var(--space-2xl);
   padding: var(--space-xl) 0;
   border-bottom: 2px solid var(--border-light);
+  width: 100% !important;
 }
 
 /* Header content */
+.header-content {
+  flex: 1 !important;
+  text-align: left !important;
+}
+
 .header-content h1 {
   margin: 0;
   font-size: clamp(1.75rem, 4vw, 2.5rem);
@@ -171,9 +177,11 @@
 
 /* Header actions */
 .header-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--space-md) !important;
+  flex-shrink: 0 !important;
+  margin-left: auto !important;
 }
 
 /* Period selector */
@@ -278,6 +286,103 @@
   display: block;
   width: 18px;
   height: 18px;
+}
+
+/* ========================================
+   Main Content Grid Layout
+   ======================================== */
+
+.main-content-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  width: 100%;
+}
+
+/* ========================================
+   Summary Cards Section - Horizontal Layout
+   ======================================== */
+
+.summary-cards-horizontal {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+/* ========================================
+   Distribution Charts Section
+   ======================================== */
+
+.distribution-charts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+/* ========================================
+   Risk & Urgency Charts Section
+   ======================================== */
+
+.risk-urgency-charts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+/* ========================================
+   Daily Trends Section
+   ======================================== */
+
+.daily-trends-section {
+  width: 100%;
+  margin-bottom: var(--space-xl);
+}
+
+.chart-wide {
+  width: 100%;
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+@media (max-width: 1200px) {
+  .summary-cards-horizontal {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .distribution-charts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .risk-urgency-charts {
+    grid-template-columns: 1fr;
+  }
+  
+  .actions-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .summary-cards-horizontal {
+    grid-template-columns: 1fr;
+  }
+  
+  .distribution-charts {
+    grid-template-columns: 1fr;
+  }
+  
+  .risk-urgency-charts {
+    grid-template-columns: 1fr;
+  }
+  
+  .actions-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* ========================================
@@ -663,23 +768,22 @@
    Quick Actions Section
    ======================================== */
 
-/* Quick actions */
 .quick-actions {
-  margin-bottom: var(--space-2xl);
+  margin-top: var(--space-2xl);
 }
 
 .quick-actions h3 {
-  margin: 0 0 var(--space-lg);
+  margin-bottom: var(--space-lg);
+  color: var(--text-primary);
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--text-primary);
 }
 
-/* Actions grid */
 .actions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--space-lg);
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: var(--space-lg) !important;
+  width: 100% !important;
 }
 
 /* Action card */

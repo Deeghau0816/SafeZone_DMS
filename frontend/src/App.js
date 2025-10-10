@@ -54,8 +54,35 @@ import DMODashboard from "./Components/DMODashboard/DMODashboard";
 import ResponseDashboard from "./Components/ResponseDashboard/ResponseDashboard";
 import Deployments from "./Components/DMODashboard/Reports/Deployments";
 
-/* ---------- Layouts ---------- */
-function PublicLayout() {
+/* ----------- Donation Dashboard ----------- */
+import DashboardLayout from "./Component/DonationDashboard/DashboardLayout";
+import Overview from "./Component/DonationDashboard/Overview";
+import DonationsPanel from "./Component/DonationDashboard/DonationsPanel";
+import ActiveDisasterPanel from "./Component/DonationDashboard/active";
+import InventoryPanel from "./Component/DonationDashboard/InventoryPanel";
+import CentersPanel from "./Component/DonationDashboard/CentersPanel";
+import VolunteersPanel from "./Component/DonationDashboard/VolunteersPanel";
+import DistributionPanel from "./Component/DonationDashboard/DistributionPanel";
+import TopDonorsPage from "./Component/DonationDashboard/TopDonorsPage";
+import Operation from "./Component/DonationDashboard/Operation";
+import EditVolunteerPage from "./Component/DonationDashboard/EditVolunteerPage";
+import DonationEditPage from "./Component/DonationDashboard/DonationEditPage";
+import EditCenter from "./Component/DonationDashboard/EditCenter";
+import DistributionQuantityChart from './Component/DonationDashboard/distributionquantitychart';
+import TargetInventory from "./Component/DonationDashboard/targetinventory";
+import Ngopast from "./Component/DonationDashboard/ngopast";
+
+/* ----------- Public Donation Pages ----------- */
+import Donation from "./Component/Donation/Donationwebpage/Donation";
+import DistributionPlan from "./Component/Donation/Donate_distributionplan/Distributionplan";
+import Donationform from "./Component/Donation/Donatemoney/Donationform";
+import Ngodisaster from "./Component/Donation/Donate_activedisasters/Ngodisaster";
+import Centers from "./Component/Donation/donate_centers/centers";
+import Volunteer from "./Component/Donation/Donation_volunteer/Volunteer";
+import DonateItemForm from "./Component/Donation/Donaterelief/donateitemform";
+
+
+export default function App() {
   return (
     <>
       <Header />

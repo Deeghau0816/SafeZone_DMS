@@ -115,43 +115,56 @@
    Base Styles & Layout
    ======================================== */
 
-/* Main container with professional spacing */
+/* Main container with professional spacing - wider layout */
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--space-xl) var(--space-lg);
-  background: var(--bg-secondary);
-  min-height: calc(100vh - 84px);
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  padding: var(--space-xl) var(--space-lg) !important;
+  background: var(--bg-secondary) !important;
+  min-height: calc(100vh - 80px) !important;
+  overflow: visible !important;
+  height: auto !important;
+  width: 100% !important;
 }
 
 /* Reports hub main wrapper */
 .reports-hub {
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
-  color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%) !important;
+  color: var(--text-primary) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+  min-height: calc(100vh - 80px) !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  overflow: visible !important;
+  height: auto !important;
 }
 
 /* ========================================
    Header Section
    ======================================== */
 
-/* Top header with title and actions */
+/* Top header with title and actions - more spacing */
 .hub-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
   margin-bottom: var(--space-xl);
   padding: var(--space-lg) 0;
+  width: 100% !important;
+  max-width: none;
+  gap: var(--space-2xl);
 }
 
-/* Header actions container */
+/* Header actions container - positioned to the right */
 .header-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--space-md) !important;
+  margin-left: auto !important;
+  flex-shrink: 0 !important;
 }
 
-/* Professional page title */
+/* Professional page title - positioned to the left */
 .hub-top h1 {
   margin: 0;
   font-size: clamp(1.75rem, 4vw, 2.5rem);
@@ -163,6 +176,8 @@
   background-clip: text;
   letter-spacing: -0.025em;
   line-height: 1.2;
+  flex-shrink: 0 !important;
+  text-align: left !important;
 }
 
 /* ========================================
@@ -235,16 +250,18 @@
    Recent Requests Section
    ======================================== */
 
-/* Recent requests container */
+/* Recent requests container - increased width */
 .recent {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-2xl);
-  padding: var(--space-xl);
-  margin-bottom: var(--space-xl);
-  box-shadow: var(--shadow-lg);
-  position: relative;
-  overflow: hidden;
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-light) !important;
+  border-radius: var(--radius-2xl) !important;
+  padding: var(--space-xl) !important;
+  margin-bottom: var(--space-xl) !important;
+  box-shadow: var(--shadow-lg) !important;
+  position: relative !important;
+  overflow: visible !important;
+  width: 100% !important;
+  max-width: none !important;
 }
 
 /* Recent section header */
@@ -306,32 +323,34 @@
    Recent Requests Table
    ======================================== */
 
-/* Table styling */
+/* Table styling - full width */
 .recent-table {
-  width: 100%;
+  width: 100% !important;
   border-collapse: separate;
   border-spacing: 0;
+  min-width: 100%;
 }
 
-/* Table header and cells */
+/* Table header and cells - matching Dashboard padding */
 .recent-table th,
 .recent-table td {
-  padding: var(--space-md);
+  padding: 10px 6px;
   text-align: left;
   border-bottom: 1px solid var(--border-light);
 }
 
-/* Table header */
+/* Table header - matching Dashboard style */
 .recent-table th {
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  background: var(--bg-tertiary);
+  letter-spacing: 0.01em;
+  background: transparent;
+  padding: 10px 6px;
 }
 
-/* Table cells */
+/* Table cells - matching Dashboard font size */
 .recent-table td {
   color: var(--text-primary);
   font-size: 0.875rem;
@@ -351,85 +370,75 @@
   font-weight: 600;
 }
 
-/* Type icons */
+/* Type icons - matching Dashboard design */
 .type-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-md);
-  background: var(--bg-tertiary);
-  border: 2px solid var(--border-light);
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
 }
 
-/* Type-specific icon colors */
+/* Type-specific icon colors - matching Dashboard */
 .type-report {
-  color: var(--report-color);
-  background: var(--report-light);
-  border-color: var(--report-color);
+  background: #f59e0b; /* Orange/Yellow for reports */
+  color: white;
 }
 
 .type-aid {
-  color: var(--aid-color);
-  background: var(--aid-light);
-  border-color: var(--aid-color);
+  background: #10b981; /* Green for aid */
+  color: white;
 }
 
 .type-claim {
-  color: var(--claim-color);
-  background: var(--claim-light);
-  border-color: var(--claim-color);
+  background: #8b5cf6; /* Purple for claims */
+  color: white;
 }
 
-/* Count badges */
+/* Count badges - circular design like Dashboard */
 .count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 32px;
-  height: 32px;
-  padding: 0 var(--space-sm);
-  border-radius: var(--radius-full);
+  min-width: 24px;
+  height: 24px;
+  padding: 4px 8px;
+  border-radius: 50%;
   font-weight: 600;
-  font-size: 0.875rem;
-  border: 2px solid;
+  font-size: 0.75rem;
+  border: none;
+  color: white;
 }
 
-/* Count-specific styling */
+/* Count-specific styling - matching Dashboard colors */
 .count-report {
-  background: var(--report-lighter);
-  border-color: var(--report-color);
-  color: var(--report-color);
+  background: #f59e0b; /* Orange/Yellow for reports */
+  color: white;
 }
 
 .count-aid {
-  background: var(--aid-lighter);
-  border-color: var(--aid-color);
-  color: var(--aid-color);
+  background: #10b981; /* Green for aid */
+  color: white;
 }
 
 .count-claim {
-  background: var(--claim-lighter);
-  border-color: var(--claim-color);
-  color: var(--claim-color);
+  background: #8b5cf6; /* Purple for claims */
+  color: white;
 }
 
-/* Location column styling */
+/* Location column styling - simple text like Dashboard */
 .location-cell {
-  text-align: center;
+  text-align: left;
   padding: var(--space-md);
 }
 
 .location-text {
-  font-weight: 500;
-  color: var(--text-primary);
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  padding: var(--space-sm) var(--space-md);
-  display: inline-block;
-  max-width: 200px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -448,29 +457,51 @@
 
 /* Cards grid container */
 .cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--space-xl);
-  margin-bottom: 60px;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: var(--space-xl) !important;
+  margin-bottom: 60px !important;
+  align-items: start !important;
+  width: 100% !important;
+}
+
+/* Ultra-specific selector to ensure horizontal layout */
+section.cards {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: var(--space-xl) !important;
 }
 
 /* Individual card styling */
 .card {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-2xl);
-  padding: var(--space-xl);
-  box-shadow: var(--shadow-lg);
-  transition: all var(--transition-normal);
-  position: relative;
-  overflow: hidden;
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-light) !important;
+  border-radius: var(--radius-2xl) !important;
+  padding: var(--space-xl) !important;
+  box-shadow: var(--shadow-lg) !important;
+  transition: all var(--transition-normal) !important;
+  position: relative !important;
+  overflow: visible !important;
+  min-height: 280px !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 /* Card hover effect */
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-xl);
-  border-color: var(--primary);
+  transform: translateY(-4px) !important;
+  box-shadow: var(--shadow-xl) !important;
+  border-color: var(--primary) !important;
+}
+
+/* Card content distribution */
+.card .meta {
+  margin-top: auto !important;
+  margin-bottom: var(--space-md) !important;
+}
+
+.card .btn {
+  margin-top: auto !important;
 }
 
 /* Card header with icon, title, and badge */
@@ -643,10 +674,17 @@
    ======================================== */
 
 /* Tablet and smaller screens */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .cards {
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: var(--space-lg) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .cards {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-lg) !important;
   }
   
   .container {

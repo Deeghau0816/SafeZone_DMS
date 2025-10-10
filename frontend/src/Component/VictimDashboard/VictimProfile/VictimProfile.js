@@ -215,7 +215,16 @@ export default function VictimProfile() {
       {/* Header with title and action buttons */}
       <header className="profile-head">
         <h1>User Panel</h1>
-        <div className="actions">
+        <div 
+          className="actions"
+          style={{
+            display: 'flex !important',
+            flexDirection: 'row !important',
+            gap: '0.75rem !important',
+            alignItems: 'center !important',
+            flexWrap: 'nowrap !important'
+          }}
+        >
           <Link to={`/victim/profile/${id}/edit`} className="btn primary">
             ✏️ Edit Report
           </Link>

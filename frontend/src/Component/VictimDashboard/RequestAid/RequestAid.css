@@ -79,9 +79,10 @@
 
 /* Page Background */
 .page {
-  margin-top: 25px !important;
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
-  min-height: calc(100vh - 25px);
+  margin-top: 0 !important;
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%) !important;
+  min-height: calc(100vh - 80px) !important;
+  padding-top: 0 !important;
 }
 
 /* Container */

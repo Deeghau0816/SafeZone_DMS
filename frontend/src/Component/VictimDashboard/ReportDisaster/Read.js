@@ -83,30 +83,52 @@ function fmt(dt) {
 export default function Read({ victim, onDelete, hideActions, compact, showAssign, onAssign }) {
   const navigate = useNavigate();
   const [reportStatus, setReportStatus] = React.useState('');
-  
-  React.useEffect(() => {
-    // Load saved status from localStorage when component mounts
-    const savedStatus = localStorage.getItem(`report_status_${victim?._id || victim?.id}`);
-    if (savedStatus) {
-      setReportStatus(savedStatus);
-    }
-  }, [victim]);
+  const [hasUpdated, setHasUpdated] = React.useState(false);
   
   // Use victim ID to create unique localStorage key
   const vid = victim?._id || victim?.id;
   const storageKey = `report_viewed_${vid}`;
+  const updateKey = `report_updated_${vid}`;
+  
+  React.useEffect(() => {
+    // Load saved status from localStorage when component mounts
+    const savedStatus = localStorage.getItem(`report_status_${vid}`);
+    if (savedStatus) {
+      setReportStatus(savedStatus);
+    }
+    
+    // Check if this report has already been updated
+    const alreadyUpdated = localStorage.getItem(updateKey) === 'true';
+    setHasUpdated(alreadyUpdated);
+  }, [victim, vid, updateKey]);
   
   // Initialize state from localStorage
   const [isViewed, setIsViewed] = React.useState(() => {
     return localStorage.getItem(storageKey) === 'true';
   });
+
+  // Check for duplicate submissions based on NIC and recent timestamp
+  const duplicateCheck = React.useMemo(() => {
+    if (!victim) return null;
+    
+    const recentSubmissions = JSON.parse(localStorage.getItem('recentSubmissions') || '[]');
+    const now = Date.now();
+    const recentThreshold = 30000; // 30 seconds
+    
+    // Find if this victim's NIC has been submitted recently
+    const duplicateSubmission = recentSubmissions.find(sub => 
+      sub.nic === victim.nic && 
+      sub.id !== vid && // Different ID but same NIC
+      (now - sub.timestamp) < recentThreshold
+    );
+    
+    return duplicateSubmission;
+  }, [victim, vid]);
   
   if (!victim) return null;
 
   // Extract victim data with fallbacks
   const {
-    _id,
-    id,
     name,
     victimName,
     nic,
@@ -146,6 +168,22 @@ export default function Read({ victim, onDelete, hideActions, compact, showAssig
 
   return (
     <article className="r-card" style={compact ? { transform: "scale(0.92)", transformOrigin: "top left" } : undefined}>
+      {/* Duplicate warning banner */}
+      {duplicateCheck && (
+        <div className="duplicate-warning" style={{
+          backgroundColor: "#fef3c7",
+          border: "1px solid #f59e0b",
+          borderRadius: "8px",
+          padding: "12px",
+          margin: "16px",
+          fontSize: "14px",
+          color: "#92400e"
+        }}>
+          ⚠️ <strong>Duplicate Submission Detected:</strong> Another report with the same NIC was submitted recently. 
+          Please verify this is the correct record.
+        </div>
+      )}
+      
       {/* Card header with name, ID, and actions */}
       <header className="r-head">
         <div>
@@ -208,12 +246,30 @@ export default function Read({ victim, onDelete, hideActions, compact, showAssig
           )}
           {showAssign && (
             <footer className="r-actions">
-              {reportStatus === 'Approved' ? (
+              {hasUpdated ? (
+                <div className="update-notice">
+                  <span className="r-badge" style={{ backgroundColor: "#d1fae5", color: "#065f46", padding: "4px 12px", borderRadius: "16px", fontSize: "14px", fontWeight: "500" }}>
+                    ✓ Already Updated
+                  </span>
+                  <p style={{ fontSize: "12px", color: "#6b7280", margin: "4px 0 0 0" }}>
+                    This report has been processed and cannot be updated again.
+                  </p>
+                </div>
+              ) : reportStatus === 'Approved' ? (
                 <>
                   <span className="r-badge ok">Approved</span>
                   <button
                     className="r-btn success"
-                    onClick={() => (typeof onAssign === 'function' ? onAssign(vid, victim) : alert('Assigned'))}
+                    onClick={() => {
+                      if (typeof onAssign === 'function') {
+                        onAssign(vid, victim);
+                      } else {
+                        alert('Assigned');
+                      }
+                      // Mark as updated to prevent further changes
+                      setHasUpdated(true);
+                      localStorage.setItem(updateKey, 'true');
+                    }}
                   >
                     Assign
                   </button>
@@ -228,6 +284,9 @@ export default function Read({ victim, onDelete, hideActions, compact, showAssig
                     onClick={() => {
                       setReportStatus('Approved');
                       localStorage.setItem(`report_status_${vid}`, 'Approved');
+                      // Mark as updated to prevent further changes
+                      setHasUpdated(true);
+                      localStorage.setItem(updateKey, 'true');
                     }}
                   >
                     Approve
@@ -237,6 +296,9 @@ export default function Read({ victim, onDelete, hideActions, compact, showAssig
                     onClick={() => {
                       setReportStatus('Rejected');
                       localStorage.setItem(`report_status_${vid}`, 'Rejected');
+                      // Mark as updated to prevent further changes
+                      setHasUpdated(true);
+                      localStorage.setItem(updateKey, 'true');
                     }}
                   >
                     Reject
