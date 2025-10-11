@@ -7,11 +7,11 @@ const API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 /* UI helpers */
 function ToggleChip({ id, checked, onChange, children }) {
   return (
-    <div className="toggle-chip">
-      <input id={id} type="checkbox" className="toggle-inp" checked={checked} onChange={onChange} />
-      <label htmlFor={id} className="toggle-lab">
-        <span className="tick" aria-hidden>✓</span>
-        <span className="txt">{children}</span>
+    <div className="don-toggle-chip">
+      <input id={id} type="checkbox" className="don-toggle-inp" checked={checked} onChange={onChange} />
+      <label htmlFor={id} className="don-toggle-lab">
+        <span className="don-tick" aria-hidden>✓</span>
+        <span className="don-txt">{children}</span>
       </label>
     </div>
   );
@@ -19,13 +19,13 @@ function ToggleChip({ id, checked, onChange, children }) {
 
 function Field({ label, required = false, hint, error, children }) {
   return (
-    <div className={`field ${error ? "field-err" : ""}`}>
-      <label className="lab">
-        {label} {required && <span className="req">*</span>}
+    <div className={`don-field ${error ? "don-field-err" : ""}`}>
+      <label className="don-lab">
+        {label} {required && <span className="don-req">*</span>}
       </label>
       {children}
-      {hint && !error ? <div className="help">{hint}</div> : null}
-      {error ? <div className="err-text">{error}</div> : null}
+      {hint && !error ? <div className="don-help">{hint}</div> : null}
+      {error ? <div className="don-err-text">{error}</div> : null}
     </div>
   );
 }
@@ -302,25 +302,26 @@ We appreciate your support!`;
 
   // -------- UI --------
   return (
-    <form className="df-wrap" onSubmit={onSubmit}>
-      <div className="df-hero">
+    <div className="donation-component">
+      <form className="don-wrap" onSubmit={onSubmit}>
+      <div className="don-hero">
         <div>
-          <h1 className="df-title">
+          <h1 className="don-title">
             {donationCause?.title ? `Fundraiser • ${donationCause.title}` : "Fundraiser"}
           </h1>
-          <div className="df-sub">
+          <div className="don-sub">
             {donationCause?.title
               ? "Your donation will be allocated to the selected response."
               : "Please support our cause with a small donation today!"}
           </div>
-          {donationCause?.area && <div className="chip soft mt6">Area: {donationCause.area}</div>}
+          {donationCause?.area && <div className="don-chip don-soft don-mt6">Area: {donationCause.area}</div>}
         </div>
 
         {/* Only a single Cancel button here, per your requirement */}
         <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
           <button
             type="button"
-            className="btn btn-ghost"
+            className="don-btn don-btn-ghost"
             onClick={() => {
               if (location.state?.from) nav(location.state.from);
               else if (window.history.length > 1) nav(-1);
@@ -333,37 +334,37 @@ We appreciate your support!`;
       </div>
 
       {/* Alerts */}
-      {successMsg && <div className="alert alert-success">{successMsg}</div>}
+      {successMsg && <div className="don-alert don-alert-success">{successMsg}</div>}
       {(submitErr || serverErrors.length > 0) && (
-        <div className="alert alert-error">
+        <div className="don-alert don-alert-error">
           {submitErr}
           {serverErrors.length > 0 && (
-            <ul className="err-list">
+            <ul className="don-err-list">
               {serverErrors.map((m, i) => <li key={i}>{m}</li>)}
             </ul>
           )}
         </div>
       )}
 
-      <div className="df-grid">
-        <section className="panel">
-          <h3 className="panel-title">Donor details</h3>
+      <div className="don-grid">
+        <section className="don-panel">
+          <h3 className="don-panel-title">Donor details</h3>
 
-          <div className="row">
-            <label className="lab">Donor type</label>
-            <div className="chips">
-              <label className="radio">
+          <div className="don-row">
+            <label className="don-lab">Donor type</label>
+            <div className="don-chips">
+              <label className="don-radio">
                 <input type="radio" name="donorType" checked={donorType === "individual"} onChange={() => setDonorType("individual")} />
                 <span>Individual</span>
               </label>
-              <label className="radio">
+              <label className="don-radio">
                 <input type="radio" name="donorType" checked={donorType === "organization"} onChange={() => setDonorType("organization")} />
                 <span>Organization</span>
               </label>
             </div>
           </div>
 
-          <div className="grid2">
+          <div className="don-grid2">
             <Field
               label={donorType === "organization" ? "Organization name" : "Donor name"}
               required
@@ -371,7 +372,7 @@ We appreciate your support!`;
             >
               <input
                 ref={refs.displayName}
-                className={`inp ${errors.displayName ? "inp-err" : ""}`}
+                className={`don-inp ${errors.displayName ? "don-inp-err" : ""}`}
                 placeholder={donorType === "organization" ? "e.g., Kind Hearts Foundation" : "e.g., Tharindu Perera"}
                 value={donorType === "organization" ? orgName : donorName}
                 onChange={(e) => donorType === "organization" ? setOrgName(e.target.value) : setDonorName(e.target.value)}
@@ -381,7 +382,7 @@ We appreciate your support!`;
             <Field label="Phone" error={errors.donorPhone} hint="e.g., +94712345678 or 0712345678">
               <input
                 ref={refs.donorPhone}
-                className={`inp ${errors.donorPhone ? "inp-err" : ""}`}
+                className={`don-inp ${errors.donorPhone ? "don-inp-err" : ""}`}
                 placeholder="+94 XX XXX XXXX"
                 value={donorPhone}
                 onChange={(e) => setDonorPhone(e.target.value)}
@@ -389,38 +390,38 @@ We appreciate your support!`;
             </Field>
           </div>
 
-          <div className="grid2">
+          <div className="don-grid2">
             <Field label="Email" error={errors.donorEmail}>
               <input
                 ref={refs.donorEmail}
-                className={`inp ${errors.donorEmail ? "inp-err" : ""}`}
+                className={`don-inp ${errors.donorEmail ? "don-inp-err" : ""}`}
                 placeholder="name@email.com"
                 value={donorEmail}
                 onChange={(e) => setDonorEmail(e.target.value)}
               />
             </Field>
             <Field label="Address">
-              <input className="inp" placeholder="Street, City" value={donorAddress} onChange={(e) => setDonorAddress(e.target.value)} />
+              <input className="don-inp" placeholder="Street, City" value={donorAddress} onChange={(e) => setDonorAddress(e.target.value)} />
             </Field>
           </div>
 
-          <div className="grid3">
+          <div className="don-grid3">
             <Field label="Amount" required error={errors.amount}>
               <input
                 ref={refs.amount}
-                className={`inp ${errors.amount ? "inp-err" : ""}`}
+                className={`don-inp ${errors.amount ? "don-inp-err" : ""}`}
                 placeholder="e.g., 5000"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
               />
             </Field>
             <Field label="Currency" required>
-              <select className="inp" value={currency} onChange={(e) => setCurrency(e.target.value)}>
+              <select className="don-inp" value={currency} onChange={(e) => setCurrency(e.target.value)}>
                 <option>LKR</option><option>USD</option><option>EUR</option>
               </select>
             </Field>
             <Field label="Channel" required>
-              <select className="inp" value={channel} onChange={(e) => setChannel(e.target.value)}>
+              <select className="don-inp" value={channel} onChange={(e) => setChannel(e.target.value)}>
                 <option value="bank_deposit">Bank deposit</option>
                 <option value="online_gateway">Online gateway</option>
                 <option value="cash_counter">Cash counter</option>
@@ -431,15 +432,15 @@ We appreciate your support!`;
           <Field label="WhatsApp (optional)" error={errors.whatsapp}>
             <input
               ref={refs.whatsapp}
-              className={`inp ${errors.whatsapp ? "inp-err" : ""}`}
+              className={`don-inp ${errors.whatsapp ? "don-inp-err" : ""}`}
               placeholder="+94 7X XXX XXXX"
               value={whatsapp}
               onChange={(e) => setWhatsapp(e.target.value)}
             />
           </Field>
 
-          <div className="consent-wrap">
-            <div className="consent-grid">
+          <div className="don-consent-wrap">
+            <div className="don-consent-grid">
               <ToggleChip
                 id="isAnonymous"
                 checked={isAnonymous}
@@ -463,16 +464,16 @@ We appreciate your support!`;
           </div>
         </section>
 
-        <section className="panel">
-          <h3 className="panel-title">Payment details</h3>
+        <section className="don-panel">
+          <h3 className="don-panel-title">Payment details</h3>
 
           {channel === "bank_deposit" && (
             <>
-              <div className="grid3">
+              <div className="don-grid3">
                 <Field label="Bank name" required error={errors.bankName}>
                   <input
                     ref={refs.bankName}
-                    className={`inp ${errors.bankName ? "inp-err" : ""}`}
+                    className={`don-inp ${errors.bankName ? "don-inp-err" : ""}`}
                     placeholder="e.g., BOC"
                     value={bank.name}
                     onChange={(e) => setBank((b) => ({ ...b, name: e.target.value }))}
@@ -480,7 +481,7 @@ We appreciate your support!`;
                 </Field>
                 <Field label="Branch">
                   <input
-                    className="inp"
+                    className="don-inp"
                     placeholder="e.g., Matara"
                     value={bank.branch}
                     onChange={(e) => setBank((b) => ({ ...b, branch: e.target.value }))}
@@ -490,17 +491,17 @@ We appreciate your support!`;
                   <input
                     ref={refs.depositDate}
                     type="date"
-                    className={`inp ${errors.depositDate ? "inp-err" : ""}`}
+                    className={`don-inp ${errors.depositDate ? "don-inp-err" : ""}`}
                     value={bank.depositDate}
                     onChange={(e) => setBank((b) => ({ ...b, depositDate: e.target.value }))}
                   />
                 </Field>
               </div>
 
-              <div className="grid2">
+              <div className="don-grid2">
                 <Field label="Depositor name">
                   <input
-                    className="inp"
+                    className="don-inp"
                     placeholder="who deposited"
                     value={bank.depositor}
                     onChange={(e) => setBank((b) => ({ ...b, depositor: e.target.value }))}
@@ -509,7 +510,7 @@ We appreciate your support!`;
                 <Field label="Reference / Slip No." required error={errors.reference}>
                   <input
                     ref={refs.reference}
-                    className={`inp ${errors.reference ? "inp-err" : ""}`}
+                    className={`don-inp ${errors.reference ? "don-inp-err" : ""}`}
                     placeholder="SLIP-12345"
                     value={bank.reference}
                     onChange={(e) => setBank((b) => ({ ...b, reference: e.target.value }))}
@@ -517,16 +518,16 @@ We appreciate your support!`;
                 </Field>
               </div>
 
-              <div className="upload-card">
-                <div className="upload-head">
+              <div className="don-upload-card">
+                <div className="don-upload-head">
                   <strong>Upload deposit evidence</strong>
-                  <span className="muted">PNG/JPG, ≤ 2 MB</span>
+                  <span className="don-muted">PNG/JPG, ≤ 2 MB</span>
                 </div>
-                <input className="inp" type="file" accept="image/png,image/jpeg" onChange={onProofSelect} />
-                {proofErr && <div className="err-text">{proofErr}</div>}
+                <input className="don-inp" type="file" accept="image/png,image/jpeg" onChange={onProofSelect} />
+                {proofErr && <div className="don-err-text">{proofErr}</div>}
                 {proofPreview && (
-                  <div className="proof-wrap">
-                    <img src={proofPreview} alt="Proof preview" className="proof-img" />
+                  <div className="don-proof-wrap">
+                    <img src={proofPreview} alt="Proof preview" className="don-proof-img" />
                   </div>
                 )}
               </div>
@@ -534,23 +535,23 @@ We appreciate your support!`;
           )}
 
           {channel === "online_gateway" && (
-            <div className="gateway-demo">
-              <div className="gw-row">
+            <div className="don-gateway-demo">
+              <div className="don-gw-row">
                 <Field label="Card number" required error={errors.cardNo}>
                   <input
                     ref={refs.cardNo}
-                    className={`inp ${errors.cardNo ? "inp-err" : ""}`}
+                    className={`don-inp ${errors.cardNo ? "don-inp-err" : ""}`}
                     placeholder="1234 5678 9012 3456"
                     value={gateway.cardNo}
                     onChange={(e) => setGateway((g) => ({ ...g, cardNo: e.target.value }))}
                   />
                 </Field>
               </div>
-              <div className="grid3">
+              <div className="don-grid3">
                 <Field label="Expiry (MM/YY)" required error={errors.exp}>
                   <input
                     ref={refs.exp}
-                    className={`inp ${errors.exp ? "inp-err" : ""}`}
+                    className={`don-inp ${errors.exp ? "don-inp-err" : ""}`}
                     placeholder="MM/YY"
                     value={gateway.exp}
                     onChange={(e) => setGateway((g) => ({ ...g, exp: e.target.value }))}
@@ -559,7 +560,7 @@ We appreciate your support!`;
                 <Field label="CVC" required error={errors.cvc}>
                   <input
                     ref={refs.cvc}
-                    className={`inp ${errors.cvc ? "inp-err" : ""}`}
+                    className={`don-inp ${errors.cvc ? "don-inp-err" : ""}`}
                     placeholder="123"
                     value={gateway.cvc}
                     onChange={(e) => setGateway((g) => ({ ...g, cvc: e.target.value }))}
@@ -568,32 +569,33 @@ We appreciate your support!`;
                 <Field label="Cardholder name" required error={errors.holder}>
                   <input
                     ref={refs.holder}
-                    className={`inp ${errors.holder ? "inp-err" : ""}`}
+                    className={`don-inp ${errors.holder ? "don-inp-err" : ""}`}
                     placeholder="As printed on the card"
                     value={gateway.holder}
                     onChange={(e) => setGateway((g) => ({ ...g, holder: e.target.value }))}
                   />
                 </Field>
               </div>
-              <div className="muted small">Demo only — do not enter real card data.</div>
+              <div className="don-muted don-small">Demo only — do not enter real card data.</div>
             </div>
           )}
         </section>
       </div>
 
-      <div className="form-actions">
-        <button type="submit" className="btn btn-primary btn-lg" disabled={saving}>
+      <div className="don-form-actions">
+        <button type="submit" className="don-btn don-btn-primary don-btn-lg" disabled={saving}>
           {saving ? "Submitting…" : "Submit"}
         </button>
       </div>
 
       {/* success toast */}
       {showToast && (
-        <div className="toast toast-success">
+        <div className="don-toast don-toast-success">
           <span>Donation recorded successfully.</span>
-          <button className="toast-x" onClick={() => setShowToast(false)} aria-label="Close">×</button>
+          <button className="don-toast-x" onClick={() => setShowToast(false)} aria-label="Close">×</button>
         </div>
       )}
     </form>
+    </div>
   );
 }

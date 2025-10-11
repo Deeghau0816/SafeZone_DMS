@@ -14,6 +14,24 @@
   --don-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
+/* Scoped CSS for Volunteer Component - Only affects files with volunteer-component class */
+.volunteer-component {
+  /* CSS Variables scoped to volunteer component */
+  --vol-primary: #2563eb;
+  --vol-primary-hover: #1d4ed8;
+  --vol-danger: #dc2626;
+  --vol-success: #16a34a;
+  --vol-warning: #f59e0b;
+  --vol-info: #06b6d4;
+  --vol-muted: #6b7280;
+  --vol-border: #e5e7eb;
+  --vol-bg: #ffffff;
+  --vol-bg-secondary: #f9fafb;
+  --vol-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --vol-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --vol-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
 /* Volunteer Container */
 .donation-component .don-volunteer-container {
   max-width: 1000px;
@@ -273,5 +291,365 @@
   
   .donation-component .don-card {
     padding: 20px;
+  }
+}
+
+/* ========== VOLUNTEER COMPONENT SCOPED STYLES ========== */
+
+/* Volunteer Component Layout */
+.volunteer-component .vol-wrap {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.volunteer-component .vol-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.volunteer-component .vol-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+  border-radius: 50%;
+  transform: translate(50px, -50px);
+  z-index: 1;
+}
+
+.volunteer-component .vol-left {
+  position: relative;
+  z-index: 2;
+}
+
+.volunteer-component .vol-title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.volunteer-component .vol-sub {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0;
+}
+
+.volunteer-component .vol-right {
+  position: relative;
+  z-index: 2;
+}
+
+/* Volunteer Component Buttons */
+.volunteer-component .vol-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.volunteer-component .vol-btn-ghost {
+  background: white;
+  color: #6b7280;
+  border: 2px solid #e5e7eb;
+}
+
+.volunteer-component .vol-btn-ghost:hover {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-color: #6b7280;
+  color: #374151;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(107, 114, 128, 0.2);
+}
+
+.volunteer-component .vol-btn-primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+}
+
+.volunteer-component .vol-btn-primary:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(16, 185, 129, 0.4);
+}
+
+.volunteer-component .vol-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Volunteer Component Messages */
+.volunteer-component .vol-msg {
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.volunteer-component .vol-success {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid #a7f3d0;
+  color: #065f46;
+}
+
+.volunteer-component .vol-error {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 2px solid #fecaca;
+  color: #991b1b;
+}
+
+/* Volunteer Component Panels */
+.volunteer-component .vol-panel {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.volunteer-component .vol-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+  border-radius: 50%;
+  transform: translate(-30px, -30px);
+  z-index: 1;
+}
+
+.volunteer-component .vol-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Volunteer Component Form Elements */
+.volunteer-component .vol-grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.volunteer-component .vol-field {
+  position: relative;
+  z-index: 2;
+}
+
+.volunteer-component .vol-field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.volunteer-component .vol-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  font-size: 14px;
+  color: #374151;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.volunteer-component .vol-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+}
+
+.volunteer-component .vol-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Volunteer Component Segmented Controls */
+.volunteer-component .vol-seg {
+  display: flex;
+  gap: 8px;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.volunteer-component .vol-seg-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #6b7280;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.volunteer-component .vol-seg-btn.vol-on {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.volunteer-component .vol-seg-btn:hover:not(.vol-on) {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+/* Volunteer Component Tag Picker */
+.volunteer-component .vol-tagpick {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.volunteer-component .vol-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  color: #6b7280;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.volunteer-component .vol-chip.vol-on {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.volunteer-component .vol-chip:hover:not(.vol-on) {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-color: #3b82f6;
+  color: #3b82f6;
+  transform: translateY(-1px);
+}
+
+.volunteer-component .vol-chip.vol-solid {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  border-color: #f59e0b;
+}
+
+.volunteer-component .vol-chip.vol-solid.vol-on {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.volunteer-component .vol-chip-input {
+  flex: 1;
+  min-width: 200px;
+  margin-left: 8px;
+}
+
+/* Volunteer Component Hints */
+.volunteer-component .vol-hint {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Volunteer Component Actions */
+.volunteer-component .vol-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive Design for Volunteer Component */
+@media (max-width: 768px) {
+  .volunteer-component .vol-wrap {
+    padding: 15px;
+  }
+  
+  .volunteer-component .vol-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .volunteer-component .vol-title {
+    font-size: 24px;
+  }
+  
+  .volunteer-component .vol-grid2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .volunteer-component .vol-actions {
+    flex-direction: column;
+  }
+  
+  .volunteer-component .vol-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .volunteer-component .vol-tagpick {
+    justify-content: center;
   }
 }

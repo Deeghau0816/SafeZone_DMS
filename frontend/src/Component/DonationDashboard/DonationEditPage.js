@@ -1,8 +1,7 @@
 // frontend/src/Component/DonationDashboard/DonationEditPage.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import "./donationcss/donate_dashboard.css";
 
 const API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 const api = axios.create({ baseURL: `${API_BASE}/api` });
@@ -47,6 +46,141 @@ const waMsg = (d) =>
 export default function DonationEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  // ---- theme (auto light/dark) ----
+  const prefersDark =
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  const theme = useMemo(
+    () => ({
+      pageBg: prefersDark ? "#0b0f14" : "#ffffff",
+      cardBg: prefersDark ? "#111827" : "#ffffff",
+      text: prefersDark ? "#e5e7eb" : "#111827",
+      muted: prefersDark ? "#9ca3af" : "#6b7280",
+      border: prefersDark ? "#1f2937" : "#e5e7eb",
+      brand: prefersDark ? "#60a5fa" : "#3b82f6",
+      brandText: "#ffffff",
+      danger: prefersDark ? "#ef4444" : "#dc2626",
+      chipBg: prefersDark ? "#1f2937" : "#f3f4f6",
+      inputBg: prefersDark ? "#0b0f14" : "#ffffff",
+      panelTint: prefersDark ? "#0f172a" : "#f8fafc",
+      shadow: prefersDark
+        ? "0 10px 30px rgba(0,0,0,.55)"
+        : "0 10px 30px rgba(0,0,0,.12)"
+    }),
+    [prefersDark]
+  );
+
+  const styles = useMemo(() => {
+    const baseField = {
+      width: "100%",
+      height: 40,
+      borderRadius: 8,
+      padding: "0 12px",
+      border: `1px solid ${theme.border}`,
+      background: theme.inputBg,
+      color: theme.text,
+      outline: "none",
+    };
+    return {
+      wrap: {
+        maxWidth: 1000,
+        margin: "0 auto",
+        padding: "24px 16px 48px",
+        color: theme.text,
+        background: theme.pageBg,
+      },
+      head: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 12,
+        marginBottom: 16,
+        borderBottom: `1px solid ${theme.border}`,
+        paddingBottom: 8,
+      },
+      title: { margin: 0, fontSize: 26, fontWeight: 800, color: theme.text },
+      btn: {
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: 38,
+        padding: "0 14px",
+        borderRadius: 8,
+        border: `1px solid ${theme.border}`,
+        background: theme.inputBg,
+        color: theme.text,
+        cursor: "pointer",
+        textDecoration: "none",
+      },
+      btnPrimary: {
+        background: theme.brand,
+        border: `1px solid ${theme.brand}`,
+        color: theme.brandText,
+      },
+      btnDanger: {
+        background: prefersDark ? "#7f1d1d" : "#fee2e2",
+        border: `1px solid ${theme.danger}`,
+        color: theme.danger,
+      },
+      row: { display: "flex", alignItems: "center", gap: 12 },
+      muted: { color: theme.muted },
+      thumb: {
+        display: "block",
+        width: 220,
+        maxHeight: 180,
+        objectFit: "cover",
+        borderRadius: 8,
+        border: `1px solid ${theme.border}`,
+        background: theme.cardBg,
+        boxShadow: theme.shadow,
+      },
+      formGrid: {
+        display: "grid",
+        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+        gap: 12,
+        background: theme.cardBg,
+        borderRadius: 12,
+        padding: 16,
+        border: `1px solid ${theme.border}`,
+        boxShadow: theme.shadow,
+        marginBottom: 16,
+      },
+      label: { display: "grid", gap: 6, fontSize: 13, color: theme.text },
+      input: baseField,
+      select: baseField,
+      textarea: {
+        ...baseField,
+        height: "auto",
+        minHeight: 96,
+        padding: 12,
+        lineHeight: 1.4,
+        resize: "vertical",
+      },
+      switchesRow: {
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        background: theme.panelTint,
+        border: `1px solid ${theme.border}`,
+        borderRadius: 12,
+        padding: 12,
+      },
+      switch: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 8,
+        padding: "6px 10px",
+        borderRadius: 999,
+        border: `1px solid ${theme.border}`,
+        background: theme.cardBg,
+        color: theme.text,
+        cursor: "pointer",
+      },
+    };
+  }, [theme, prefersDark]);
 
   const [data, setData] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -108,40 +242,62 @@ export default function DonationEditPage() {
     }
   };
 
-  if (err) return <div className="ngo-wrap"><p className="ngo-error">{err}</p></div>;
-  if (!data) return <div className="ngo-wrap"><p className="muted">Loading…</p></div>;
+  if (err) {
+    return (
+      <div style={styles.wrap}>
+        <p style={{ ...styles.muted, color: theme.danger, fontWeight: 600 }}>{err}</p>
+      </div>
+    );
+  }
+  if (!data) {
+    return (
+      <div style={styles.wrap}>
+        <p style={styles.muted}>Loading…</p>
+      </div>
+    );
+  }
 
   const wa = normWA(data.whatsapp || data.donorPhone);
   const waHref = wa ? `https://wa.me/${wa}?text=${waMsg(data)}` : null;
 
   return (
-    <div className="ngo-wrap">
-      <div className="ngo-head">
-        <h1 className="ngo-title">Edit Donation</h1>
-        <div>
-          <button className="ngo-btn" onClick={() => navigate(-1)}>Back</button>
-          <button className="ngo-btn ngo-btn-danger" onClick={remove}>Delete</button>
+    <div style={styles.wrap}>
+      {/* header */}
+      <div style={styles.head}>
+        <h1 style={styles.title}>Edit Donation</h1>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button style={styles.btn} onClick={() => navigate(-1)}>Back</button>
+          <button style={{ ...styles.btn, ...styles.btnDanger }} onClick={remove}>Delete</button>
         </div>
       </div>
 
+      {/* evidence */}
       <div style={{ marginBottom: 12 }}>
-        <div style={{ fontWeight: 700, marginBottom: 6 }}>Deposit evidence</div>
+        <div style={{ fontWeight: 700, marginBottom: 6, color: theme.text }}>Deposit evidence</div>
         {data.evidence?.path ? (
           <a href={`${API_BASE}${data.evidence.path}`} target="_blank" rel="noreferrer">
-            <img className="ngo-slipthumb" src={`${API_BASE}${data.evidence.path}`} alt="slip" />
+            <img
+              src={`${API_BASE}${data.evidence.path}`}
+              alt="slip"
+              style={styles.thumb}
+            />
           </a>
         ) : (
-          <div className="muted">No file uploaded</div>
+          <div style={styles.muted}>No file uploaded</div>
         )}
         <div style={{ marginTop: 8 }}>
-          <input type="file" accept="image/png,image/jpeg" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+          <input
+            type="file"
+            accept="image/png,image/jpeg"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
+          />
         </div>
       </div>
 
       {/* Donor type */}
-      <div className="row gap12" style={{marginBottom:6}}>
-        <label className="strong">Donor type:</label>
-        <label className="ngo-switch">
+      <div style={{ ...styles.row, marginBottom: 6 }}>
+        <label style={{ fontWeight: 700, color: theme.text }}>Donor type:</label>
+        <label style={styles.switch}>
           <input
             type="radio"
             name="dtype"
@@ -150,7 +306,7 @@ export default function DonationEditPage() {
           />
           <span>Individual</span>
         </label>
-        <label className="ngo-switch">
+        <label style={styles.switch}>
           <input
             type="radio"
             name="dtype"
@@ -161,81 +317,98 @@ export default function DonationEditPage() {
         </label>
       </div>
 
-      <div className="ngo-formgrid">
-        <label>Donor name
-          <input className="ngo-input" value={data.donorName || ""} onChange={(e) => set("donorName", e.target.value)} />
+      {/* form grid */}
+      <div style={styles.formGrid}>
+        <label style={styles.label}>Donor name
+          <input style={styles.input} value={data.donorName || ""} onChange={(e) => set("donorName", e.target.value)} />
         </label>
-        <label>Email
-          <input className="ngo-input" value={data.donorEmail || ""} onChange={(e) => set("donorEmail", e.target.value)} />
+        <label style={styles.label}>Email
+          <input style={styles.input} value={data.donorEmail || ""} onChange={(e) => set("donorEmail", e.target.value)} />
         </label>
-        <label>Phone
-          <input className="ngo-input" value={data.donorPhone || ""} onChange={(e) => set("donorPhone", e.target.value)} />
+        <label style={styles.label}>Phone
+          <input style={styles.input} value={data.donorPhone || ""} onChange={(e) => set("donorPhone", e.target.value)} />
         </label>
-        <label>Amount
-          <input type="number" className="ngo-input" value={data.amount ?? ""} onChange={(e) => set("amount", e.target.value)} />
+        <label style={styles.label}>Amount
+          <input type="number" style={styles.input} value={data.amount ?? ""} onChange={(e) => set("amount", e.target.value)} />
         </label>
-        <label>Currency
-          <select className="ngo-select" value={data.currency || ""} onChange={(e) => set("currency", e.target.value)}>
+        <label style={styles.label}>Currency
+          <select style={styles.select} value={data.currency || ""} onChange={(e) => set("currency", e.target.value)}>
             {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
         </label>
-        <label>Channel
-          <select className="ngo-select" value={data.channel || ""} onChange={(e) => set("channel", e.target.value)}>
+        <label style={styles.label}>Channel
+          <select style={styles.select} value={data.channel || ""} onChange={(e) => set("channel", e.target.value)}>
             {CHANNELS.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
         </label>
-        <label>Gateway (if online)
-          <input className="ngo-input" value={data.gateway || ""} onChange={(e) => set("gateway", e.target.value)} />
+        <label style={styles.label}>Gateway (if online)
+          <input style={styles.input} value={data.gateway || ""} onChange={(e) => set("gateway", e.target.value)} />
         </label>
-        <label>Bank name (if deposit)
-          <input className="ngo-input" value={data.bankName || ""} onChange={(e) => set("bankName", e.target.value)} />
+        <label style={styles.label}>Bank name (if deposit)
+          <input style={styles.input} value={data.bankName || ""} onChange={(e) => set("bankName", e.target.value)} />
         </label>
-        <label>Branch
-          <input className="ngo-input" value={data.branch || ""} onChange={(e) => set("branch", e.target.value)} />
+        <label style={styles.label}>Branch
+          <input style={styles.input} value={data.branch || ""} onChange={(e) => set("branch", e.target.value)} />
         </label>
-        <label>Reference No
-          <input className="ngo-input" value={data.referenceNo || ""} onChange={(e) => set("referenceNo", e.target.value)} />
+        <label style={styles.label}>Reference No
+          <input style={styles.input} value={data.referenceNo || ""} onChange={(e) => set("referenceNo", e.target.value)} />
         </label>
-        <label>Transaction Ref
-          <input className="ngo-input" value={data.transactionRef || ""} onChange={(e) => set("transactionRef", e.target.value)} />
+        <label style={styles.label}>Transaction Ref
+          <input style={styles.input} value={data.transactionRef || ""} onChange={(e) => set("transactionRef", e.target.value)} />
         </label>
 
         {/* Dates */}
-        <label>Deposit date
-          <input type="date" className="ngo-input" value={toDateValue(data.depositDate)} onChange={(e) => set("depositDate", e.target.value)} />
+        <label style={styles.label}>Deposit date
+          <input type="date" style={styles.input} value={toDateValue(data.depositDate)} onChange={(e) => set("depositDate", e.target.value)} />
         </label>
-        <label>Recorded at (date &amp; time)
-          <input type="datetime-local" className="ngo-input" value={toDTLocalValue(data.createdAt)} onChange={(e) => set("createdAt", e.target.value)} />
+        <label style={styles.label}>Recorded at (date &amp; time)
+          <input type="datetime-local" style={styles.input} value={toDTLocalValue(data.createdAt)} onChange={(e) => set("createdAt", e.target.value)} />
         </label>
 
-        <label>Status
-          <select className="ngo-select" value={data.status || "RECEIVED"} onChange={(e) => set("status", e.target.value)}>
+        <label style={styles.label}>Status
+          <select style={styles.select} value={data.status || "RECEIVED"} onChange={(e) => set("status", e.target.value)}>
             {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
           </select>
         </label>
-        <label>Note
-          <textarea className="ngo-input" rows={3} value={data.note || ""} onChange={(e) => set("note", e.target.value)} />
+        <label style={{ ...styles.label, gridColumn: "1 / -1" }}>Note
+          <textarea style={styles.textarea} rows={3} value={data.note || ""} onChange={(e) => set("note", e.target.value)} />
         </label>
       </div>
 
       {/* Visibility toggles */}
-      <div className="row gap12" style={{marginBottom:16}}>
-        <label className="ngo-switch">
+      <div style={{ ...styles.switchesRow, marginBottom: 16 }}>
+        <label style={styles.switch}>
           <input type="checkbox" checked={!!data.isAnonymous} onChange={(e)=> set("isAnonymous", e.target.checked)} />
-            <span>Make donor anonymous</span>
+          <span>Make donor anonymous</span>
         </label>
-        <label className="ngo-switch">
+        <label style={styles.switch}>
           <input type="checkbox" checked={!!data.allowNamePublic} onChange={(e)=> set("allowNamePublic", e.target.checked)} />
           <span>Allow name to be public</span>
         </label>
       </div>
 
+      {/* actions */}
       <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
-        <button disabled={saving} className="ngo-btn ngo-btn-primary" onClick={save}>
+        <button
+          disabled={saving}
+          onClick={save}
+          style={{
+            ...styles.btn,
+            ...styles.btnPrimary,
+            opacity: saving ? 0.8 : 1,
+            pointerEvents: saving ? "none" : "auto",
+          }}
+        >
           {saving ? "Saving…" : "Save changes"}
         </button>
+
         {waHref && (
-          <a className="ngo-btn" href={waHref} target="_blank" rel="noreferrer">
+          <a
+            href={waHref}
+            target="_blank"
+            rel="noreferrer"
+            style={styles.btn}
+          >
             Send WhatsApp Thank-you
           </a>
         )}

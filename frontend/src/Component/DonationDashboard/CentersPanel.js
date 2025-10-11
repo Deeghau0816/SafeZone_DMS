@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import EditCenter from "./EditCenter"; // modal
+import "./donationcss/donate_dashboard.css";
 
 function CentersPanel() {
   const navigate = useNavigate();
@@ -153,9 +154,11 @@ function CentersPanel() {
   // rendering
   if (loading) {
     return (
-      <div className="dd-centers-panel">
-        <div className="dd-loading">
-          <p>Loading centers...</p>
+      <div className="donation-dashboard-component">
+        <div className="dd-centers-panel">
+          <div className="dd-loading">
+            <p>Loading centers...</p>
+          </div>
         </div>
       </div>
     );
@@ -163,19 +166,48 @@ function CentersPanel() {
 
   if (error) {
     return (
-      <div className="dd-centers-panel">
-        <div className="dd-error">
-          <p>{error}</p>
-          <button className="dd-btn dd-btn-primary" onClick={fetchCenters}>
-            Retry
-          </button>
+      <div className="donation-dashboard-component">
+        <div className="dd-centers-panel">
+          <div className="dd-error">
+            <p>{error}</p>
+            <button 
+              onClick={fetchCenters}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '10px 16px',
+                borderRadius: '12px',
+                border: 'none',
+                fontWeight: '700',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                background: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
+                color: 'white',
+                boxShadow: '0 8px 16px rgba(59, 130, 246, 0.3)'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)';
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 12px 24px rgba(59, 130, 246, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)';
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 8px 16px rgba(59, 130, 246, 0.3)';
+              }}
+            >
+              Retry
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="dd-centers-panel">
+    <div className="donation-dashboard-component">
+      <div className="dd-centers-panel">
       {/* Header */}
       <div className="dd-dashboard-header">
         <div className="dd-header-content">
@@ -184,10 +216,34 @@ function CentersPanel() {
             <p>Manage donation collection centers and their locations</p>
           </div>
           <button
-            className="dd-btn dd-btn-primary"
             onClick={handleAddCenter}
             type="button"
             title="Navigate to centers form"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '12px 20px',
+              borderRadius: '12px',
+              border: 'none',
+              fontWeight: '700',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+              color: 'white',
+              boxShadow: '0 8px 16px rgba(239, 68, 68, 0.3)',
+              fontSize: '16px'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)';
+              e.target.style.transform = 'translateY(-2px)';
+              e.target.style.boxShadow = '0 12px 24px rgba(239, 68, 68, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = '0 8px 16px rgba(239, 68, 68, 0.3)';
+            }}
           >
             + Add Center
           </button>
@@ -212,21 +268,73 @@ function CentersPanel() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button
-            className="dd-btn dd-btn-ghost"
             onClick={handleRefresh}
             type="button"
             title="Refresh centers data"
             disabled={loading}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '8px 12px',
+              borderRadius: '8px',
+              border: '1px solid #e5e7eb',
+              background: loading ? '#f3f4f6' : 'white',
+              color: loading ? '#9ca3af' : '#374151',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              transition: 'all 0.3s ease',
+              fontWeight: '600',
+              fontSize: '14px'
+            }}
+            onMouseEnter={(e) => {
+              if (!loading) {
+                e.target.style.background = '#f9fafb';
+                e.target.style.borderColor = '#d1d5db';
+                e.target.style.transform = 'translateY(-1px)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!loading) {
+                e.target.style.background = 'white';
+                e.target.style.borderColor = '#e5e7eb';
+                e.target.style.transform = 'translateY(0)';
+              }
+            }}
           >
             {loading ? "..." : "🔄"}
           </button>
           {(searchTerm || filterCity) && (
             <button
-              className="dd-btn dd-btn-ghost"
               onClick={handleClearSearch}
               type="button"
               title="Clear search and filters"
-              style={{ minWidth: "auto", padding: "8px 12px" }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minWidth: 'auto',
+                padding: '8px 12px',
+                borderRadius: '8px',
+                border: '1px solid #e5e7eb',
+                background: 'white',
+                color: '#6b7280',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                fontWeight: '600',
+                fontSize: '16px'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = '#fef2f2';
+                e.target.style.borderColor = '#fecaca';
+                e.target.style.color = '#dc2626';
+                e.target.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'white';
+                e.target.style.borderColor = '#e5e7eb';
+                e.target.style.color = '#6b7280';
+                e.target.style.transform = 'translateY(0)';
+              }}
             >
               ×
             </button>
@@ -294,27 +402,98 @@ function CentersPanel() {
 
                 <div className="dd-cc-actions">
                   <a
-                    className="dd-btn dd-btn-primary"
                     href={`https://www.google.com/maps/dir/?api=1&destination=${c.lat},${c.lng}`}
                     target="_blank"
                     rel="noreferrer"
                     onClick={(e) => e.stopPropagation()}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '8px 16px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                      color: 'white',
+                      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+                      textDecoration: 'none',
+                      fontSize: '14px'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+                      e.target.style.transform = 'translateY(-2px)';
+                      e.target.style.boxShadow = '0 8px 16px rgba(16, 185, 129, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                      e.target.style.transform = 'translateY(0)';
+                      e.target.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
+                    }}
                   >
                     Get Directions
                   </a>
                   <button
-                    className="dd-btn dd-btn-ghost"
                     onClick={(e) => handleEditCenter(c, e)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '8px 16px',
+                      borderRadius: '8px',
+                      border: '1px solid #e5e7eb',
+                      background: 'white',
+                      color: '#374151',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      fontWeight: '600',
+                      fontSize: '14px'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = '#f3f4f6';
+                      e.target.style.borderColor = '#d1d5db';
+                      e.target.style.transform = 'translateY(-1px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = 'white';
+                      e.target.style.borderColor = '#e5e7eb';
+                      e.target.style.transform = 'translateY(0)';
+                    }}
                   >
                     Edit
                   </button>
                   <button
-                    className="dd-btn dd-btn-danger"
                     onClick={(e) => {
                       e.stopPropagation();
                       removeCenter(c._id);
                     }}
                     title="Delete this center"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '8px 16px',
+                      borderRadius: '8px',
+                      border: '1px solid #fecaca',
+                      background: 'white',
+                      color: '#dc2626',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      fontWeight: '600',
+                      fontSize: '14px'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = '#fef2f2';
+                      e.target.style.borderColor = '#fca5a5';
+                      e.target.style.transform = 'translateY(-1px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = 'white';
+                      e.target.style.borderColor = '#fecaca';
+                      e.target.style.transform = 'translateY(0)';
+                    }}
                   >
                     Delete
                   </button>
@@ -338,10 +517,35 @@ function CentersPanel() {
                     </div>
                   </div>
                   <a
-                    className="dd-btn dd-btn-primary"
                     href={`https://www.google.com/maps/dir/?api=1&destination=${selected.lat},${selected.lng}`}
                     target="_blank"
                     rel="noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '10px 16px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                      color: 'white',
+                      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+                      textDecoration: 'none',
+                      fontSize: '14px'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+                      e.target.style.transform = 'translateY(-2px)';
+                      e.target.style.boxShadow = '0 8px 16px rgba(16, 185, 129, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                      e.target.style.transform = 'translateY(0)';
+                      e.target.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
+                    }}
                   >
                     Get Directions
                   </a>
@@ -369,6 +573,7 @@ function CentersPanel() {
           onSubmit={handleEditSubmit}
         />
       )}
+      </div>
     </div>
   );
 }

@@ -149,189 +149,267 @@ const DistributionTable = () => {
 
   if (loading) {
     return (
-      <div className="dashboard-layout">
+      <div className="donation-dashboard-component">
         <DonationSidebar />
-        <div className="dq-modern-container">
-          <div className="dq-header">
-            <h2>📑 Distribution Records</h2>
+        <div className="dd-distribution-quantity-container">
+          <div className="dd-distribution-quantity-header">
+            <h1>📑 Distribution Records</h1>
+            <p>Loading distribution data...</p>
           </div>
-          <div style={{ textAlign: "center", padding: "2rem" }}>Loading...</div>
+          <div className="dd-chart-loading">
+            <div className="dd-loading-spinner"></div>
+            <span>Loading distribution records...</span>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="dashboard-layout">
+    <div className="donation-dashboard-component">
       {/* Sidebar */}
       <DonationSidebar />
 
       {/* Main content */}
-      <div className="dq-modern-container">
+      <div className="dd-distribution-quantity-container">
         {/* Header */}
-        <div className="dq-header">
-          <h2>📑 Distribution Records</h2>
-          <button className="dq-close" onClick={() => navigate(-1)}>
-            ✕
+        <div className="dd-distribution-quantity-header">
+          <h1>📑 Distribution Records</h1>
+          <p>Track and manage distribution quantities for families and resources</p>
+          <button 
+            className="dd-export-btn" 
+            onClick={() => navigate(-1)}
+            style={{ marginTop: '16px' }}
+          >
+            ← Back to Dashboard
           </button>
         </div>
 
-        {/* Progress */}
-        <div className="dq-progress">
-          <div className="dq-progress-bar">
-            <div
-              className="dq-progress-fill"
-              style={{ width: `${progressPercent}%` }}
-            />
+        {/* Summary Cards */}
+        <div className="dd-summary-cards">
+          <div className="dd-summary-card">
+            <div className="dd-summary-card-icon">👥</div>
+            <div className="dd-summary-card-number">{totalFamiliesToday}</div>
+            <div className="dd-summary-card-label">Families Assisted Today</div>
           </div>
-          <span>{progressPercent}% of today's resources distributed</span>
+          <div className="dd-summary-card">
+            <div className="dd-summary-card-icon">📦</div>
+            <div className="dd-summary-card-number">{totalResourcesToday}</div>
+            <div className="dd-summary-card-label">Resources Distributed Today</div>
+          </div>
+          <div className="dd-summary-card">
+            <div className="dd-summary-card-icon">📊</div>
+            <div className="dd-summary-card-number">{progressPercent}%</div>
+            <div className="dd-summary-card-label">Distribution Progress</div>
+          </div>
         </div>
 
         {/* Error */}
         {error && (
-          <div className="dq-error">
-            ⚠ {error} <button onClick={() => setError(null)}>Dismiss</button>
+          <div className="dd-chart-error">
+            <div className="dd-error-icon">⚠️</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '8px' }}>
+              Error Loading Data
+            </div>
+            <div style={{ marginBottom: '16px' }}>{error}</div>
+            <button 
+              className="dd-export-btn" 
+              onClick={() => setError(null)}
+            >
+              Dismiss
+            </button>
           </div>
         )}
 
-        {/* ✅ Chart Section */}
-        <div style={{ width: "100%", height: 400, marginBottom: 40 }}>
-          <ResponsiveContainer>
-            <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="families" fill="#3b82f6" name="Families Assisted" />
-              <Bar
-                dataKey="resources"
-                fill="#10b981"
-                name="Resources Distributed"
-              />
-            </BarChart>
-          </ResponsiveContainer>
+        {/* Chart Section */}
+        <div className="dd-chart-container">
+          <div className="dd-chart-header">
+            <h2>📈 Distribution Trends</h2>
+            <p>Visual representation of families assisted and resources distributed over time</p>
+          </div>
+          
+          <div className="dd-chart-wrapper">
+            <ResponsiveContainer>
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="families" fill="#3b82f6" name="Families Assisted" />
+                <Bar
+                  dataKey="resources"
+                  fill="#10b981"
+                  name="Resources Distributed"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="dd-chart-legend">
+            <div className="dd-legend-item">
+              <div className="dd-legend-color" style={{ backgroundColor: '#3b82f6' }}></div>
+              <span>Families Assisted</span>
+            </div>
+            <div className="dd-legend-item">
+              <div className="dd-legend-color" style={{ backgroundColor: '#10b981' }}></div>
+              <span>Resources Distributed</span>
+            </div>
+          </div>
         </div>
 
-        {/* Table */}
-        <div className="dq-table-card">
-          <table className="dq-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Families Assisted</th>
-                <th>Resources Distributed</th>
-                <th>Date & Time</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.length === 0 ? (
+        {/* Data Table */}
+        <div className="dd-data-table-container">
+          <div className="dd-data-table-header">
+            <h2>📋 Distribution Records</h2>
+          </div>
+          
+          <div className="dd-table-wrapper">
+            <table className="dd-data-table">
+              <thead>
                 <tr>
-                  <td colSpan="5" className="dq-no-data">
-                    No records found
-                  </td>
+                  <th>ID</th>
+                  <th>Families Assisted</th>
+                  <th>Resources Distributed</th>
+                  <th>Date & Time</th>
+                  <th>Actions</th>
                 </tr>
-              ) : (
-                records.map((r) => (
-                  <tr key={r._id}>
-                    <td>{r._id.slice(-6)}</td>
-
-                    {/* Families Assisted */}
-                    <td>
-                      {editingId === r._id ? (
-                        <input
-                          type="number"
-                          value={editData.familiesAssisted}
-                          onChange={(e) =>
-                            handleInputChange("familiesAssisted", e.target.value)
-                          }
-                          className="dq-input"
-                          min="0"
-                        />
-                      ) : (
-                        r.familiesAssisted || 0
-                      )}
-                    </td>
-
-                    {/* Resources Distributed */}
-                    <td>
-                      {editingId === r._id ? (
-                        <input
-                          type="number"
-                          value={editData.resourcesDistributed}
-                          onChange={(e) =>
-                            handleInputChange(
-                              "resourcesDistributed",
-                              e.target.value
-                            )
-                          }
-                          className="dq-input"
-                          min="0"
-                        />
-                      ) : (
-                        r.resourcesDistributed || 0
-                      )}
-                    </td>
-
-                    {/* Date & Time */}
-                    <td>
-                      {editingId === r._id ? (
-                        <input
-                          type="datetime-local"
-                          value={editData.timestamp || ""}
-                          onChange={(e) =>
-                            handleInputChange("timestamp", e.target.value)
-                          }
-                          className="dq-input"
-                        />
-                      ) : (
-                        new Date(r.timestamp).toLocaleString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })
-                      )}
-                    </td>
-
-                    {/* Actions */}
-                    <td>
-                      {editingId === r._id ? (
-                        <div className="dq-edit-actions">
-                          <button
-                            className="dq-save"
-                            onClick={() => handleUpdate(r._id)}
-                          >
-                            💾 Save
-                          </button>
-                          <button className="dq-cancel" onClick={cancelEdit}>
-                            ✕ Cancel
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="dq-actions">
-                          <button
-                            className="dq-edit"
-                            onClick={() => startEdit(r)}
-                          >
-                            ✏️
-                          </button>
-                          <button
-                            className="dq-delete"
-                            onClick={() => handleDelete(r._id)}
-                          >
-                            🗑️
-                          </button>
-                        </div>
-                      )}
+              </thead>
+              <tbody>
+                {records.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="dd-chart-empty">
+                      <div className="dd-empty-icon">📋</div>
+                      <div className="dd-empty-title">No Records Found</div>
+                      <div className="dd-empty-subtitle">Start by adding distribution records to see data here</div>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  records.map((r) => (
+                    <tr key={r._id}>
+                      <td>{r._id.slice(-6)}</td>
+
+                      {/* Families Assisted */}
+                      <td>
+                        {editingId === r._id ? (
+                          <input
+                            type="number"
+                            value={editData.familiesAssisted}
+                            onChange={(e) =>
+                              handleInputChange("familiesAssisted", e.target.value)
+                            }
+                            style={{
+                              width: '100%',
+                              padding: '8px 12px',
+                              border: '1px solid var(--dd-border)',
+                              borderRadius: '6px',
+                              fontSize: '0.95rem'
+                            }}
+                            min="0"
+                          />
+                        ) : (
+                          r.familiesAssisted || 0
+                        )}
+                      </td>
+
+                      {/* Resources Distributed */}
+                      <td>
+                        {editingId === r._id ? (
+                          <input
+                            type="number"
+                            value={editData.resourcesDistributed}
+                            onChange={(e) =>
+                              handleInputChange(
+                                "resourcesDistributed",
+                                e.target.value
+                              )
+                            }
+                            style={{
+                              width: '100%',
+                              padding: '8px 12px',
+                              border: '1px solid var(--dd-border)',
+                              borderRadius: '6px',
+                              fontSize: '0.95rem'
+                            }}
+                            min="0"
+                          />
+                        ) : (
+                          r.resourcesDistributed || 0
+                        )}
+                      </td>
+
+                      {/* Date & Time */}
+                      <td>
+                        {editingId === r._id ? (
+                          <input
+                            type="datetime-local"
+                            value={editData.timestamp || ""}
+                            onChange={(e) =>
+                              handleInputChange("timestamp", e.target.value)
+                            }
+                            style={{
+                              width: '100%',
+                              padding: '8px 12px',
+                              border: '1px solid var(--dd-border)',
+                              borderRadius: '6px',
+                              fontSize: '0.95rem'
+                            }}
+                          />
+                        ) : (
+                          new Date(r.timestamp).toLocaleString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        )}
+                      </td>
+
+                      {/* Actions */}
+                      <td>
+                        {editingId === r._id ? (
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <button
+                              className="dd-export-btn"
+                              onClick={() => handleUpdate(r._id)}
+                              style={{ backgroundColor: 'var(--dd-success)', color: 'white', border: 'none' }}
+                            >
+                              💾 Save
+                            </button>
+                            <button 
+                              className="dd-export-btn" 
+                              onClick={cancelEdit}
+                              style={{ backgroundColor: 'var(--dd-danger)', color: 'white', border: 'none' }}
+                            >
+                              ✕ Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <button
+                              className="dd-export-btn"
+                              onClick={() => startEdit(r)}
+                              style={{ backgroundColor: 'var(--dd-primary)', color: 'white', border: 'none' }}
+                            >
+                              ✏️ Edit
+                            </button>
+                            <button
+                              className="dd-export-btn"
+                              onClick={() => handleDelete(r._id)}
+                              style={{ backgroundColor: 'var(--dd-danger)', color: 'white', border: 'none' }}
+                            >
+                              🗑️ Delete
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

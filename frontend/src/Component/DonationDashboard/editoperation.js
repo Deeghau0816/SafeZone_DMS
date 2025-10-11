@@ -74,12 +74,13 @@ const EditOperation = ({ operation, onClose, onSubmit }) => {
   if (!operation) return null;
 
   return (
-    <div className="edit-modal-overlay" onClick={handleOverlayClick}>
-      <div className="edit-modal-container">
-        <div className="edit-modal-header">
-          <h2 className="edit-modal-title">Edit Operation</h2>
+    <div className="editoperation-component">
+      <div className="eo-modal-overlay" onClick={handleOverlayClick}>
+        <div className="eo-modal-container">
+        <div className="eo-modal-header">
+          <h2 className="eo-modal-title">Edit Operation</h2>
           <button 
-            className="edit-modal-close"
+            className="eo-modal-close"
             onClick={onClose}
             type="button"
           >
@@ -87,16 +88,16 @@ const EditOperation = ({ operation, onClose, onSubmit }) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="edit-modal-form">
+        <form onSubmit={handleSubmit} className="eo-modal-form">
           {error && (
-            <div className="edit-form-error">
-              <span className="error-icon">⚠</span>
+            <div className="eo-form-error">
+              <span className="eo-error-icon">⚠</span>
               {error}
             </div>
           )}
 
-          <div className="edit-form-group">
-            <label htmlFor="operationName" className="edit-form-label">
+          <div className="eo-form-group">
+            <label htmlFor="operationName" className="eo-form-label">
               Operation Name *
             </label>
             <input
@@ -105,15 +106,15 @@ const EditOperation = ({ operation, onClose, onSubmit }) => {
               name="operationName"
               value={formData.operationName}
               onChange={handleInputChange}
-              className="edit-form-input"
+              className="eo-form-input"
               placeholder="Enter operation name"
               disabled={loading}
               required
             />
           </div>
 
-          <div className="edit-form-group">
-            <label htmlFor="location" className="edit-form-label">
+          <div className="eo-form-group">
+            <label htmlFor="location" className="eo-form-label">
               Location
             </label>
             <input
@@ -122,18 +123,18 @@ const EditOperation = ({ operation, onClose, onSubmit }) => {
               name="location"
               value={formData.location}
               onChange={handleInputChange}
-              className="edit-form-input"
+              className="eo-form-input"
               placeholder="Enter operation location"
               disabled={loading}
               maxLength="100"
             />
-            <small className="edit-form-help">
+            <small className="eo-form-help">
               Optional. Maximum 100 characters.
             </small>
           </div>
 
-          <div className="edit-form-group">
-            <label htmlFor="volunteerCount" className="edit-form-label">
+          <div className="eo-form-group">
+            <label htmlFor="volunteerCount" className="eo-form-label">
               Required Volunteers *
             </label>
             <input
@@ -142,7 +143,7 @@ const EditOperation = ({ operation, onClose, onSubmit }) => {
               name="volunteerCount"
               value={formData.volunteerCount}
               onChange={handleInputChange}
-              className="edit-form-input"
+              className="eo-form-input"
               placeholder="Enter number of volunteers needed"
               min="1"
               disabled={loading}
@@ -150,8 +151,8 @@ const EditOperation = ({ operation, onClose, onSubmit }) => {
             />
           </div>
 
-          <div className="edit-form-group">
-            <label htmlFor="status" className="edit-form-label">
+          <div className="eo-form-group">
+            <label htmlFor="status" className="eo-form-label">
               Status
             </label>
             <select
@@ -159,7 +160,7 @@ const EditOperation = ({ operation, onClose, onSubmit }) => {
               name="status"
               value={formData.status}
               onChange={handleInputChange}
-              className="edit-form-select"
+              className="eo-form-select"
               disabled={loading}
             >
               <option value="pending">Pending</option>
@@ -169,55 +170,56 @@ const EditOperation = ({ operation, onClose, onSubmit }) => {
             </select>
           </div>
 
-          <div className="edit-operation-info">
-            <div className="info-item">
-              <span className="info-label">Operation ID:</span>
-              <span className="info-value">{operation._id}</span>
+          <div className="eo-operation-info">
+            <div className="eo-info-item">
+              <span className="eo-info-label">Operation ID:</span>
+              <span className="eo-info-value">{operation._id}</span>
             </div>
-            <div className="info-item">
-              <span className="info-label">Created:</span>
-              <span className="info-value">
+            <div className="eo-info-item">
+              <span className="eo-info-label">Created:</span>
+              <span className="eo-info-value">
                 {new Date(operation.createdAt).toLocaleString()}
               </span>
             </div>
             {operation.updatedAt && (
-              <div className="info-item">
-                <span className="info-label">Last Updated:</span>
-                <span className="info-value">
+              <div className="eo-info-item">
+                <span className="eo-info-label">Last Updated:</span>
+                <span className="eo-info-value">
                   {new Date(operation.updatedAt).toLocaleString()}
                 </span>
               </div>
             )}
           </div>
 
-          <div className="edit-modal-actions">
+          <div className="eo-modal-actions">
             <button
               type="button"
               onClick={onClose}
-              className="edit-btn-cancel"
+              className="eo-btn-cancel"
               disabled={loading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="edit-btn-submit"
+              className="eo-btn-submit"
               disabled={loading}
             >
               {loading ? (
                 <>
-                  <span className="submit-spinner"></span>
+                  <span className="eo-submit-spinner"></span>
                   Updating...
                 </>
               ) : (
                 <>
-                  <span className="btn-icon">💾</span>
+                  <span className="eo-btn-icon">💾</span>
                   Update Operation
                 </>
               )}
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

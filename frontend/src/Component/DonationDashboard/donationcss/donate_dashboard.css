@@ -16,6 +16,60 @@
   --dd-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
+/* Scoped CSS for VolunteersPanel - Only affects files with volunteers-component class */
+.volunteers-component {
+  /* CSS Variables scoped to volunteers component */
+  --vp-primary: #2563eb;
+  --vp-primary-hover: #1d4ed8;
+  --vp-danger: #dc2626;
+  --vp-success: #16a34a;
+  --vp-warning: #f59e0b;
+  --vp-info: #06b6d4;
+  --vp-muted: #6b7280;
+  --vp-border: #e5e7eb;
+  --vp-bg: #ffffff;
+  --vp-bg-secondary: #f9fafb;
+  --vp-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --vp-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --vp-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Scoped CSS for DistributionPanel - Only affects files with distribution-component class */
+.distribution-component {
+  /* CSS Variables scoped to distribution component */
+  --dist-primary: #2563eb;
+  --dist-primary-hover: #1d4ed8;
+  --dist-danger: #dc2626;
+  --dist-success: #16a34a;
+  --dist-warning: #f59e0b;
+  --dist-info: #06b6d4;
+  --dist-muted: #6b7280;
+  --dist-border: #e5e7eb;
+  --dist-bg: #ffffff;
+  --dist-bg-secondary: #f9fafb;
+  --dist-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --dist-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --dist-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Scoped CSS for EditOperation - Only affects files with editoperation-component class */
+.editoperation-component {
+  /* CSS Variables scoped to editoperation component */
+  --eo-primary: #2563eb;
+  --eo-primary-hover: #1d4ed8;
+  --eo-danger: #dc2626;
+  --eo-success: #16a34a;
+  --eo-warning: #f59e0b;
+  --eo-info: #06b6d4;
+  --eo-muted: #6b7280;
+  --eo-border: #e5e7eb;
+  --eo-bg: #ffffff;
+  --eo-bg-secondary: #f9fafb;
+  --eo-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --eo-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --eo-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
 /* ---------- buttons ---------- */
 .donation-dashboard-component .dd-btn {
   display: inline-flex; 
@@ -584,5 +638,2302 @@
   .donation-dashboard-component .dd-table thead th,
   .donation-dashboard-component .dd-table tbody td {
     padding: 8px;
+  }
+}
+
+/* ---------- Centers Panel Styles ---------- */
+.donation-dashboard-component .dd-centers-panel {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.donation-dashboard-component .dd-loading,
+.donation-dashboard-component .dd-error {
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--dd-bg-secondary);
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.donation-dashboard-component .dd-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+}
+
+.donation-dashboard-component .dd-dashboard-header {
+  margin-bottom: 30px;
+}
+
+.donation-dashboard-component .dd-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+
+.donation-dashboard-component .dd-header-content h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+}
+
+.donation-dashboard-component .dd-header-content p {
+  color: #64748b;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.donation-dashboard-component .dd-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.donation-dashboard-component .dd-stat-card {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: var(--dd-shadow);
+  text-align: center;
+  border-left: 4px solid var(--dd-primary);
+}
+
+.donation-dashboard-component .dd-stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--dd-primary);
+  margin-bottom: 8px;
+}
+
+.donation-dashboard-component .dd-stat-label {
+  color: #64748b;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.donation-dashboard-component .dd-search-filters {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.donation-dashboard-component .dd-search-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 300px;
+}
+
+.donation-dashboard-component .dd-search-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.donation-dashboard-component .dd-search-input:focus {
+  outline: none;
+  border-color: var(--dd-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.donation-dashboard-component .dd-filter-select {
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: white;
+  min-width: 150px;
+  transition: all 0.2s ease;
+}
+
+.donation-dashboard-component .dd-filter-select:focus {
+  outline: none;
+  border-color: var(--dd-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.donation-dashboard-component .dd-centers-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--dd-shadow);
+  overflow: hidden;
+}
+
+.donation-dashboard-component .dd-cc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 600px;
+}
+
+.donation-dashboard-component .dd-cc-list {
+  padding: 20px;
+  border-right: 1px solid #e2e8f0;
+  overflow-y: auto;
+  max-height: 600px;
+}
+
+.donation-dashboard-component .dd-cc-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+  font-style: italic;
+}
+
+.donation-dashboard-component .dd-cc-card {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+.donation-dashboard-component .dd-cc-card:hover {
+  border-color: var(--dd-primary);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
+.donation-dashboard-component .dd-cc-card.dd-active {
+  border-color: var(--dd-primary);
+  background: #eff6ff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+.donation-dashboard-component .dd-cc-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.donation-dashboard-component .dd-cc-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.donation-dashboard-component .dd-cc-city {
+  background: var(--dd-primary);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.donation-dashboard-component .dd-cc-line {
+  color: #64748b;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.donation-dashboard-component .dd-cc-line a {
+  color: var(--dd-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.donation-dashboard-component .dd-cc-line a:hover {
+  text-decoration: underline;
+}
+
+.donation-dashboard-component .dd-cc-hours {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.donation-dashboard-component .dd-cc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.donation-dashboard-component .dd-cc-tag {
+  background: #e2e8f0;
+  color: #475569;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.donation-dashboard-component .dd-cc-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.donation-dashboard-component .dd-cc-map {
+  padding: 20px;
+  background: #f8fafc;
+}
+
+.donation-dashboard-component .dd-cc-map-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+
+.donation-dashboard-component .dd-cc-map-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+}
+
+.donation-dashboard-component .dd-cc-map-sub {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.donation-dashboard-component .dd-cc-map-sub a {
+  color: var(--dd-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.donation-dashboard-component .dd-cc-map-sub a:hover {
+  text-decoration: underline;
+}
+
+.donation-dashboard-component .dd-cc-iframe {
+  width: 100%;
+  height: 400px;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design for Centers Panel */
+@media (max-width: 1024px) {
+  .donation-dashboard-component .dd-cc-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .donation-dashboard-component .dd-cc-list {
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+    max-height: 400px;
+  }
+  
+  .donation-dashboard-component .dd-cc-iframe {
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .donation-dashboard-component .dd-header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .donation-dashboard-component .dd-search-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .donation-dashboard-component .dd-search-input-wrapper {
+    min-width: auto;
+  }
+  
+  .donation-dashboard-component .dd-cc-actions {
+    justify-content: center;
+  }
+}
+
+/* ===== BEAUTIFUL TARGET INVENTORY STYLES ===== */
+.donation-dashboard-component .dd-targets-panel {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 24px;
+  padding: 32px;
+  margin-top: 24px;
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.donation-dashboard-component .dd-targets-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  z-index: 1;
+}
+
+.donation-dashboard-component .dd-targets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.donation-dashboard-component .dd-target-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.donation-dashboard-component .dd-target-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3);
+  background-size: 200% 100%;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.donation-dashboard-component .dd-target-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.donation-dashboard-component .dd-target-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.donation-dashboard-component .dd-target-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.donation-dashboard-component .dd-target-icon::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: rotate(45deg);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.donation-dashboard-component .dd-target-info {
+  flex: 1;
+}
+
+.donation-dashboard-component .dd-target-label {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 4px 0;
+  background: linear-gradient(135deg, #2d3748, #4a5568);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.donation-dashboard-component .dd-target-unit {
+  font-size: 14px;
+  color: #718096;
+  margin: 0;
+  font-weight: 500;
+}
+
+.donation-dashboard-component .dd-target-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.donation-dashboard-component .dd-target-input {
+  flex: 1;
+  padding: 16px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d3748;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.donation-dashboard-component .dd-target-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  transform: scale(1.02);
+}
+
+.donation-dashboard-component .dd-target-input::placeholder {
+  color: #a0aec0;
+  font-weight: 400;
+}
+
+.donation-dashboard-component .dd-target-unit-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  white-space: nowrap;
+}
+
+.donation-dashboard-component .dd-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  color: white;
+  margin-top: 24px;
+}
+
+.donation-dashboard-component .dd-loading p {
+  margin-top: 16px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Enhanced Hero Section */
+.donation-dashboard-component .dd-hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.donation-dashboard-component .dd-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+  backdrop-filter: blur(10px);
+}
+
+.donation-dashboard-component .dd-title {
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
+}
+
+.donation-dashboard-component .dd-sub {
+  color: rgba(255, 255, 255, 0.9);
+  position: relative;
+  z-index: 2;
+}
+
+.donation-dashboard-component .dd-hero-actions {
+  position: relative;
+  z-index: 2;
+}
+
+/* Enhanced Buttons */
+.donation-dashboard-component .dd-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.donation-dashboard-component .dd-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.donation-dashboard-component .dd-btn:hover::before {
+  left: 100%;
+}
+
+.donation-dashboard-component .dd-btn-ghost {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.donation-dashboard-component .dd-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.donation-dashboard-component .dd-btn-primary {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  border: none;
+  color: white;
+  box-shadow: 0 8px 16px rgba(255, 107, 107, 0.3);
+}
+
+.donation-dashboard-component .dd-btn-primary:hover {
+  background: linear-gradient(135deg, #ee5a24 0%, #ff6b6b 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(255, 107, 107, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .donation-dashboard-component .dd-targets-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .donation-dashboard-component .dd-target-card {
+    padding: 20px;
+  }
+  
+  .donation-dashboard-component .dd-target-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .donation-dashboard-component .dd-target-input-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .donation-dashboard-component .dd-target-unit-badge {
+    align-self: center;
+  }
+}
+
+/* ========== VOLUNTEERS PANEL SCOPED STYLES ========== */
+
+/* Volunteers Panel Layout */
+.volunteers-component .vp-vols-wrap {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.volunteers-component .vp-vols-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--vp-border);
+}
+
+.volunteers-component .vp-vols-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  background: var(--vp-bg-secondary);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--vp-muted);
+}
+
+.volunteers-component .vp-vols-stat .strong {
+  font-weight: 700;
+  color: var(--vp-primary);
+}
+
+/* Volunteers Panel Buttons */
+.volunteers-component .vp-vols-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--vp-border);
+  background: var(--vp-bg);
+  color: var(--vp-muted);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.volunteers-component .vp-vols-btn:hover {
+  background: var(--vp-bg-secondary);
+  border-color: var(--vp-primary);
+  color: var(--vp-primary);
+  transform: translateY(-1px);
+}
+
+.volunteers-component .vp-vols-btn-primary {
+  background: var(--vp-primary);
+  color: white;
+  border-color: var(--vp-primary);
+  box-shadow: var(--vp-shadow-md);
+}
+
+.volunteers-component .vp-vols-btn-primary:hover {
+  background: var(--vp-primary-hover);
+  border-color: var(--vp-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--vp-shadow-lg);
+}
+
+.volunteers-component .vp-vols-btn-ghost {
+  background: transparent;
+  border-color: var(--vp-border);
+  color: var(--vp-muted);
+}
+
+.volunteers-component .vp-vols-btn-ghost:hover {
+  background: var(--vp-bg-secondary);
+  border-color: var(--vp-muted);
+}
+
+.volunteers-component .vp-vols-btn-wa {
+  background: #25d366;
+  color: white;
+  border-color: #25d366;
+}
+
+.volunteers-component .vp-vols-btn-wa:hover {
+  background: #128c7e;
+  border-color: #128c7e;
+}
+
+/* Volunteers Panel Form Elements */
+.volunteers-component .vp-vols-input {
+  padding: 10px 12px;
+  border: 1px solid var(--vp-border);
+  border-radius: 8px;
+  font-size: 14px;
+  background: var(--vp-bg);
+  color: var(--vp-muted);
+  transition: all 0.2s ease;
+}
+
+.volunteers-component .vp-vols-input:focus {
+  outline: none;
+  border-color: var(--vp-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.volunteers-component .vp-vols-select {
+  padding: 10px 12px;
+  border: 1px solid var(--vp-border);
+  border-radius: 8px;
+  font-size: 14px;
+  background: var(--vp-bg);
+  color: var(--vp-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.volunteers-component .vp-vols-select:focus {
+  outline: none;
+  border-color: var(--vp-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Volunteers Panel Toolbar */
+.volunteers-component .vp-vols-toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding: 16px;
+  background: var(--vp-bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--vp-border);
+}
+
+/* Volunteers Panel Roles */
+.volunteers-component .vp-vols-roles {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.volunteers-component .vp-vols-role-chip {
+  display: inline-block;
+  padding: 4px 8px;
+  background: var(--vp-primary);
+  color: white;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Volunteers Panel Filter Tags */
+.volunteers-component .vp-vols-filter-tag {
+  display: inline-block;
+  padding: 4px 8px;
+  background: var(--vp-info);
+  color: white;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Volunteers Panel Table */
+.volunteers-component .vp-vols-table-wrap {
+  background: var(--vp-bg);
+  border-radius: 12px;
+  border: 1px solid var(--vp-border);
+  overflow: hidden;
+  box-shadow: var(--vp-shadow);
+}
+
+.volunteers-component .vp-vols-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.volunteers-component .vp-vols-table th {
+  background: var(--vp-bg-secondary);
+  padding: 16px 12px;
+  text-align: left;
+  font-weight: 700;
+  color: var(--vp-muted);
+  border-bottom: 1px solid var(--vp-border);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.volunteers-component .vp-vols-table td {
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--vp-border);
+  vertical-align: top;
+}
+
+.volunteers-component .vp-vols-table tbody tr:hover {
+  background: var(--vp-bg-secondary);
+}
+
+.volunteers-component .vp-vols-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Volunteers Panel Type Badge */
+.volunteers-component .vp-vols-type-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.volunteers-component .vp-vols-type-badge.individual {
+  background: var(--vp-success);
+  color: white;
+}
+
+.volunteers-component .vp-vols-type-badge.team {
+  background: var(--vp-warning);
+  color: white;
+}
+
+/* Volunteers Panel Assignment Badge */
+.volunteers-component .vp-vols-assignment-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.volunteers-component .vp-vols-assignment-badge.assigned {
+  background: var(--vp-success);
+  color: white;
+}
+
+.volunteers-component .vp-vols-assignment-badge.unassigned {
+  background: var(--vp-danger);
+  color: white;
+}
+
+/* Responsive Design for Volunteers Panel */
+@media (max-width: 768px) {
+  .volunteers-component .vp-vols-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .volunteers-component .vp-vols-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .volunteers-component .vp-vols-table-wrap {
+    overflow-x: auto;
+  }
+  
+  .volunteers-component .vp-vols-table {
+    min-width: 800px;
+  }
+  
+  .volunteers-component .vp-vols-roles {
+    justify-content: center;
+  }
+}
+
+/* ========== DISTRIBUTION COMPONENT SCOPED STYLES ========== */
+
+/* Distribution Component Layout */
+.distribution-component .dist-panel {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Distribution Header */
+.distribution-component .dist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.distribution-component .dist-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+  border-radius: 50%;
+  transform: translate(50px, -50px);
+  z-index: 1;
+}
+
+.distribution-component .dist-title-section {
+  position: relative;
+  z-index: 2;
+}
+
+.distribution-component .dist-title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.distribution-component .dist-subtitle {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Distribution Buttons */
+.distribution-component .dist-add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+  font-size: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.distribution-component .dist-add-btn:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(16, 185, 129, 0.4);
+}
+
+.distribution-component .dist-add-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.distribution-component .dist-report-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  gap: 8px;
+}
+
+/* Distribution Error */
+.distribution-component .dist-error {
+  margin-bottom: 24px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 2px solid #fecaca;
+  border-radius: 12px;
+  color: #991b1b;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 8px 16px rgba(220, 38, 38, 0.1);
+}
+
+.distribution-component .dist-error-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.distribution-component .dist-error-icon {
+  font-size: 18px;
+}
+
+/* Distribution Content */
+.distribution-component .dist-content {
+  margin-bottom: 32px;
+}
+
+.distribution-component .dist-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.distribution-component .dist-loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  animation: dist-spin 1s linear infinite;
+}
+
+@keyframes dist-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Distribution Empty State */
+.distribution-component .dist-empty {
+  text-align: center;
+  padding: 60px 40px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.distribution-component .dist-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.distribution-component .dist-empty-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.distribution-component .dist-empty-subtitle {
+  color: #6b7280;
+  font-size: 16px;
+  margin-bottom: 24px;
+}
+
+.distribution-component .dist-empty-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+  font-size: 16px;
+}
+
+.distribution-component .dist-empty-cta-btn:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(16, 185, 129, 0.4);
+}
+
+/* Distribution Table */
+.distribution-component .dist-table-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.distribution-component .dist-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.distribution-component .dist-table-header {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.distribution-component .dist-table-header-cell {
+  padding: 16px 20px;
+  text-align: left;
+  font-weight: 700;
+  color: #374151;
+  font-size: 14px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.distribution-component .dist-table-body {
+  background: white;
+}
+
+.distribution-component .dist-table-row {
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.2s ease;
+}
+
+.distribution-component .dist-table-row:hover {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.distribution-component .dist-table-cell {
+  padding: 16px 20px;
+  vertical-align: top;
+}
+
+/* Distribution Table Content */
+.distribution-component .dist-operation-name {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.distribution-component .dist-name-text {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 16px;
+}
+
+.distribution-component .dist-operation-meta {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.distribution-component .dist-location-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.distribution-component .dist-location-text {
+  font-weight: 500;
+  color: #374151;
+}
+
+.distribution-component .dist-volunteer-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.distribution-component .dist-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.distribution-component .dist-count-text {
+  font-size: 14px;
+  color: #374151;
+}
+
+.distribution-component .dist-muted {
+  color: #6b7280;
+}
+
+.distribution-component .dist-small {
+  font-size: 12px;
+}
+
+/* Distribution Status Badges */
+.distribution-component .dist-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.distribution-component .dist-status-active {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.distribution-component .dist-status-pending {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+}
+
+.distribution-component .dist-status-completed {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  color: white;
+}
+
+/* Distribution Action Buttons */
+.distribution-component .dist-action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.distribution-component .dist-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  gap: 6px;
+}
+
+.distribution-component .dist-edit-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+}
+
+.distribution-component .dist-edit-btn:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+  transform: translateY(-1px);
+}
+
+.distribution-component .dist-delete-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.distribution-component .dist-delete-btn:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-1px);
+}
+
+.distribution-component .dist-btn-icon {
+  font-size: 16px;
+}
+
+/* Distribution Simple Operation Grid */
+.distribution-component .dist-simple-operation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.distribution-component .dist-simple-operation-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.distribution-component .dist-simple-operation-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.distribution-component .dist-simple-operation-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.distribution-component .dist-simple-operation-location {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.distribution-component .dist-simple-view-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+  font-size: 14px;
+}
+
+.distribution-component .dist-simple-view-btn:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+  transform: translateY(-1px);
+}
+
+/* Distribution Timeline Cards */
+.distribution-component .dist-timeline-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.distribution-component .dist-timeline-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+  border-radius: 50%;
+  transform: translate(-30px, -30px);
+  z-index: 1;
+}
+
+.distribution-component .dist-timeline-head {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 20px;
+}
+
+.distribution-component .dist-timeline-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.distribution-component .dist-timeline-sub {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.distribution-component .dist-timeline-op {
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.distribution-component .dist-timeline-list {
+  position: relative;
+  z-index: 2;
+}
+
+.distribution-component .dist-timeline-step {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.distribution-component .dist-timeline-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 3px solid #e5e7eb;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 3;
+}
+
+.distribution-component .dist-timeline-dot.dot-done {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-color: #10b981;
+}
+
+.distribution-component .dist-timeline-dot.dot-warn {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border-color: #f59e0b;
+}
+
+.distribution-component .dist-timeline-dot.dot-pending {
+  background: white;
+  border-color: #e5e7eb;
+}
+
+.distribution-component .dist-timeline-dot:hover {
+  transform: scale(1.1);
+}
+
+.distribution-component .dist-timeline-line {
+  position: absolute;
+  left: 15px;
+  top: 32px;
+  width: 2px;
+  height: 20px;
+  background: #e5e7eb;
+  z-index: 1;
+}
+
+.distribution-component .dist-timeline-label {
+  margin-left: 16px;
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.distribution-component .dist-timeline-saving {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6b7280;
+  font-size: 14px;
+  margin-top: 16px;
+}
+
+.distribution-component .dist-timeline-error {
+  color: #dc2626;
+  font-size: 14px;
+  margin-top: 16px;
+}
+
+/* Distribution Volunteer Management */
+.distribution-component .dist-vm-timeline-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.distribution-component .dist-vm-timeline-head {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 20px;
+}
+
+.distribution-component .dist-vm-timeline-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.distribution-component .dist-vm-timeline-sub {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.distribution-component .dist-vm-timeline-op {
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.distribution-component .dist-vm-card-body {
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.distribution-component .dist-vm-volunteer-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.distribution-component .dist-vm-volunteer-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  color: #6b7280;
+}
+
+.distribution-component .dist-vm-loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  animation: dist-spin 1s linear infinite;
+}
+
+.distribution-component .dist-vm-volunteer-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+}
+
+.distribution-component .dist-vm-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.distribution-component .dist-vm-volunteer-count-display {
+  font-size: 12px;
+  font-weight: 700;
+  color: #3b82f6;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+
+.distribution-component .dist-vm-volunteer-names-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.distribution-component .dist-vm-volunteer-name-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f3f4f6;
+}
+
+.distribution-component .dist-vm-volunteer-name-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.distribution-component .dist-vm-volunteer-name-details {
+  flex: 1;
+}
+
+.distribution-component .dist-vm-volunteer-name-text {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.distribution-component .dist-vm-volunteer-name-type {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.distribution-component .dist-vm-volunteer-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.distribution-component .dist-vm-volunteer-see-more {
+  text-align: center;
+}
+
+.distribution-component .dist-vm-see-more-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  color: #6b7280;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.distribution-component .dist-vm-see-more-btn:hover {
+  background: #f8fafc;
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.distribution-component .dist-vm-photo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.distribution-component .dist-vm-side-photo {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Distribution Volunteer Modal */
+.distribution-component .dist-volunteer-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.distribution-component .dist-volunteer-modal-container {
+  background: white;
+  border-radius: 20px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+
+.distribution-component .dist-volunteer-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.distribution-component .dist-volunteer-modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.distribution-component .dist-volunteer-modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #e5e7eb;
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.distribution-component .dist-volunteer-modal-close:hover {
+  background: #dc2626;
+  color: white;
+}
+
+.distribution-component .dist-volunteer-modal-content {
+  padding: 24px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.distribution-component .dist-volunteer-operation-section {
+  margin-bottom: 32px;
+}
+
+.distribution-component .dist-volunteer-operation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.distribution-component .dist-volunteer-operation-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.distribution-component .dist-volunteer-operation-location {
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0;
+}
+
+.distribution-component .dist-volunteer-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 40px;
+  color: #6b7280;
+  justify-content: center;
+}
+
+.distribution-component .dist-volunteer-empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+}
+
+.distribution-component .dist-volunteer-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.distribution-component .dist-volunteer-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.distribution-component .dist-volunteer-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.distribution-component .dist-volunteer-card-header {
+  margin-bottom: 16px;
+}
+
+.distribution-component .dist-volunteer-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.distribution-component .dist-volunteer-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.distribution-component .dist-volunteer-type-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.distribution-component .dist-volunteer-type-badge.team {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+}
+
+.distribution-component .dist-volunteer-type-badge.individual {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.distribution-component .dist-volunteer-card-body {
+  margin-bottom: 16px;
+}
+
+.distribution-component .dist-volunteer-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.distribution-component .dist-detail-label {
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.distribution-component .dist-detail-value {
+  color: #374151;
+}
+
+.distribution-component .dist-contact-link {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.distribution-component .dist-contact-link:hover {
+  text-decoration: underline;
+}
+
+.distribution-component .dist-volunteer-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.distribution-component .dist-contact-btn,
+.distribution-component .dist-whatsapp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.distribution-component .dist-contact-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+}
+
+.distribution-component .dist-contact-btn:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+  transform: translateY(-1px);
+}
+
+.distribution-component .dist-whatsapp-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.distribution-component .dist-whatsapp-btn:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-1px);
+}
+
+/* Distribution Quantity Section */
+.distribution-component .dist-quantity-section {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.distribution-component .dist-quantity-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  box-shadow: 0 8px 16px rgba(139, 92, 246, 0.3);
+  font-size: 16px;
+}
+
+.distribution-component .dist-quantity-btn:hover {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(139, 92, 246, 0.4);
+}
+
+/* Distribution Empty Panel */
+.distribution-component .dist-empty-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #6b7280;
+  font-size: 16px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 2px dashed #e5e7eb;
+}
+
+/* Responsive Design for Distribution Component */
+@media (max-width: 768px) {
+  .distribution-component .dist-panel {
+    padding: 15px;
+  }
+  
+  .distribution-component .dist-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .distribution-component .dist-title {
+    font-size: 24px;
+  }
+  
+  .distribution-component .dist-table-container {
+    overflow-x: auto;
+  }
+  
+  .distribution-component .dist-table {
+    min-width: 800px;
+  }
+  
+  .distribution-component .dist-simple-operation-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .distribution-component .dist-vm-card-body {
+    grid-template-columns: 1fr;
+  }
+  
+  .distribution-component .dist-volunteer-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .distribution-component .dist-quantity-section {
+    flex-direction: column;
+  }
+  
+  .distribution-component .dist-action-buttons {
+    flex-direction: column;
+  }
+}
+
+/* ========== EDITOPERATION COMPONENT SCOPED STYLES ========== */
+
+/* EditOperation Modal Overlay */
+.editoperation-component .eo-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+
+/* EditOperation Modal Container */
+.editoperation-component .eo-modal-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  animation: eo-modal-slide-in 0.3s ease-out;
+}
+
+@keyframes eo-modal-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* EditOperation Modal Header */
+.editoperation-component .eo-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.editoperation-component .eo-modal-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+  border-radius: 50%;
+  transform: translate(30px, -30px);
+  z-index: 1;
+}
+
+.editoperation-component .eo-modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.editoperation-component .eo-modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #e5e7eb;
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.editoperation-component .eo-modal-close:hover {
+  background: #dc2626;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* EditOperation Modal Form */
+.editoperation-component .eo-modal-form {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* EditOperation Form Error */
+.editoperation-component .eo-form-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 2px solid #fecaca;
+  border-radius: 12px;
+  color: #991b1b;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+}
+
+.editoperation-component .eo-error-icon {
+  font-size: 16px;
+}
+
+/* EditOperation Form Groups */
+.editoperation-component .eo-form-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.editoperation-component .eo-form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+}
+
+.editoperation-component .eo-form-input,
+.editoperation-component .eo-form-select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #374151;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.editoperation-component .eo-form-input:focus,
+.editoperation-component .eo-form-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+  transform: translateY(-1px);
+}
+
+.editoperation-component .eo-form-input:disabled,
+.editoperation-component .eo-form-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #f9fafb;
+}
+
+.editoperation-component .eo-form-help {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* EditOperation Info Section */
+.editoperation-component .eo-operation-info {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.editoperation-component .eo-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.editoperation-component .eo-info-item:last-child {
+  margin-bottom: 0;
+}
+
+.editoperation-component .eo-info-label {
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.editoperation-component .eo-info-value {
+  color: #374151;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+}
+
+/* EditOperation Modal Actions */
+.editoperation-component .eo-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding: 24px;
+  border-top: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+/* EditOperation Buttons */
+.editoperation-component .eo-btn-cancel,
+.editoperation-component .eo-btn-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.editoperation-component .eo-btn-cancel {
+  background: white;
+  color: #6b7280;
+  border: 2px solid #e5e7eb;
+}
+
+.editoperation-component .eo-btn-cancel:hover {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-color: #6b7280;
+  color: #374151;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(107, 114, 128, 0.2);
+}
+
+.editoperation-component .eo-btn-submit {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+}
+
+.editoperation-component .eo-btn-submit:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(16, 185, 129, 0.4);
+}
+
+.editoperation-component .eo-btn-cancel:disabled,
+.editoperation-component .eo-btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* EditOperation Button Icons */
+.editoperation-component .eo-btn-icon {
+  font-size: 16px;
+}
+
+.editoperation-component .eo-submit-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: eo-spin 1s linear infinite;
+}
+
+@keyframes eo-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design for EditOperation Component */
+@media (max-width: 768px) {
+  .editoperation-component .eo-modal-overlay {
+    padding: 10px;
+  }
+  
+  .editoperation-component .eo-modal-container {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+  
+  .editoperation-component .eo-modal-header {
+    padding: 20px;
+  }
+  
+  .editoperation-component .eo-modal-title {
+    font-size: 20px;
+  }
+  
+  .editoperation-component .eo-modal-form {
+    padding: 20px;
+  }
+  
+  .editoperation-component .eo-modal-actions {
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .editoperation-component .eo-btn-cancel,
+  .editoperation-component .eo-btn-submit {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .editoperation-component .eo-info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
   }
 }
