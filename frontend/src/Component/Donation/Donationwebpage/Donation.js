@@ -1,9 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
-import { Link } from "react-router-dom";
-import { createPortal } from "react-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import DistributionPlan from "../Donate_distributionplan/Distributionplan";
-import "../Donate_distributionplan/Distributionplan.css";
 import "./Donation.css";
 
 /* ---------- API Configuration ---------- */
@@ -89,27 +86,6 @@ const MiniRotator = ({ images = [], interval = 3500, alt = "" }) => {
   );
 };
 
-/* ---------- Modal via portal ---------- */
-const Modal = ({ open, onClose, children }) => {
-  if (!open) return null;
-  return createPortal(
-    <div className="donation-modal-backdrop" onClick={onClose}>
-      <div
-        className="donation-modal-body"
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
-      >
-        <button className="donation-modal-close" onClick={onClose} aria-label="Close" type="button">
-          ×
-        </button>
-        {children}
-      </div>
-    </div>,
-    document.body
-  );
-};
-
 /* ---------- Progress Bar ---------- */
 const PBar = ({ label, value, color }) => (
   <div className="donation-pbar-wrap">
@@ -157,10 +133,11 @@ const getCoverageColor = (coverage) => {
 };
 
 export default function Donation() {
+  const navigate = useNavigate();
+  
   const [showDonateSection, setShowDonateSection] = useState(false);
   const [centerIdx, setCenterIdx] = useState(0);
   const [selectedDisaster, setSelectedDisaster] = useState(null);
-  const [showPlan, setShowPlan] = useState(false);
 
   // API data state
   const [disasters, setDisasters] = useState([]);
@@ -712,7 +689,7 @@ export default function Donation() {
             <br />
             <button
               className="distribution-plan-btn"
-              onClick={() => setShowPlan(true)}
+              onClick={() => navigate('/donation/distribution-plan')}
               type="button"
               style={{
                 display: 'inline-flex',
@@ -944,7 +921,7 @@ export default function Donation() {
                 <div className="donation-row-actions">
                   <button 
                     className="donation-pill outline accent" 
-                    onClick={() => setShowPlan(true)} 
+                    onClick={() => navigate('/donation/distribution-plan')} 
                     type="button"
                     style={{
                       display: 'inline-flex',
@@ -1131,11 +1108,6 @@ export default function Donation() {
           </div>
         </section>
       )}
-
-      {/* ---------- MODAL with Distribution Plan ---------- */}
-      <Modal open={showPlan} onClose={() => setShowPlan(false)}>
-        <DistributionPlan onClose={() => setShowPlan(false)} />
-      </Modal>
 
         {/* ---------- NGO PAST RECORDS SECTION ---------- */}
         <section className="donation-ngo-records-section donation-wrap">

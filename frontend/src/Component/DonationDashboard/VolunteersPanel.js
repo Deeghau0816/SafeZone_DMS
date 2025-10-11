@@ -23,7 +23,7 @@ const operationsApi = {
 };
 
 /* -------------------------------- Constants -------------------------------- */
-const FORM_ROUTE = "/volunteers";
+const FORM_ROUTE = "/donation/volunteer";
 const ROLE_OPTIONS = ["Driver", "Medic", "Logistics", "Cooking", "Translator"];
 const LANGUAGE_OPTIONS = ["Sinhala", "Tamil", "English"];
 

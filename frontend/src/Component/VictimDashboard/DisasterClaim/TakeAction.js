@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import axios from '../../../api/axios';
 
 export default function TakeAction() {
   const { id } = useParams();
@@ -220,18 +221,54 @@ SafeZone DMS`;
   };
 
   // Complete action
-  const completeAction = () => {
+  const completeAction = async () => {
     if (!actionForm.actionType || !actionForm.description) {
       alert('Please fill in required fields (Action Type and Description)');
       return;
     }
 
-    // Store claim status and action details in localStorage
+    setLoading(true);
+
     try {
-      // Store the updated status for this claim
+      // Map action types to database status values
+      const getActionStatus = (actionType) => {
+        const statusMap = {
+          'Approved': 'approved',
+          'Rejected': 'rejected', 
+          'Under Investigation': 'under_review',
+          'Requires Documentation': 'under_review',
+          'Assessment Scheduled': 'under_review',
+          'Compensation Approved': 'approved'
+        };
+        return statusMap[actionType] || 'under_review';
+      };
+
+      // Determine financial status based on action type
+      const getFinancialStatus = (actionType) => {
+        if (actionType === 'Compensation Approved' || actionType === 'Approved') {
+          return 'sent_to_financial';
+        }
+        if (actionType === 'Rejected') {
+          return 'not_sent';
+        }
+        return 'not_sent';
+      };
+
+      // Update action status in database
+      await axios.patch(`/damage/${claim._id}/action`, {
+        actionStatus: getActionStatus(actionForm.actionType),
+        actionTakenBy: 'Admin', // You can get this from user context
+        actionNotes: actionForm.description,
+        actionType: actionForm.actionType,
+        financialStatus: getFinancialStatus(actionForm.actionType),
+        financialAmount: actionForm.compensationAmount ? Number(actionForm.compensationAmount) : undefined,
+        financialNotes: actionForm.financialRecommendation
+      });
+
+      // Store claim status and action details in localStorage (for backward compatibility)
       const claimStatuses = JSON.parse(localStorage.getItem('claimStatuses') || '{}');
       claimStatuses[claim._id] = {
-        status: actionForm.actionType,
+        status: actionForm.actionType, // Store the display name
         actionDate: new Date().toISOString(),
         priority: actionForm.priority,
         compensationAmount: actionForm.compensationAmount,
@@ -247,20 +284,39 @@ SafeZone DMS`;
         reviewedIds.push(claim._id);
         localStorage.setItem('reviewedClaimIds', JSON.stringify(reviewedIds));
       }
+
+      // Automatically send email to victim
+      try {
+        sendEmailToVictim();
+      } catch (error) {
+        console.error('Error sending email to victim:', error);
+        // Continue with the process even if email fails
+      }
+
+      alert(`Action completed successfully! Claim status has been updated to: ${actionForm.actionType}. An email notification has been sent to the victim. The status will now sync across all devices.`);
+      navigate('/victim/claim/records');
+
     } catch (error) {
       console.error('Error updating claim status:', error);
+      alert('Error updating claim status in database. Changes saved locally only.');
+      
+      // Fallback to localStorage only
+      const claimStatuses = JSON.parse(localStorage.getItem('claimStatuses') || '{}');
+      claimStatuses[claim._id] = {
+        status: actionForm.actionType,
+        actionDate: new Date().toISOString(),
+        priority: actionForm.priority,
+        compensationAmount: actionForm.compensationAmount,
+        description: actionForm.description,
+        financialRecommendation: actionForm.financialRecommendation,
+        notes: actionForm.notes
+      };
+      localStorage.setItem('claimStatuses', JSON.stringify(claimStatuses));
+      
+      navigate('/victim/claim/records');
+    } finally {
+      setLoading(false);
     }
-
-    // Automatically send email to victim
-    try {
-      sendEmailToVictim();
-    } catch (error) {
-      console.error('Error sending email to victim:', error);
-      // Continue with the process even if email fails
-    }
-
-    alert(`Action completed successfully! Claim status has been updated to: ${actionForm.actionType}. An email notification has been sent to the victim.`);
-    navigate('/victim/claim/records');
   };
 
   // Inline styles

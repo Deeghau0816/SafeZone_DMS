@@ -1,13 +1,13 @@
 // Import React hooks and dependencies
 import React, { useEffect, useMemo, useState } from "react";
-import axios from "axios";
+import axios from "../../../api/axios";
 import { useNavigate } from "react-router-dom";
 import "./DS_Read.css";
 
 // API endpoints configuration
 const API = {
-  list: "http://localhost:5000/damage",
-  del: (id) => `http://localhost:5000/damage/${id}`,
+  list: "/damage",
+  del: (id) => `/damage/${id}`,
 };
 
 // localStorage key for tracking reviewed claims
@@ -26,15 +26,40 @@ function getClaimStatus(claimId) {
 
 // Get status display information
 function getStatusInfo(claim, reviewed) {
-  const claimStatus = getClaimStatus(claim._id);
+  // Prioritize database status over localStorage
+  if (claim.actionType || (claim.actionStatus && claim.actionStatus !== 'pending')) {
+    // Use actionType for display if available, otherwise map actionStatus
+    const displayText = claim.actionType || getStatusDisplayText(claim.actionStatus);
+    const statusForClass = claim.actionType || claim.actionStatus;
+    
+    return {
+      status: claim.actionStatus || 'under_review',
+      text: displayText,
+      class: getStatusClass(statusForClass),
+      details: {
+        status: claim.actionType || claim.actionStatus,
+        actionDate: claim.actionDate,
+        priority: 'medium', // default priority
+        compensationAmount: claim.financialAmount,
+        description: claim.actionNotes,
+        financialRecommendation: claim.financialNotes,
+        notes: claim.actionNotes
+      },
+      hasAction: true,
+      source: 'database'
+    };
+  }
   
+  // Fallback to localStorage
+  const claimStatus = getClaimStatus(claim._id);
   if (claimStatus) {
     return {
       status: claimStatus.status,
       text: claimStatus.status,
       class: getStatusClass(claimStatus.status),
       details: claimStatus,
-      hasAction: true
+      hasAction: true,
+      source: 'localStorage'
     };
   }
   
@@ -43,8 +68,21 @@ function getStatusInfo(claim, reviewed) {
     text: reviewed ? "Action Taken" : "Pending Review",
     class: reviewed ? 'reviewed' : 'pending',
     details: null,
-    hasAction: false
+    hasAction: false,
+    source: 'default'
   };
+}
+
+// Get display text for status
+function getStatusDisplayText(status) {
+  const statusMap = {
+    'pending': 'Pending Review',
+    'under_review': 'Under Review',
+    'approved': 'Approved',
+    'rejected': 'Rejected',
+    'completed': 'Completed'
+  };
+  return statusMap[status] || status;
 }
 
 // Get CSS class for status
@@ -52,11 +90,23 @@ function getStatusClass(status) {
   if (!status) return 'pending';
   
   const statusLower = status.toLowerCase();
-  if (statusLower.includes('approved') || statusLower.includes('compensation approved')) return 'approved';
+  
+  // Handle specific action types
+  if (statusLower === 'approved' || statusLower === 'approve claim' || statusLower === 'compensation approved') return 'approved';
+  if (statusLower === 'rejected' || statusLower === 'reject claim') return 'rejected';
+  if (statusLower === 'under investigation') return 'investigation';
+  if (statusLower === 'requires documentation' || statusLower.includes('documentation')) return 'documentation';
+  if (statusLower === 'assessment scheduled' || statusLower.includes('assessment')) return 'assessment';
+  
+  // Handle database status values
+  if (statusLower === 'pending') return 'pending';
+  if (statusLower === 'under_review') return 'investigation';
+  if (statusLower === 'completed') return 'approved';
+  
+  // Handle legacy localStorage status values
+  if (statusLower.includes('approved')) return 'approved';
   if (statusLower.includes('rejected')) return 'rejected';
   if (statusLower.includes('investigation')) return 'investigation';
-  if (statusLower.includes('documentation')) return 'documentation';
-  if (statusLower.includes('assessment')) return 'assessment';
   
   return 'reviewed';
 }

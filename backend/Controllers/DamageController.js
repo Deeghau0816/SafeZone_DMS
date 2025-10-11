@@ -271,3 +271,70 @@ exports.deleteDamage = async (req, res) => {
     return res.status(500).json({ ok: false, message: "Server error", error: err.message });
   }
 };
+
+/* ---------- Update Action Status ---------- */
+exports.updateActionStatus = async (req, res) => {
+  try {
+    const id = normalizeId(req.params.id);
+    if (!isHex24(id)) return badReq(res, "Invalid id");
+
+    const {
+      actionStatus,
+      actionTakenBy,
+      actionNotes,
+      actionType,
+      financialStatus,
+      financialAmount,
+      financialNotes
+    } = req.body || {};
+
+    // Validate action status
+    const validActionStatuses = ["pending", "under_review", "approved", "rejected", "completed"];
+    if (actionStatus && !validActionStatuses.includes(actionStatus)) {
+      return badReq(res, "Invalid action status");
+    }
+
+    // Validate financial status
+    const validFinancialStatuses = ["not_sent", "sent_to_financial", "processing", "approved", "paid"];
+    if (financialStatus && !validFinancialStatuses.includes(financialStatus)) {
+      return badReq(res, "Invalid financial status");
+    }
+
+    // Build update object
+    const updateObj = {};
+    if (actionStatus) updateObj.actionStatus = actionStatus;
+    if (actionTakenBy) updateObj.actionTakenBy = actionTakenBy.trim();
+    if (actionNotes !== undefined) updateObj.actionNotes = actionNotes.trim();
+    if (actionType) updateObj.actionType = actionType.trim();
+    if (financialStatus) updateObj.financialStatus = financialStatus;
+    if (financialAmount !== undefined) {
+      const amount = Number(financialAmount);
+      if (Number.isNaN(amount) || amount < 0) {
+        return badReq(res, "Invalid financial amount");
+      }
+      updateObj.financialAmount = amount;
+    }
+    if (financialNotes !== undefined) updateObj.financialNotes = financialNotes.trim();
+
+    // Set action date when status is updated
+    if (actionStatus || actionType) {
+      updateObj.actionDate = new Date();
+    }
+
+    const updated = await Damage.findByIdAndUpdate(
+      id, 
+      { $set: updateObj }, 
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) return notFound(res);
+
+    const out = updated.toObject();
+    out.attachments = mapAttachments(req, out.attachments);
+    return res.json({ ok: true, damage: out });
+
+  } catch (err) {
+    console.error("updateActionStatus error:", err);
+    return res.status(500).json({ ok: false, message: "Server error", error: err.message });
+  }
+};

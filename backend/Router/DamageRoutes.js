@@ -35,6 +35,7 @@ router.post("/", upload.array("attachments", 10), ctrl.createDamage);
 router.get("/",  ctrl.listDamages);
 router.get("/:id", ctrl.getDamage);
 router.put("/:id", upload.array("attachments", 10), ctrl.updateDamage);
+router.patch("/:id/action", ctrl.updateActionStatus); // New route for action status updates
 router.delete("/:id", ctrl.deleteDamage);
 
 module.exports = router;

@@ -38,6 +38,27 @@ const DamageSchema = new mongoose.Schema(
 
     // Could be "lat,lng" or textual place
     currentLocation: { type: String, required: true, trim: true },
+
+    // Action tracking fields
+    actionStatus: {
+      type: String,
+      enum: ["pending", "under_review", "approved", "rejected", "completed"],
+      default: "pending"
+    },
+    
+    actionTakenBy: { type: String, trim: true }, // Admin/user who took action
+    actionDate: { type: Date },
+    actionNotes: { type: String, trim: true },
+    actionType: { type: String, trim: true }, // Type of action taken
+    
+    // Financial processing
+    financialStatus: {
+      type: String,
+      enum: ["not_sent", "sent_to_financial", "processing", "approved", "paid"],
+      default: "not_sent"
+    },
+    financialAmount: { type: Number, min: 0 },
+    financialNotes: { type: String, trim: true },
   },
   { timestamps: true }
 );
