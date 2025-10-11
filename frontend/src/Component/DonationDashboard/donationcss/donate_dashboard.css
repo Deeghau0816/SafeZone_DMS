@@ -2937,3 +2937,1207 @@
     gap: 4px;
   }
 }
+
+/* ========== TOP DONORS COMPONENT SCOPED STYLES ========== */
+
+/* Scoped CSS for TopDonorsPage - Only affects files with topdonors-component class */
+.topdonors-component {
+  /* CSS Variables scoped to top donors component */
+  --td-primary: #2563eb;
+  --td-primary-hover: #1d4ed8;
+  --td-danger: #dc2626;
+  --td-success: #16a34a;
+  --td-warning: #f59e0b;
+  --td-info: #06b6d4;
+  --td-muted: #6b7280;
+  --td-border: #e5e7eb;
+  --td-bg: #ffffff;
+  --td-bg-secondary: #f9fafb;
+  --td-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --td-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --td-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* TopDonors Component Layout */
+.topdonors-component .td-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* TopDonors Header */
+.topdonors-component .td-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  box-shadow: var(--td-shadow-md);
+  border: 1px solid var(--td-border);
+}
+
+.topdonors-component .td-title {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+}
+
+.topdonors-component .td-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+  box-shadow: var(--td-shadow);
+  font-size: 14px;
+}
+
+.topdonors-component .td-btn:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+  transform: translateY(-1px);
+  box-shadow: var(--td-shadow-md);
+}
+
+.topdonors-component .td-btn:disabled {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}
+
+/* TopDonors Table */
+.topdonors-component .td-tablewrap {
+  background: var(--td-bg);
+  border-radius: 16px;
+  box-shadow: var(--td-shadow-md);
+  border: 1px solid var(--td-border);
+  overflow: hidden;
+}
+
+.topdonors-component .td-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.topdonors-component .td-table thead {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.topdonors-component .td-table th {
+  padding: 16px 12px;
+  text-align: left;
+  font-weight: 700;
+  color: #374151;
+  border-bottom: 2px solid var(--td-border);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.topdonors-component .td-table td {
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--td-border);
+  vertical-align: top;
+}
+
+.topdonors-component .td-table tbody tr:hover {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.topdonors-component .td-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* TopDonors Table Content */
+.topdonors-component .td-strong {
+  font-weight: 700;
+  color: #1f2937;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.topdonors-component .td-muted {
+  color: var(--td-muted);
+  font-size: 13px;
+}
+
+.topdonors-component .td-error {
+  color: var(--td-danger);
+  font-weight: 600;
+  text-align: center;
+  padding: 20px;
+}
+
+.topdonors-component .td-empty {
+  color: var(--td-muted);
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+.topdonors-component .td-tight {
+  white-space: nowrap;
+}
+
+/* TopDonors Type Badges */
+.topdonors-component .td-type {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+  align-self: flex-start;
+}
+
+.topdonors-component .td-type--individual {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1e40af;
+}
+
+.topdonors-component .td-type--corporate {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  color: #166534;
+}
+
+.topdonors-component .td-type--organization {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+}
+
+.topdonors-component .td-type--foundation {
+  background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+  color: #be185d;
+}
+
+/* TopDonors Action Buttons */
+.topdonors-component .td-btn-wa {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: white !important;
+  text-decoration: none;
+  margin-right: 8px;
+}
+
+.topdonors-component .td-btn-wa:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  transform: translateY(-1px);
+}
+
+/* Responsive Design for TopDonors Component */
+@media (max-width: 768px) {
+  .topdonors-component .td-wrap {
+    padding: 15px;
+  }
+  
+  .topdonors-component .td-head {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .topdonors-component .td-title {
+    font-size: 24px;
+    text-align: center;
+  }
+  
+  .topdonors-component .td-tablewrap {
+    overflow-x: auto;
+  }
+  
+  .topdonors-component .td-table {
+    min-width: 800px;
+  }
+  
+  .topdonors-component .td-table th,
+  .topdonors-component .td-table td {
+    padding: 12px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topdonors-component .td-table th,
+  .topdonors-component .td-table td {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+  
+  .topdonors-component .td-btn {
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+}
+
+/* ========== DISTRIBUTION PLAN COMPONENT SCOPED STYLES ========== */
+
+/* Scoped CSS for DistributionPlan - Only affects files with distributionplan-component class */
+.distributionplan-component {
+  /* CSS Variables scoped to distribution plan component */
+  --dp-primary: #2563eb;
+  --dp-primary-hover: #1d4ed8;
+  --dp-danger: #dc2626;
+  --dp-success: #16a34a;
+  --dp-warning: #f59e0b;
+  --dp-info: #06b6d4;
+  --dp-muted: #6b7280;
+  --dp-border: #e5e7eb;
+  --dp-bg: #ffffff;
+  --dp-bg-secondary: #f9fafb;
+  --dp-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --dp-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --dp-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* DistributionPlan Modal */
+.distributionplan-component .dp-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.distributionplan-component .dp-modal-body {
+  background: var(--dp-bg);
+  border-radius: 20px;
+  box-shadow: var(--dp-shadow-lg);
+  border: 1px solid var(--dp-border);
+  max-width: 1200px;
+  max-height: 90vh;
+  width: 100%;
+  overflow-y: auto;
+  position: relative;
+}
+
+.distributionplan-component .dp-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.distributionplan-component .dp-modal-close:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: scale(1.1);
+}
+
+/* DistributionPlan Loading States */
+.distributionplan-component .dp-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--dp-muted);
+}
+
+.distributionplan-component .dp-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--dp-primary);
+  border-radius: 50%;
+  animation: dp-spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes dp-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* DistributionPlan Error States */
+.distributionplan-component .dp-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 2px solid #fecaca;
+  border-radius: 16px;
+  margin: 20px;
+}
+
+.distributionplan-component .dp-error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: var(--dp-danger);
+  font-weight: 600;
+}
+
+.distributionplan-component .dp-error-icon {
+  font-size: 32px;
+  opacity: 0.7;
+}
+
+/* DistributionPlan Empty States */
+.distributionplan-component .dp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background: var(--dp-bg-secondary);
+  border: 2px dashed var(--dp-border);
+  border-radius: 16px;
+  margin: 20px;
+  color: var(--dp-muted);
+}
+
+.distributionplan-component .dp-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.distributionplan-component .dp-empty-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.distributionplan-component .dp-empty-subtitle {
+  color: var(--dp-muted);
+  text-align: center;
+}
+
+/* DistributionPlan Panel */
+.distributionplan-component .dp-panel {
+  padding: 24px;
+}
+
+.distributionplan-component .dp-header {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  box-shadow: var(--dp-shadow-md);
+  border: 1px solid var(--dp-border);
+}
+
+.distributionplan-component .dp-title-section {
+  text-align: center;
+}
+
+.distributionplan-component .dp-title {
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0 0 8px 0;
+}
+
+.distributionplan-component .dp-subtitle {
+  color: var(--dp-muted);
+  font-size: 16px;
+  margin: 0;
+}
+
+.distributionplan-component .dp-status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.distributionplan-component .dp-status-active {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  color: #166534;
+}
+
+.distributionplan-component .dp-status-pending {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+}
+
+.distributionplan-component .dp-status-completed {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1e40af;
+}
+
+/* DistributionPlan Timeline Cards */
+.distributionplan-component .dp-timeline-card {
+  background: var(--dp-bg);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--dp-shadow-md);
+  border: 1px solid var(--dp-border);
+  transition: all 0.3s ease;
+}
+
+.distributionplan-component .dp-timeline-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--dp-shadow-lg);
+}
+
+.distributionplan-component .dp-timeline-head {
+  margin-bottom: 20px;
+}
+
+.distributionplan-component .dp-timeline-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.distributionplan-component .dp-timeline-sub {
+  color: var(--dp-muted);
+  font-size: 14px;
+}
+
+.distributionplan-component .dp-timeline-op {
+  font-weight: 600;
+  color: var(--dp-primary);
+}
+
+/* DistributionPlan Timeline List */
+.distributionplan-component .dp-timeline-list {
+  position: relative;
+}
+
+.distributionplan-component .dp-timeline-step {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.distributionplan-component .dp-timeline-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.distributionplan-component .dp-dot-done {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+}
+
+.distributionplan-component .dp-dot-warn {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
+}
+
+.distributionplan-component .dp-dot-pending {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+  box-shadow: 0 0 0 4px rgba(229, 231, 235, 0.2);
+}
+
+.distributionplan-component .dp-timeline-line {
+  position: absolute;
+  left: 7px;
+  top: 16px;
+  width: 2px;
+  height: 24px;
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+}
+
+.distributionplan-component .dp-timeline-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+/* DistributionPlan Empty Panel */
+.distributionplan-component .dp-empty-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: var(--dp-bg-secondary);
+  border: 2px dashed var(--dp-border);
+  border-radius: 12px;
+  color: var(--dp-muted);
+  font-style: italic;
+}
+
+/* DistributionPlan KPI Grid */
+.distributionplan-component .dp-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.distributionplan-component .dp-kpi {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 12px;
+  border: 1px solid var(--dp-border);
+  transition: all 0.3s ease;
+}
+
+.distributionplan-component .dp-kpi:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--dp-shadow-md);
+}
+
+.distributionplan-component .dp-kpi-emoji {
+  font-size: 24px;
+}
+
+.distributionplan-component .dp-num {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.distributionplan-component .dp-muted {
+  color: var(--dp-muted);
+}
+
+.distributionplan-component .dp-small {
+  font-size: 12px;
+}
+
+/* DistributionPlan Inventory Table */
+.distributionplan-component .dp-inv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.distributionplan-component .dp-inv-table thead {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.distributionplan-component .dp-inv-table th {
+  padding: 12px 8px;
+  text-align: left;
+  font-weight: 700;
+  color: #374151;
+  border-bottom: 2px solid var(--dp-border);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.distributionplan-component .dp-inv-table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--dp-border);
+}
+
+.distributionplan-component .dp-inv-table tbody tr:hover {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+/* DistributionPlan Volunteer Management */
+.distributionplan-component .dp-vm-timeline-card {
+  background: var(--dp-bg);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--dp-shadow-md);
+  border: 1px solid var(--dp-border);
+  transition: all 0.3s ease;
+}
+
+.distributionplan-component .dp-vm-timeline-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--dp-shadow-lg);
+}
+
+.distributionplan-component .dp-vm-timeline-head {
+  margin-bottom: 20px;
+}
+
+.distributionplan-component .dp-vm-timeline-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.distributionplan-component .dp-vm-timeline-sub {
+  color: var(--dp-muted);
+  font-size: 14px;
+}
+
+.distributionplan-component .dp-vm-timeline-op {
+  font-weight: 600;
+  color: var(--dp-primary);
+}
+
+/* DistributionPlan Volunteer List */
+.distributionplan-component .dp-vm-volunteer-list-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.distributionplan-component .dp-vm-volunteer-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--dp-muted);
+}
+
+.distributionplan-component .dp-vm-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.distributionplan-component .dp-vm-volunteer-empty-state h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.distributionplan-component .dp-vm-volunteer-empty-state p {
+  font-size: 14px;
+  margin: 0;
+}
+
+.distributionplan-component .dp-vm-volunteer-count-display {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dp-primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.distributionplan-component .dp-vm-volunteer-names-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.distributionplan-component .dp-vm-volunteer-name-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 12px;
+  border: 1px solid var(--dp-border);
+  transition: all 0.3s ease;
+}
+
+.distributionplan-component .dp-vm-volunteer-name-item:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--dp-shadow-md);
+}
+
+.distributionplan-component .dp-vm-volunteer-name-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--dp-primary) 0%, var(--dp-primary-hover) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.distributionplan-component .dp-vm-volunteer-name-details {
+  flex: 1;
+}
+
+.distributionplan-component .dp-vm-volunteer-name-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 2px;
+}
+
+.distributionplan-component .dp-vm-volunteer-name-type {
+  font-size: 12px;
+  color: var(--dp-muted);
+}
+
+.distributionplan-component .dp-vm-volunteer-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+/* Responsive Design for DistributionPlan Component */
+@media (max-width: 768px) {
+  .distributionplan-component .dp-modal-backdrop {
+    padding: 10px;
+  }
+  
+  .distributionplan-component .dp-modal-body {
+    max-height: 95vh;
+  }
+  
+  .distributionplan-component .dp-panel {
+    padding: 16px;
+  }
+  
+  .distributionplan-component .dp-title {
+    font-size: 24px;
+  }
+  
+  .distributionplan-component .dp-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .distributionplan-component .dp-kpi {
+    padding: 12px;
+  }
+  
+  .distributionplan-component .dp-vm-volunteer-name-item {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .distributionplan-component .dp-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .distributionplan-component .dp-timeline-card,
+  .distributionplan-component .dp-vm-timeline-card {
+    padding: 16px;
+  }
+}
+
+/* ========== OPERATION COMPONENT SCOPED STYLES ========== */
+
+/* Scoped CSS for Operation - Only affects files with operation-component class */
+.operation-component {
+  /* CSS Variables scoped to operation component */
+  --op-primary: #2563eb;
+  --op-primary-hover: #1d4ed8;
+  --op-danger: #dc2626;
+  --op-success: #16a34a;
+  --op-warning: #f59e0b;
+  --op-info: #06b6d4;
+  --op-muted: #6b7280;
+  --op-border: #e5e7eb;
+  --op-bg: #ffffff;
+  --op-bg-secondary: #f9fafb;
+  --op-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --op-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --op-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Operation Modal Overlay */
+.operation-component .op-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+/* Operation Card */
+.operation-component .op-card {
+  background: var(--op-bg);
+  border-radius: 20px;
+  box-shadow: var(--op-shadow-lg);
+  border: 1px solid var(--op-border);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: op-slideInUp 0.3s ease-out;
+}
+
+@keyframes op-slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Operation Card Success State */
+.operation-component .op-card--success {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid #bbf7d0;
+}
+
+/* Operation Header */
+.operation-component .op-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 24px 0 24px;
+  margin-bottom: 20px;
+}
+
+.operation-component .op-header--success {
+  justify-content: center;
+  padding: 24px 24px 0 24px;
+}
+
+.operation-component .op-title {
+  font-size: 24px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+}
+
+/* Operation Close Button */
+.operation-component .op-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.operation-component .op-close:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: scale(1.1);
+}
+
+.operation-component .op-close svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Operation Body */
+.operation-component .op-body {
+  padding: 0 24px 24px 24px;
+}
+
+.operation-component .op-body--center {
+  text-align: center;
+  padding: 24px;
+}
+
+/* Operation Success Check */
+.operation-component .op-check {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+  animation: op-bounce 0.6s ease-out;
+}
+
+@keyframes op-bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.operation-component .op-check svg {
+  width: 30px;
+  height: 30px;
+}
+
+/* Operation Success Messages */
+.operation-component .op-success-line {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+.operation-component .op-success-sub {
+  font-size: 16px;
+  color: var(--op-muted);
+  margin: 0;
+}
+
+/* Operation Form Fields */
+.operation-component .op-field {
+  margin-bottom: 20px;
+}
+
+.operation-component .op-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.operation-component .op-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--op-border);
+  border-radius: 12px;
+  font-size: 16px;
+  background: var(--op-bg);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.operation-component .op-input:focus {
+  outline: none;
+  border-color: var(--op-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  transform: translateY(-1px);
+}
+
+.operation-component .op-input:disabled {
+  background: var(--op-bg-secondary);
+  color: var(--op-muted);
+  cursor: not-allowed;
+}
+
+.operation-component .op-input.op-is-invalid {
+  border-color: var(--op-danger);
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+.operation-component .op-input.op-is-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+/* Operation Hints */
+.operation-component .op-hint {
+  font-size: 12px;
+  color: var(--op-muted);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Operation Spinner */
+.operation-component .op-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid var(--op-primary);
+  border-radius: 50%;
+  animation: op-spin 1s linear infinite;
+}
+
+@keyframes op-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Operation Error Inline */
+.operation-component .op-error-inline {
+  font-size: 12px;
+  color: var(--op-danger);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* Operation Alert */
+.operation-component .op-alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 2px solid #fecaca;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  color: var(--op-danger);
+  font-weight: 500;
+}
+
+.operation-component .op-alert-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--op-danger);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Operation Actions */
+.operation-component .op-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+/* Operation Buttons */
+.operation-component .op-btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.operation-component .op-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.operation-component .op-btn--ghost {
+  background: var(--op-bg);
+  color: var(--op-muted);
+  border: 2px solid var(--op-border);
+}
+
+.operation-component .op-btn--ghost:hover:not(:disabled) {
+  background: var(--op-bg-secondary);
+  color: #374151;
+  transform: translateY(-1px);
+  box-shadow: var(--op-shadow-md);
+}
+
+.operation-component .op-btn--primary {
+  background: linear-gradient(135deg, var(--op-primary) 0%, var(--op-primary-hover) 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.operation-component .op-btn--primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--op-primary-hover) 0%, #1e3a8a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+}
+
+.operation-component .op-btn--primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* Responsive Design for Operation Component */
+@media (max-width: 768px) {
+  .operation-component .op-overlay {
+    padding: 10px;
+  }
+  
+  .operation-component .op-card {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+  
+  .operation-component .op-header {
+    padding: 20px 20px 0 20px;
+  }
+  
+  .operation-component .op-body {
+    padding: 0 20px 20px 20px;
+  }
+  
+  .operation-component .op-title {
+    font-size: 20px;
+  }
+  
+  .operation-component .op-actions {
+    flex-direction: column;
+  }
+  
+  .operation-component .op-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .operation-component .op-header {
+    padding: 16px 16px 0 16px;
+  }
+  
+  .operation-component .op-body {
+    padding: 0 16px 16px 16px;
+  }
+  
+  .operation-component .op-title {
+    font-size: 18px;
+  }
+  
+  .operation-component .op-input {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+}

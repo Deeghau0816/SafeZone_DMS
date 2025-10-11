@@ -1,24 +1,25 @@
 /* Distributionplan.css - SCOPED CSS
-   Only affects files in Donation folder */
+   Only affects files with distributionplan-component class */
 
 /* Scoped CSS Variables */
-.donation-component {
-  --don-primary: #2563eb;
-  --don-primary-hover: #1d4ed8;
-  --don-danger: #dc2626;
-  --don-success: #16a34a;
-  --don-warning: #f59e0b;
-  --don-muted: #6b7280;
-  --don-border: #e5e7eb;
-  --don-bg: #ffffff;
-  --don-bg-secondary: #f9fafb;
-  --don-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --don-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --don-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+.distributionplan-component {
+  --dp-primary: #2563eb;
+  --dp-primary-hover: #1d4ed8;
+  --dp-danger: #dc2626;
+  --dp-success: #16a34a;
+  --dp-warning: #f59e0b;
+  --dp-info: #06b6d4;
+  --dp-muted: #6b7280;
+  --dp-border: #e5e7eb;
+  --dp-bg: #ffffff;
+  --dp-bg-secondary: #f9fafb;
+  --dp-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --dp-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --dp-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 /* Modal shell - ensure highest specificity - SCOPED */
-.donation-component .dp-modal-backdrop {
+.distributionplan-component .dp-modal-backdrop {
   position: fixed !important;
   inset: 0 !important;
   display: grid !important;
@@ -29,7 +30,7 @@
   -webkit-backdrop-filter: blur(2px);
 }
 
-.donation-component .dp-modal-body {
+.distributionplan-component .dp-modal-body {
   position: relative !important;
   background: #fff !important;
   border: 1px solid #e5e7eb !important;
@@ -44,7 +45,7 @@
 }
 
 /* Close button - highest specificity to prevent override - SCOPED */
-.donation-component .dp-modal-close {
+.distributionplan-component .dp-modal-close {
   position: absolute !important;
   top: 12px !important;
   right: 12px !important;
@@ -78,23 +79,23 @@
   transform: none !important;
 }
 
-.dp-modal-close:hover {
+.distributionplan-component .dp-modal-close:hover {
   background: #f8fafc !important;
   transform: translateY(-1px) !important;
   box-shadow: 0 10px 22px rgba(2, 6, 23, 0.18), inset 0 0 0 1px rgba(15, 23, 42, 0.10) !important;
 }
 
-.dp-modal-close:active {
+.distributionplan-component .dp-modal-close:active {
   transform: translateY(0) !important;
   box-shadow: 0 4px 12px rgba(2, 6, 23, 0.14), inset 0 0 0 1px rgba(15, 23, 42, 0.10) !important;
 }
 
-.dp-modal-close:focus-visible {
+.distributionplan-component .dp-modal-close:focus-visible {
   outline: 3px solid #6366f1 !important;
   outline-offset: 2px !important;
 }
 
-.dp-modal-close svg {
+.distributionplan-component .dp-modal-close svg {
   width: 18px !important;
   height: 18px !important;
   pointer-events: none !important;
@@ -107,7 +108,7 @@
 }
 
 /* Loading states */
-.distribution-loading {
+.distributionplan-component .distribution-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -117,21 +118,21 @@
   color: #64748b;
 }
 
-.loading-spinner {
+.distributionplan-component .loading-spinner {
   width: 32px;
   height: 32px;
   border: 3px solid #e2e8f0;
   border-top: 3px solid #3b82f6;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: dp-spin 1s linear infinite;
 }
 
-@keyframes spin {
+@keyframes dp-spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-.distribution-error {
+.distributionplan-component .distribution-error {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -139,7 +140,7 @@
   color: #dc2626;
 }
 
-.error-content {
+.distributionplan-component .error-content {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -149,11 +150,11 @@
   border-radius: 8px;
 }
 
-.error-icon {
+.distributionplan-component .error-icon {
   font-size: 20px;
 }
 
-.distribution-empty {
+.distributionplan-component .distribution-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -163,44 +164,44 @@
   color: #64748b;
 }
 
-.empty-icon {
+.distributionplan-component .empty-icon {
   font-size: 48px;
   margin-bottom: 16px;
 }
 
-.empty-title {
+.distributionplan-component .empty-title {
   margin: 0 0 8px 0;
   font-size: 20px;
   font-weight: 600;
   color: #334155;
 }
 
-.empty-subtitle {
+.distributionplan-component .empty-subtitle {
   margin: 0;
   color: #64748b;
 }
 
 /* Main content */
-.distribution-panel {
+.distributionplan-component .distribution-panel {
   min-height: 400px;
 }
 
-.distribution-header {
+.distributionplan-component .distribution-header {
   margin-bottom: 32px;
 }
 
-.distribution-title-section {
+.distributionplan-component .distribution-title-section {
   text-align: center;
 }
 
-.distribution-title {
+.distributionplan-component .distribution-title {
   margin: 0 0 8px 0;
   font-size: 28px;
   font-weight: 700;
   color: #1e293b;
 }
 
-.distribution-subtitle {
+.distributionplan-component .distribution-subtitle {
   margin: 0;
   font-size: 16px;
   color: #64748b;
@@ -211,7 +212,7 @@
   flex-wrap: wrap;
 }
 
-.status-badge {
+.distributionplan-component .status-badge {
   padding: 4px 12px;
   border-radius: 6px;
   font-size: 14px;
@@ -219,26 +220,26 @@
   text-transform: capitalize;
 }
 
-.status-active {
+.distributionplan-component .status-active {
   background: #dcfce7;
   color: #166534;
   border: 1px solid #bbf7d0;
 }
 
-.status-pending {
+.distributionplan-component .status-pending {
   background: #fef3c7;
   color: #92400e;
   border: 1px solid #fde68a;
 }
 
-.status-completed {
+.distributionplan-component .status-completed {
   background: #dbeafe;
   color: #1e40af;
   border: 1px solid #bfdbfe;
 }
 
 /* Timeline and cards */
-.timeline-card {
+.distributionplan-component .timeline-card {
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
@@ -246,35 +247,35 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.timeline-head {
+.distributionplan-component .timeline-head {
   margin-bottom: 20px;
 }
 
-.timeline-title {
+.distributionplan-component .timeline-title {
   font-size: 18px;
   font-weight: 600;
   color: #1e293b;
   margin: 0 0 4px 0;
 }
 
-.timeline-sub {
+.distributionplan-component .timeline-sub {
   font-size: 14px;
   color: #64748b;
   margin: 0;
 }
 
-.timeline-op {
+.distributionplan-component .timeline-op {
   font-weight: 500;
   color: #3b82f6;
 }
 
-.timeline-list {
+.distributionplan-component .timeline-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.timeline-step {
+.distributionplan-component .timeline-step {
   position: relative;
   display: flex;
   align-items: center;
@@ -282,7 +283,7 @@
   padding-left: 8px;
 }
 
-.timeline-dot {
+.distributionplan-component .timeline-dot {
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -291,22 +292,22 @@
   position: relative;
 }
 
-.dot-done {
+.distributionplan-component .dot-done {
   background: #22c55e;
   box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
 }
 
-.dot-warn {
+.distributionplan-component .dot-warn {
   background: #f59e0b;
   box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
 }
 
-.dot-pending {
+.distributionplan-component .dot-pending {
   background: #e5e7eb;
   border: 2px solid #9ca3af;
 }
 
-.timeline-line {
+.distributionplan-component .timeline-line {
   position: absolute;
   left: 14px;
   top: 20px;
@@ -316,21 +317,21 @@
   z-index: 1;
 }
 
-.timeline-label {
+.distributionplan-component .timeline-label {
   font-size: 14px;
   color: #374151;
   font-weight: 500;
 }
 
 /* KPI section */
-.kpi-grid {
+.distributionplan-component .kpi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 16px;
   margin-bottom: 20px;
 }
 
-.kpi {
+.distributionplan-component .kpi {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -340,12 +341,12 @@
   border-radius: 8px;
 }
 
-.kpi-emoji {
+.distributionplan-component .kpi-emoji {
   font-size: 20px;
   flex-shrink: 0;
 }
 
-.num {
+.distributionplan-component .num {
   font-size: 20px;
   font-weight: 700;
   color: #1e293b;
@@ -353,17 +354,17 @@
   margin: 0 0 2px 0;
 }
 
-.muted {
+.distributionplan-component .muted {
   color: #64748b;
 }
 
-.small {
+.distributionplan-component .small {
   font-size: 12px;
   line-height: 1.2;
 }
 
 /* Inventory table */
-.inv-table {
+.distributionplan-component .inv-table {
   width: 100%;
   border-collapse: collapse;
   background: #ffffff;
@@ -372,7 +373,7 @@
   border: 1px solid #e5e7eb;
 }
 
-.inv-table th {
+.distributionplan-component .inv-table th {
   background: #f8fafc;
   color: #374151;
   font-weight: 600;
@@ -382,23 +383,23 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
-.inv-table td {
+.distributionplan-component .inv-table td {
   padding: 12px;
   border-bottom: 1px solid #f1f5f9;
   font-size: 14px;
   color: #374151;
 }
 
-.inv-table tr:last-child td {
+.distributionplan-component .inv-table tr:last-child td {
   border-bottom: none;
 }
 
-.inv-table tr:hover {
+.distributionplan-component .inv-table tr:hover {
   background: #f8fafc;
 }
 
 /* Volunteer section */
-.vm-timeline-card {
+.distributionplan-component .vm-timeline-card {
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
@@ -406,33 +407,33 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.vm-timeline-head {
+.distributionplan-component .vm-timeline-head {
   margin-bottom: 20px;
 }
 
-.vm-timeline-title {
+.distributionplan-component .vm-timeline-title {
   font-size: 18px;
   font-weight: 600;
   color: #1e293b;
   margin: 0 0 4px 0;
 }
 
-.vm-timeline-sub {
+.distributionplan-component .vm-timeline-sub {
   font-size: 14px;
   color: #64748b;
   margin: 0;
 }
 
-.vm-timeline-op {
+.distributionplan-component .vm-timeline-op {
   font-weight: 500;
   color: #3b82f6;
 }
 
-.vm-volunteer-list-container {
+.distributionplan-component .vm-volunteer-list-container {
   min-height: 200px;
 }
 
-.vm-volunteer-empty-state {
+.distributionplan-component .vm-volunteer-empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -442,25 +443,25 @@
   color: #64748b;
 }
 
-.vm-empty-icon {
+.distributionplan-component .vm-empty-icon {
   font-size: 32px;
   margin-bottom: 12px;
 }
 
-.vm-volunteer-empty-state h4 {
+.distributionplan-component .vm-volunteer-empty-state h4 {
   margin: 0 0 8px 0;
   font-size: 16px;
   font-weight: 600;
   color: #374151;
 }
 
-.vm-volunteer-empty-state p {
+.distributionplan-component .vm-volunteer-empty-state p {
   margin: 0;
   font-size: 14px;
   color: #64748b;
 }
 
-.vm-volunteer-count-display {
+.distributionplan-component .vm-volunteer-count-display {
   font-size: 12px;
   font-weight: 600;
   color: #6b7280;
@@ -470,13 +471,13 @@
   text-align: center;
 }
 
-.vm-volunteer-names-list {
+.distributionplan-component .vm-volunteer-names-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.vm-volunteer-name-item {
+.distributionplan-component .vm-volunteer-name-item {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -488,11 +489,11 @@
   max-width: 100%;
 }
 
-.vm-volunteer-name-item:hover {
+.distributionplan-component .vm-volunteer-name-item:hover {
   background: #f1f5f9;
 }
 
-.vm-volunteer-name-avatar {
+.distributionplan-component .vm-volunteer-name-avatar {
   width: 36px;
   height: 36px;
   background: #3b82f6;
@@ -506,12 +507,12 @@
   flex-shrink: 0;
 }
 
-.vm-volunteer-name-details {
+.distributionplan-component .vm-volunteer-name-details {
   flex: 1;
   min-width: 0;
 }
 
-.vm-volunteer-name-text {
+.distributionplan-component .vm-volunteer-name-text {
   font-size: 14px;
   font-weight: 500;
   color: #374151;
@@ -519,13 +520,13 @@
   line-height: 1.3;
 }
 
-.vm-volunteer-name-type {
+.distributionplan-component .vm-volunteer-name-type {
   font-size: 12px;
   color: #6b7280;
   line-height: 1.2;
 }
 
-.vm-volunteer-status-dot {
+.distributionplan-component .vm-volunteer-status-dot {
   width: 8px;
   height: 8px;
   background: #22c55e;
@@ -534,7 +535,7 @@
 }
 
 /* Empty panel for map */
-.adp-empty-panel {
+.distributionplan-component .adp-empty-panel {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -549,65 +550,65 @@
 
 /* Responsive design */
 @media (max-width: 640px) {
-  .dp-modal-body {
+  .distributionplan-component .dp-modal-body {
     padding: 16px !important;
     margin: 8px !important;
     width: calc(100vw - 16px) !important;
   }
   
-  .dp-modal-close {
+  .distributionplan-component .dp-modal-close {
     top: 8px !important;
     right: 8px !important;
   }
   
-  .distribution-title {
+  .distributionplan-component .distribution-title {
     font-size: 24px;
   }
   
-  .distribution-subtitle {
+  .distributionplan-component .distribution-subtitle {
     flex-direction: column;
     gap: 4px;
   }
   
-  .timeline-card,
-  .vm-timeline-card {
+  .distributionplan-component .timeline-card,
+  .distributionplan-component .vm-timeline-card {
     padding: 16px;
   }
   
-  .kpi-grid {
+  .distributionplan-component .kpi-grid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 768px) {
-  .dp-modal-body {
+  .distributionplan-component .dp-modal-body {
     max-height: 95vh !important;
   }
   
   /* Stack timeline and map on mobile */
-  .distribution-panel > div:first-of-type {
+  .distributionplan-component .distribution-panel > div:first-of-type {
     grid-template-columns: 1fr !important;
   }
   
   /* Stack KPIs and team on mobile */
-  .distribution-panel > div:last-of-type {
+  .distributionplan-component .distribution-panel > div:last-of-type {
     grid-template-columns: 1fr !important;
   }
   
-  .timeline-card {
+  .distributionplan-component .timeline-card {
     min-width: 0;
   }
 }
 
 /* Ensure no conflicting styles from other components */
-.dp-modal-backdrop *,
-.dp-modal-backdrop *::before,
-.dp-modal-backdrop *::after {
+.distributionplan-component .dp-modal-backdrop *,
+.distributionplan-component .dp-modal-backdrop *::before,
+.distributionplan-component .dp-modal-backdrop *::after {
   box-sizing: border-box;
 }
 
 /* Override any global button styles that might affect the close button */
-.dp-modal-backdrop button.dp-modal-close {
+.distributionplan-component .dp-modal-backdrop button.dp-modal-close {
   all: unset;
   position: absolute !important;
   top: 12px !important;
@@ -624,7 +625,7 @@
 }
 
 /* Prevent text selection on close button */
-.dp-modal-close {
+.distributionplan-component .dp-modal-close {
   user-select: none !important;
   -webkit-user-select: none !important;
   -moz-user-select: none !important;

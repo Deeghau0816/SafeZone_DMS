@@ -65,14 +65,15 @@ export default function TopDonorsPage() {
   }, []);
 
   return (
-    <div className="ngo-wrap">
-      <div className="ngo-head">
-        <h1 className="ngo-title">Top donors</h1>
-        <button className="ngo-btn" onClick={() => navigate("/dashboard/donations")}>Back to list</button>
-      </div>
+    <div className="topdonors-component">
+      <div className="td-wrap">
+        <div className="td-head">
+          <h1 className="td-title">Top donors</h1>
+          <button className="td-btn" onClick={() => navigate("/dashboard/donations")}>Back to list</button>
+        </div>
 
-      <div className="ngo-tablewrap">
-        <table className="ngo-table">
+        <div className="td-tablewrap">
+          <table className="td-table">
           <thead>
             <tr>
               <th>Donor</th>
@@ -81,16 +82,16 @@ export default function TopDonorsPage() {
               <th>Amount</th>
               <th>Channel</th>
               <th>Ref / Txn</th>
-              <th className="ngo-tight">Actions</th>
+              <th className="td-tight">Actions</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan="7" className="muted">Loading…</td></tr>
+              <tr><td colSpan="7" className="td-muted">Loading…</td></tr>
             ) : err ? (
-              <tr><td colSpan="7" className="ngo-error">{err}</td></tr>
+              <tr><td colSpan="7" className="td-error">{err}</td></tr>
             ) : items.length === 0 ? (
-              <tr><td colSpan="7" className="ngo-empty">No donors yet.</td></tr>
+              <tr><td colSpan="7" className="td-empty">No donors yet.</td></tr>
             ) : (
               items.map((d) => {
                 const wa = normWA(d.whatsapp || d.donorPhone);
@@ -100,31 +101,31 @@ export default function TopDonorsPage() {
                 return (
                   <tr key={d._id || d.id}>
                     <td>
-                      <div className="strong">
+                      <div className="td-strong">
                         {d.donorName || "-"}
-                        <span className={`ngo-type ngo-type--${type}`}>{d.donorType || "Individual"}</span>
+                        <span className={`td-type td-type--${type}`}>{d.donorType || "Individual"}</span>
                       </div>
                     </td>
-                    <td className="muted">{d.donorEmail || "—"}</td>
+                    <td className="td-muted">{d.donorEmail || "—"}</td>
                     <td>
                       {d.donorPhone || "—"}
-                      {d.whatsapp ? <div className="muted">WA: {d.whatsapp}</div> : null}
+                      {d.whatsapp ? <div className="td-muted">WA: {d.whatsapp}</div> : null}
                     </td>
                     <td>{fmtMoney(d.amount, d.currency)}</td>
                     <td>{d.channel || "—"}</td>
                     <td>
                       <div>{d.referenceNo || "—"}</div>
-                      <div className="muted">{d.transactionRef || "—"}</div>
+                      <div className="td-muted">{d.transactionRef || "—"}</div>
                     </td>
-                    <td className="ngo-tight">
+                    <td className="td-tight">
                       {waHref ? (
-                        <a className="ngo-btn ngo-btn-wa" href={waHref} target="_blank" rel="noreferrer">
+                        <a className="td-btn td-btn-wa" href={waHref} target="_blank" rel="noreferrer">
                           WhatsApp
                         </a>
                       ) : (
-                        <button className="ngo-btn" disabled>WhatsApp</button>
+                        <button className="td-btn" disabled>WhatsApp</button>
                       )}
-                      <button className="ngo-btn" onClick={() => navigate(`/dashboard/donations/${d._id || d.id}/edit`)}>
+                      <button className="td-btn" onClick={() => navigate(`/dashboard/donations/${d._id || d.id}/edit`)}>
                         Edit
                       </button>
                     </td>
@@ -134,6 +135,7 @@ export default function TopDonorsPage() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

@@ -137,30 +137,32 @@ export default function VolunteerOperationForm({ onClose, onSubmit }) {
 
   if (success) {
     return (
-      <div className="opform-overlay" role="dialog" aria-modal="true">
-        <div className="opform-card opform-card--success" aria-live="polite">
-          <div className="opform-header opform-header--success">
-            <h2 className="opform-title">Success!</h2>
-          </div>
-          <div className="opform-body opform-body--center">
-            <div className="opform-check">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M5 13l4 4L19 7"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+      <div className="operation-component">
+        <div className="op-overlay" role="dialog" aria-modal="true">
+          <div className="op-card op-card--success" aria-live="polite">
+            <div className="op-header op-header--success">
+              <h2 className="op-title">Success!</h2>
             </div>
-            <p className="opform-success-line">
-              Operation <strong>{formData.operationName}</strong> created.
-            </p>
-            <p className="opform-success-sub">
-              Volunteers needed: <strong>{formData.volunteerCount}</strong>
-            </p>
+            <div className="op-body op-body--center">
+              <div className="op-check">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M5 13l4 4L19 7"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <p className="op-success-line">
+                Operation <strong>{formData.operationName}</strong> created.
+              </p>
+              <p className="op-success-sub">
+                Volunteers needed: <strong>{formData.volunteerCount}</strong>
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -168,66 +170,67 @@ export default function VolunteerOperationForm({ onClose, onSubmit }) {
   }
 
   return (
-    <div
-      className="opform-overlay"
-      onClick={handleBackdropClick}
-      role="dialog"
-      aria-modal="true"
-    >
-      <div className="opform-card" onKeyDown={handleKeyDown}>
-        {/* Header */}
-        <div className="opform-header">
-          <h2 className="opform-title">New Volunteer Operation</h2>
-          <button className="opform-close" aria-label="Close" onClick={handleClose}>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                d="M6 6l12 12M18 6L6 18"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-          </button>
-        </div>
+    <div className="operation-component">
+      <div
+        className="op-overlay"
+        onClick={handleBackdropClick}
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className="op-card" onKeyDown={handleKeyDown}>
+          {/* Header */}
+          <div className="op-header">
+            <h2 className="op-title">New Volunteer Operation</h2>
+            <button className="op-close" aria-label="Close" onClick={handleClose}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M6 6l12 12M18 6L6 18"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+          </div>
 
-        {/* Body */}
-        <div className="opform-body">
+          {/* Body */}
+          <div className="op-body">
           {/* Operation Name */}
-          <div className="opform-field">
-            <label htmlFor="opform-operationName" className="opform-label">
+          <div className="op-field">
+            <label htmlFor="op-operationName" className="op-label">
               Operation Name *
             </label>
             <input
               ref={nameRef}
-              id="opform-operationName"
+              id="op-operationName"
               name="operationName"
               type="text"
-              className={`opform-input ${nameTaken ? "is-invalid" : ""}`}
+              className={`op-input ${nameTaken ? "op-is-invalid" : ""}`}
               value={formData.operationName}
               onChange={handleInputChange}
               placeholder="e.g., Flood Relief — Ratnapura"
               disabled={isSubmitting}
             />
-            <div className="opform-hint">
-              {nameChecking && <span className="opform-spinner" aria-hidden="true" />}
+            <div className="op-hint">
+              {nameChecking && <span className="op-spinner" aria-hidden="true" />}
               {nameChecking ? " Checking name…" : "Use a descriptive, unique name."}
             </div>
             {nameTaken && (
-              <div className="opform-error-inline">This operation name already exists.</div>
+              <div className="op-error-inline">This operation name already exists.</div>
             )}
           </div>
 
           {/* Location (optional) */}
-          <div className="opform-field">
-            <label htmlFor="opform-location" className="opform-label">
+          <div className="op-field">
+            <label htmlFor="op-location" className="op-label">
               Location (optional)
             </label>
             <input
-              id="opform-location"
+              id="op-location"
               name="location"
               type="text"
-              className="opform-input"
+              className="op-input"
               value={formData.location}
               onChange={handleInputChange}
               placeholder="e.g., Sector 7, Ratnapura"
@@ -237,16 +240,16 @@ export default function VolunteerOperationForm({ onClose, onSubmit }) {
           </div>
 
           {/* Volunteer Count */}
-          <div className="opform-field">
-            <label htmlFor="opform-volunteerCount" className="opform-label">
+          <div className="op-field">
+            <label htmlFor="op-volunteerCount" className="op-label">
               Required Volunteer Count *
             </label>
             <input
-              id="opform-volunteerCount"
+              id="op-volunteerCount"
               name="volunteerCount"
               type="number"
               min="1"
-              className="opform-input"
+              className="op-input"
               value={formData.volunteerCount}
               onChange={handleInputChange}
               placeholder="e.g., 12"
@@ -256,16 +259,16 @@ export default function VolunteerOperationForm({ onClose, onSubmit }) {
 
           {/* Error banner */}
           {error && (
-            <div className="opform-alert" role="alert">
-              <div className="opform-alert-icon">!</div>
+            <div className="op-alert" role="alert">
+              <div className="op-alert-icon">!</div>
               <div>{error}</div>
             </div>
           )}
 
           {/* Actions */}
-          <div className="opform-actions">
+          <div className="op-actions">
             <button
-              className="opform-btn opform-btn--ghost"
+              className="op-btn op-btn--ghost"
               type="button"
               onClick={handleClose}
               disabled={isSubmitting}
@@ -273,7 +276,7 @@ export default function VolunteerOperationForm({ onClose, onSubmit }) {
               Cancel
             </button>
             <button
-              className="opform-btn opform-btn--primary"
+              className="op-btn op-btn--primary"
               type="button"
               onClick={handleSubmit}
               disabled={
@@ -285,12 +288,13 @@ export default function VolunteerOperationForm({ onClose, onSubmit }) {
             >
               {isSubmitting ? (
                 <>
-                  <span className="opform-spinner" aria-hidden="true" /> Submitting…
+                  <span className="op-spinner" aria-hidden="true" /> Submitting…
                 </>
               ) : (
                 "Create Operation"
               )}
             </button>
+          </div>
           </div>
         </div>
       </div>

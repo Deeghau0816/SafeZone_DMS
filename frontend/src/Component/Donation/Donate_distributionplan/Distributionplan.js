@@ -258,11 +258,12 @@ export default function Distributionplan({ onClose }) {
   if (selfClosed) return null; // fallback path when no onClose provided
 
   const content = (
-    <div
-      className="dp-modal-backdrop"
-      onClick={(e) => e.target === e.currentTarget && cleanupAndClose()}
-      data-open="true"
-    >
+    <div className="distributionplan-component">
+      <div
+        className="dp-modal-backdrop"
+        onClick={(e) => e.target === e.currentTarget && cleanupAndClose()}
+        data-open="true"
+      >
       <div className="dp-modal-body" onClick={(e) => e.stopPropagation()}>
         <button
           className="dp-modal-close"
@@ -280,31 +281,31 @@ export default function Distributionplan({ onClose }) {
         </button>
 
         {loading ? (
-          <div className="distribution-loading">
-            <div className="loading-spinner" /> 
+          <div className="dp-loading">
+            <div className="dp-loading-spinner" /> 
             <span>Loading distribution plan…</span>
           </div>
         ) : err ? (
-          <div className="distribution-error">
-            <div className="error-content">
-              <span className="error-icon">⚠</span>
+          <div className="dp-error">
+            <div className="dp-error-content">
+              <span className="dp-error-icon">⚠</span>
               {err}
             </div>
           </div>
         ) : !activeOp ? (
-          <div className="distribution-empty">
-            <div className="empty-icon">📋</div>
-            <h3 className="empty-title">No operations</h3>
-            <p className="empty-subtitle">Create an operation to view the distribution plan.</p>
+          <div className="dp-empty">
+            <div className="dp-empty-icon">📋</div>
+            <h3 className="dp-empty-title">No operations</h3>
+            <p className="dp-empty-subtitle">Create an operation to view the distribution plan.</p>
           </div>
         ) : (
-          <section className="distribution-panel">
-            <div className="distribution-header">
-              <div className="distribution-title-section">
-                <h1 className="distribution-title">Distribution Plan</h1>
-                <p className="distribution-subtitle">
+          <section className="dp-panel">
+            <div className="dp-header">
+              <div className="dp-title-section">
+                <h1 className="dp-title">Distribution Plan</h1>
+                <p className="dp-subtitle">
                   {activeOp.operationName} • Status:{" "}
-                  <span className={`status-badge status-${(activeOp.status || "pending").toLowerCase()}`}>
+                  <span className={`dp-status-badge dp-status-${(activeOp.status || "pending").toLowerCase()}`}>
                     {activeOp.status || "Pending"}
                   </span>
                 </p>
@@ -313,32 +314,32 @@ export default function Distributionplan({ onClose }) {
 
             {/* Timeline + Map */}
             <div style={{ display: "grid", gridTemplateColumns: "minmax(340px,420px) 1fr", gap: 20, marginBottom: 24 }}>
-              <div className="timeline-card">
-                <div className="timeline-head">
+              <div className="dp-timeline-card">
+                <div className="dp-timeline-head">
                   <div>
-                    <div className="timeline-title">Timeline</div>
-                    <div className="timeline-sub">
-                      Active operation: <span className="timeline-op">{activeOp.operationName}</span>
+                    <div className="dp-timeline-title">Timeline</div>
+                    <div className="dp-timeline-sub">
+                      Active operation: <span className="dp-timeline-op">{activeOp.operationName}</span>
                     </div>
                   </div>
                 </div>
-                <div className="timeline-list">
+                <div className="dp-timeline-list">
                   {timeline.map((s, idx) => (
-                    <div key={s.key} className="timeline-step">
-                      <span className={`timeline-dot ${s.state === "done" ? "dot-done" : s.state === "warn" ? "dot-warn" : "dot-pending"}`} />
-                      {idx < timeline.length - 1 && <div className="timeline-line" />}
-                      <div className="timeline-label">{s.label}</div>
+                    <div key={s.key} className="dp-timeline-step">
+                      <span className={`dp-timeline-dot ${s.state === "done" ? "dp-dot-done" : s.state === "warn" ? "dp-dot-warn" : "dp-dot-pending"}`} />
+                      {idx < timeline.length - 1 && <div className="dp-timeline-line" />}
+                      <div className="dp-timeline-label">{s.label}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="timeline-card" style={{ height: "100%" }}>
-                <div className="timeline-head">
+              <div className="dp-timeline-card" style={{ height: "100%" }}>
+                <div className="dp-timeline-head">
                   <div>
-                    <div className="timeline-title">Distribution area Map</div>
-                    <div className="timeline-sub">
-                      Location: <span className="timeline-op">{activeOp.location || "—"}</span>
+                    <div className="dp-timeline-title">Distribution area Map</div>
+                    <div className="dp-timeline-sub">
+                      Location: <span className="dp-timeline-op">{activeOp.location || "—"}</span>
                     </div>
                   </div>
                 </div>
@@ -353,30 +354,30 @@ export default function Distributionplan({ onClose }) {
                     />
                   </div>
                 ) : (
-                  <div className="adp-empty-panel">No location set for this operation.</div>
+                  <div className="dp-empty-panel">No location set for this operation.</div>
                 )}
               </div>
             </div>
 
             {/* KPIs + Team */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr minmax(320px, 420px)", gap: 20 }}>
-              <div className="timeline-card">
-                <div className="timeline-head">
+              <div className="dp-timeline-card">
+                <div className="dp-timeline-head">
                   <div>
-                    <div className="timeline-title">Emergency resources available</div>
-                    <div className="timeline-sub">Live from inventory</div>
+                    <div className="dp-timeline-title">Emergency resources available</div>
+                    <div className="dp-timeline-sub">Live from inventory</div>
                   </div>
                 </div>
 
-                <div className="kpi-grid">
+                <div className="dp-kpi-grid">
                   {["medical","clothing","water","dry_rations"].map(v => {
                     const k = { ...itemMeta[v], have: totals[v] || 0 };
                     return (
-                      <div key={k.value} className="kpi">
-                        <div className="kpi-emoji">📦</div>
+                      <div key={k.value} className="dp-kpi">
+                        <div className="dp-kpi-emoji">📦</div>
                         <div>
-                          <div className="num">{Number(k.have).toLocaleString()}</div>
-                          <div className="muted small">{k.label}</div>
+                          <div className="dp-num">{Number(k.have).toLocaleString()}</div>
+                          <div className="dp-muted dp-small">{k.label}</div>
                         </div>
                       </div>
                     );
@@ -384,7 +385,7 @@ export default function Distributionplan({ onClose }) {
                 </div>
 
                 <div style={{ marginTop: 16, overflowX: "auto" }}>
-                  <table className="inv-table">
+                  <table className="dp-inv-table">
                     <thead>
                       <tr>
                         <th>Item</th>
@@ -405,40 +406,40 @@ export default function Distributionplan({ onClose }) {
                 </div>
               </div>
 
-              <div className="vm-timeline-card">
-                <div className="vm-timeline-head">
+              <div className="dp-vm-timeline-card">
+                <div className="dp-vm-timeline-head">
                   <div>
-                    <div className="vm-timeline-title">Team</div>
-                    <div className="vm-timeline-sub">
-                      Active operation: <span className="vm-timeline-op">{activeOp.operationName}</span>
+                    <div className="dp-vm-timeline-title">Team</div>
+                    <div className="dp-vm-timeline-sub">
+                      Active operation: <span className="dp-vm-timeline-op">{activeOp.operationName}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="vm-volunteer-list-container">
+                <div className="dp-vm-volunteer-list-container">
                   {assignedToActive.length === 0 ? (
-                    <div className="vm-volunteer-empty-state">
-                      <div className="vm-empty-icon">👥</div>
+                    <div className="dp-vm-volunteer-empty-state">
+                      <div className="dp-vm-empty-icon">👥</div>
                       <h4>No volunteers assigned</h4>
                       <p>This operation doesn't have any assigned volunteers yet.</p>
                     </div>
                   ) : (
                     <>
-                      <div className="vm-volunteer-count-display">
+                      <div className="dp-vm-volunteer-count-display">
                         {assignedToActive.length} VOLUNTEER{assignedToActive.length > 1 ? "S" : ""} ASSIGNED
                       </div>
-                      <div className="vm-volunteer-names-list">
+                      <div className="dp-vm-volunteer-names-list">
                         {assignedToActive.map((v, i) => {
                           const name = v?.fullName || "—";
                           const type = v?.volunteerType || "individual";
                           return (
-                            <div key={v?._id || i} className="vm-volunteer-name-item">
-                              <div className="vm-volunteer-name-avatar">{name.charAt(0)}</div>
-                              <div className="vm-volunteer-name-details">
-                                <div className="vm-volunteer-name-text">{name}</div>
-                                <div className="vm-volunteer-name-type">{type === "team" ? "Team Lead" : "Individual"}</div>
+                            <div key={v?._id || i} className="dp-vm-volunteer-name-item">
+                              <div className="dp-vm-volunteer-name-avatar">{name.charAt(0)}</div>
+                              <div className="dp-vm-volunteer-name-details">
+                                <div className="dp-vm-volunteer-name-text">{name}</div>
+                                <div className="dp-vm-volunteer-name-type">{type === "team" ? "Team Lead" : "Individual"}</div>
                               </div>
-                              <div className="vm-volunteer-status-dot"></div>
+                              <div className="dp-vm-volunteer-status-dot"></div>
                             </div>
                           );
                         })}
@@ -451,6 +452,7 @@ export default function Distributionplan({ onClose }) {
           </section>
         )}
       </div>
+    </div>
     </div>
   );
 
