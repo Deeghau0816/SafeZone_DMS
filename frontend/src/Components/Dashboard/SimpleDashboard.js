@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../HeaderFotter/Header';
+import Nav from '../NavBar/adminNav';
 import Footer from '../../HeaderFotter/Footer';
 import Map from '../map/map';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
@@ -285,7 +285,7 @@ const SimpleDashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <Header />
+      
       
       <div className="dashboard-content">
         <div className="dashboard-header">
@@ -382,6 +382,15 @@ const SimpleDashboard = () => {
                   </div>
                   <p>Active incidents</p>
                 </div>
+
+                <div className="stat-card">
+                  <h3>Emergency Shelters</h3>
+                  <div className="stat-number">
+                    {loading ? '...' : shelterCount}
+                  </div>
+                  <p>Available shelters</p>
+                </div>
+
                 <div className="stat-card">
                   <h3>Contact Reports</h3>
                   <div className="stat-number">
@@ -390,23 +399,9 @@ const SimpleDashboard = () => {
                   <p>Total submissions</p>
                   
                 </div>
-                <div className="stat-card">
-                  <h3>Response Time</h3>
-                  <div className="stat-number">12m</div>
-                  <p>Average response</p>
-                </div>
-                <div className="stat-card">
-                  <h3>Emergency Shelters</h3>
-                  <div className="stat-number">
-                    {loading ? '...' : shelterCount}
-                  </div>
-                  <p>Available shelters</p>
-                </div>
-                <div className="stat-card">
-                  <h3>Active Teams</h3>
-                  <div className="stat-number">8</div>
-                  <p>Deployed teams</p>
-                </div>
+                
+                
+                
               </div>
 
               
@@ -492,9 +487,20 @@ const SimpleDashboard = () => {
           )}
 
           {activeTab === 'contacts' && (
-            <div className="contacts-section">
-              <h2>Contact Reports</h2>
-              <p>View and manage all contact form submissions</p>
+            <div style={{
+              textAlign: 'center'
+            }}>
+              <h2 style={{
+                fontSize: '2rem',
+                color: '#333',
+                marginBottom: '1rem',
+                fontWeight: '700'
+              }}>Contact Reports</h2>
+              <p style={{
+                color: '#666',
+                marginBottom: '2rem',
+                fontSize: '1.1rem'
+              }}>View and manage all contact form submissions</p>
               <ContactList />
             </div>
           )}

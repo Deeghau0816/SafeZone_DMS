@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   max-width: 900px;
+  width: 100%;
   margin: 40px auto;
   padding: 30px;
   border-radius: 20px;
@@ -10,6 +11,7 @@
   color: #333;
   border: 1px solid #e0e0e0;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 .contact-list-container h2 {
@@ -82,6 +84,9 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .contact-item:hover {
@@ -92,6 +97,8 @@
 .contact-details {
   flex: 1;
   min-width: 0;
+  max-width: calc(100% - 140px);
+  overflow-wrap: break-word;
 }
 
 .contact-item p {
@@ -112,6 +119,8 @@
   gap: 8px;
   flex-shrink: 0;
   min-width: 120px;
+  max-width: 120px;
+  width: 120px;
 }
 
 .download-btn,
