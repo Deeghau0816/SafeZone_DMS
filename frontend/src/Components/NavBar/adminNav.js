@@ -56,13 +56,13 @@ export default function Nav() {
             className={`link ${pathname.includes("/toAlerts") ? "active" : ""}`}
             to="/AdminHome/toAlerts"
           >
-            Alerts
+            All Alerts
           </Link>
           <Link
             className={`link ${pathname.includes("/AlertAdd") ? "active" : ""}`}
             to="/AdminHome/AlertAdd"
           >
-            DMS dashboard
+            DMO Dashboard
           </Link>
           <Link
             className={`link ${pathname.includes("/AdminRegitration") ? "active" : ""}`}
