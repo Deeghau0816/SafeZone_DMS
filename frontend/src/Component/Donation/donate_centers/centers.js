@@ -124,192 +124,194 @@ export default function AddCenterForm() {
   }
 
   return (
-    <div className="cc-page wrap">
-      {/* Header */}
-      <div className="cc-hero">
-        <div>
-          <h1 className="cc-title">Add New Collection Center</h1>
-          <p className="cc-sub">
-            Create a new drop-off location for donations.
-          </p>
+    <div className="donation-component">
+      <div className="cc-page wrap">
+        {/* Header */}
+        <div className="cc-hero">
+          <div>
+            <h1 className="cc-title">Add New Collection Center</h1>
+            <p className="cc-sub">
+              Create a new drop-off location for donations.
+            </p>
+          </div>
+          <div className="cc-hero-actions">
+            <button className="btn btn-ghost" type="button" onClick={closeForm}>
+              Back
+            </button>
+          </div>
         </div>
-        <div className="cc-hero-actions">
-          <button className="btn btn-ghost" type="button" onClick={closeForm}>
-            Back
-          </button>
-        </div>
-      </div>
 
-      {/* Form */}
-      <div
-        className="cc-drawer"
-        style={{
-          position: "static",
-          transform: "none",
-          width: "100%",
-          height: "auto",
-          background: "transparent",
-          boxShadow: "none",
-          display: "flex",
-          justifyContent: "center",
-          padding: "2rem 1rem",
-        }}
-      >
-        <form
-          className="cc-form"
-          onSubmit={submitForm}
+        {/* Form */}
+        <div
+          className="cc-drawer"
           style={{
-            maxWidth: "900px",
+            position: "static",
+            transform: "none",
             width: "100%",
-            margin: "0 auto",
+            height: "auto",
+            background: "transparent",
+            boxShadow: "none",
+            display: "flex",
+            justifyContent: "center",
+            padding: "2rem 1rem",
           }}
         >
-          <div className="cc-form-head">
-            <h3>Center Details</h3>
-          </div>
-
-          {/* Display Error Message */}
-          {msg && (
-            <div
-              className="cc-msg"
-              style={{ color: "red", fontWeight: "bold" }}
-            >
-              {msg}
+          <form
+            className="cc-form"
+            onSubmit={submitForm}
+            style={{
+              maxWidth: "900px",
+              width: "100%",
+              margin: "0 auto",
+            }}
+          >
+            <div className="cc-form-head">
+              <h3>Center Details</h3>
             </div>
-          )}
 
-          <div className="grid2">
+            {/* Display Error Message */}
+            {msg && (
+              <div
+                className="cc-msg"
+                style={{ color: "red", fontWeight: "bold" }}
+              >
+                {msg}
+              </div>
+            )}
+
+            <div className="grid2">
+              <div className="field">
+                <label>Name *</label>
+                <input
+                  className="input"
+                  value={draft.name}
+                  onChange={(e) =>
+                    setDraft((d) => ({ ...d, name: e.target.value }))
+                  }
+                  required
+                  placeholder="Enter center name"
+                />
+              </div>
+
+              <div className="field">
+                <label>Phone * (10 digits)</label>
+                <input
+                  className="input"
+                  value={draft.phone}
+                  onChange={(e) =>
+                    setDraft((d) => ({ ...d, phone: e.target.value }))
+                  }
+                  required
+                  placeholder="Enter phone number"
+                />
+              </div>
+
+              <div className="field field-wide">
+                <label>Address *</label>
+                <input
+                  className="input"
+                  value={draft.address}
+                  onChange={(e) =>
+                    setDraft((d) => ({ ...d, address: e.target.value }))
+                  }
+                  required
+                  placeholder="Enter full address"
+                />
+              </div>
+
+              <div className="field">
+                <label>City / hometown *</label>
+                <input
+                  className="input"
+                  value={draft.city}
+                  onChange={(e) =>
+                    setDraft((d) => ({ ...d, city: e.target.value }))
+                  }
+                  required
+                  placeholder="Enter city name"
+                />
+              </div>
+
+              <div className="field">
+                <label>Opening hours</label>
+                <input
+                  className="input"
+                  placeholder="e.g., 9.00 AM – 5.00 PM"
+                  value={draft.hours}
+                  onChange={(e) =>
+                    setDraft((d) => ({ ...d, hours: e.target.value }))
+                  }
+                />
+              </div>
+
+              <div className="field">
+                <label>Latitude *</label>
+                <input
+                  className="input"
+                  type="number"
+                  step="any"
+                  value={draft.lat}
+                  onChange={(e) =>
+                    setDraft((d) => ({ ...d, lat: e.target.value }))
+                  }
+                  placeholder="e.g., 6.9271"
+                />
+              </div>
+
+              <div className="field">
+                <label>Longitude *</label>
+                <input
+                  className="input"
+                  type="number"
+                  step="any"
+                  value={draft.lng}
+                  onChange={(e) =>
+                    setDraft((d) => ({ ...d, lng: e.target.value }))
+                  }
+                  placeholder="e.g., 79.8612"
+                />
+              </div>
+            </div>
+
             <div className="field">
-              <label>Name *</label>
-              <input
-                className="input"
-                value={draft.name}
-                onChange={(e) =>
-                  setDraft((d) => ({ ...d, name: e.target.value }))
-                }
-                required
-                placeholder="Enter center name"
-              />
+              <label>Categories</label>
+              <div className="cc-tagpick">
+                {["Food", "Medical", "Clothing", "Shelter", "Water"].map((t) => {
+                  const on = draft.tags?.includes(t);
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      className={`chip ${on ? "on" : ""}`}
+                      onClick={() =>
+                        setDraft((d) => {
+                          const s = new Set(d.tags || []);
+                          on ? s.delete(t) : s.add(t);
+                          return { ...d, tags: Array.from(s) };
+                        })
+                      }
+                    >
+                      {t}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            <div className="field">
-              <label>Phone * (10 digits)</label>
-              <input
-                className="input"
-                value={draft.phone}
-                onChange={(e) =>
-                  setDraft((d) => ({ ...d, phone: e.target.value }))
-                }
-                required
-                placeholder="Enter phone number"
-              />
+            <div className="cc-form-actions">
+              <button className="btn btn-ghost" type="button" onClick={closeForm}>
+                Cancel
+              </button>
+              <button
+                className="btn btn-primary"
+                type="submit"
+                disabled={submitting}
+              >
+                {submitting ? "Adding Center..." : "Save Center"}
+              </button>
             </div>
-
-            <div className="field field-wide">
-              <label>Address *</label>
-              <input
-                className="input"
-                value={draft.address}
-                onChange={(e) =>
-                  setDraft((d) => ({ ...d, address: e.target.value }))
-                }
-                required
-                placeholder="Enter full address"
-              />
-            </div>
-
-            <div className="field">
-              <label>City / hometown *</label>
-              <input
-                className="input"
-                value={draft.city}
-                onChange={(e) =>
-                  setDraft((d) => ({ ...d, city: e.target.value }))
-                }
-                required
-                placeholder="Enter city name"
-              />
-            </div>
-
-            <div className="field">
-              <label>Opening hours</label>
-              <input
-                className="input"
-                placeholder="e.g., 9.00 AM – 5.00 PM"
-                value={draft.hours}
-                onChange={(e) =>
-                  setDraft((d) => ({ ...d, hours: e.target.value }))
-                }
-              />
-            </div>
-
-            <div className="field">
-              <label>Latitude *</label>
-              <input
-                className="input"
-                type="number"
-                step="any"
-                value={draft.lat}
-                onChange={(e) =>
-                  setDraft((d) => ({ ...d, lat: e.target.value }))
-                }
-                placeholder="e.g., 6.9271"
-              />
-            </div>
-
-            <div className="field">
-              <label>Longitude *</label>
-              <input
-                className="input"
-                type="number"
-                step="any"
-                value={draft.lng}
-                onChange={(e) =>
-                  setDraft((d) => ({ ...d, lng: e.target.value }))
-                }
-                placeholder="e.g., 79.8612"
-              />
-            </div>
-          </div>
-
-          <div className="field">
-            <label>Categories</label>
-            <div className="cc-tagpick">
-              {["Food", "Medical", "Clothing", "Shelter", "Water"].map((t) => {
-                const on = draft.tags?.includes(t);
-                return (
-                  <button
-                    key={t}
-                    type="button"
-                    className={`chip ${on ? "on" : ""}`}
-                    onClick={() =>
-                      setDraft((d) => {
-                        const s = new Set(d.tags || []);
-                        on ? s.delete(t) : s.add(t);
-                        return { ...d, tags: Array.from(s) };
-                      })
-                    }
-                  >
-                    {t}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="cc-form-actions">
-            <button className="btn btn-ghost" type="button" onClick={closeForm}>
-              Cancel
-            </button>
-            <button
-              className="btn btn-primary"
-              type="submit"
-              disabled={submitting}
-            >
-              {submitting ? "Adding Center..." : "Save Center"}
-            </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

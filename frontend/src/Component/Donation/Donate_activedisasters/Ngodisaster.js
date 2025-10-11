@@ -165,201 +165,203 @@ if (/\d/.test(city)) { alert("City should not contain numbers"); return; }
   }
 
   return (
-    <form className="nd-wrap" onSubmit={handleSave}>
-      {/* Hero header */}
-      <div className="nd-hero">
-        <div className="nd-hero-left">
-          <h1 className="nd-title">Create New Disaster</h1>
-          <p className="nd-sub">Add a new disaster to track and manage relief efforts</p>
+    <div className="donation-component">
+      <form className="nd-wrap" onSubmit={handleSave}>
+        {/* Hero header */}
+        <div className="nd-hero">
+          <div className="nd-hero-left">
+            <h1 className="nd-title">Create New Disaster</h1>
+            <p className="nd-sub">Add a new disaster to track and manage relief efforts</p>
+          </div>
+          <div className="nd-hero-actions">
+            <button type="button" className="btn btn-ghost" onClick={goBack} disabled={saving}>
+              Cancel
+            </button>
+          </div>
         </div>
-        <div className="nd-hero-actions">
-          <button type="button" className="btn btn-ghost" onClick={goBack} disabled={saving}>
-            Cancel
-          </button>
-        </div>
-      </div>
 
-      {/* Basic fields */}
-      <div className="nd-grid2">
+        {/* Basic fields */}
+        <div className="nd-grid2">
+          <div className="field">
+            <label>Name *</label>
+            <input
+              className="input"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g., Flood Response"
+              required
+              disabled={saving}
+            />
+          </div>
+          <div className="field">
+            <label>City *</label>
+            <input
+              className="input"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="e.g., Ratnapura"
+              required
+              disabled={saving}
+            />
+          </div>
+        </div>
+
         <div className="field">
-          <label>Name *</label>
-          <input
+          <label>Summary</label>
+          <textarea
             className="input"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g., Flood Response"
-            required
+            rows={5}
+            value={summary}
+            onChange={(e) => setSummary(e.target.value)}
+            placeholder="Short description of the disaster and current situation…"
             disabled={saving}
           />
         </div>
+
         <div className="field">
-          <label>City *</label>
+          <label>Top needs (comma-separated)</label>
           <input
             className="input"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            placeholder="e.g., Ratnapura"
-            required
+            value={needsText}
+            onChange={(e) => setNeedsText(e.target.value)}
+            placeholder="e.g., Water, Dry rations, Bedding, Medical supplies"
             disabled={saving}
           />
+          {needs.length > 0 && (
+            <div className="chips">
+              {needs.map((n, i) => (
+                <span key={i} className="chip">
+                  {n}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
-      </div>
 
-      <div className="field">
-        <label>Summary</label>
-        <textarea
-          className="input"
-          rows={5}
-          value={summary}
-          onChange={(e) => setSummary(e.target.value)}
-          placeholder="Short description of the disaster and current situation…"
-          disabled={saving}
-        />
-      </div>
+        <div className="nd-grid2">
+          <div className="field">
+            <label>Accent color</label>
+            <div className="color-row">
+              <input
+                type="color"
+                value={accent}
+                onChange={(e) => setAccent(e.target.value)}
+                disabled={saving}
+              />
+              <span className="muted">{accent}</span>
+            </div>
+          </div>
+          <div className="field">
+            <label>Severity</label>
+            <select
+              className="input"
+              value={severity}
+              onChange={(e) => setSeverity(e.target.value)}
+              disabled={saving}
+            >
+              <option>Low</option>
+              <option>Medium</option>
+              <option>High</option>
+              <option>Critical</option>
+            </select>
+          </div>
+        </div>
 
-      <div className="field">
-        <label>Top needs (comma-separated)</label>
-        <input
-          className="input"
-          value={needsText}
-          onChange={(e) => setNeedsText(e.target.value)}
-          placeholder="e.g., Water, Dry rations, Bedding, Medical supplies"
-          disabled={saving}
-        />
-        {needs.length > 0 && (
-          <div className="chips">
-            {needs.map((n, i) => (
-              <span key={i} className="chip">
-                {n}
-              </span>
+        <div className="field">
+          <div className="nd-grid2">
+            <label className="checkrow">
+              <input
+                type="checkbox"
+                checked={active}
+                onChange={(e) => setActive(e.target.checked)}
+                disabled={saving}
+              />
+              <span>Active</span>
+            </label>
+            <label className="checkrow">
+              <input
+                type="checkbox"
+                checked={showOnDonation}
+                onChange={(e) => setShowOnDonation(e.target.checked)}
+                disabled={saving}
+              />
+              <span>Show on Donation page</span>
+            </label>
+          </div>
+        </div>
+
+        {/* Images */}
+        <div className="card">
+          <div className="card-head">
+            <strong>Images</strong>
+            <span className="muted">PNG/JPG/WebP, ≤ 2 MB each</span>
+          </div>
+
+          {/* Bulk picker */}
+          <div className="bulk-row">
+            <input
+              ref={bulkPickRef}
+              type="file"
+              className="visually-hidden"
+              accept="image/png,image/jpeg,image/jpg,image/webp"
+              multiple
+              onChange={onBulkPick}
+              disabled={saving}
+            />
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={() => bulkPickRef.current?.click()}
+              disabled={saving}
+            >
+              Add up to 4 images at once
+            </button>
+            <span className="muted">
+              First image becomes the cover, next three fill the gallery.
+            </span>
+          </div>
+
+          {/* Four equal boxes - only gallery */}
+          <div className="img-grid">
+            {galPrev.map((p, i) => (
+              <div key={i} className="img-slot">
+                {p ? (
+                  <img src={p} alt={`Gallery ${i + 1}`} />
+                ) : (
+                  <div className="img-empty">Gallery {i + 1}</div>
+                )}
+                <button
+                  type="button"
+                  className="slot-btn"
+                  onClick={() => pickSlot(i)}
+                  disabled={saving}
+                >
+                  {p ? "Replace" : "Choose image"}
+                </button>
+              </div>
             ))}
           </div>
-        )}
-      </div>
-
-      <div className="nd-grid2">
-        <div className="field">
-          <label>Accent color</label>
-          <div className="color-row">
-            <input
-              type="color"
-              value={accent}
-              onChange={(e) => setAccent(e.target.value)}
-              disabled={saving}
-            />
-            <span className="muted">{accent}</span>
-          </div>
         </div>
-        <div className="field">
-          <label>Severity</label>
-          <select
-            className="input"
-            value={severity}
-            onChange={(e) => setSeverity(e.target.value)}
+
+        {/* Bottom actions */}
+        <div className="nd-actions">
+          <button 
+            type="button" 
+            className="btn btn-ghost" 
+            onClick={goBack}
             disabled={saving}
           >
-            <option>Low</option>
-            <option>Medium</option>
-            <option>High</option>
-            <option>Critical</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="field">
-        <div className="nd-grid2">
-          <label className="checkrow">
-            <input
-              type="checkbox"
-              checked={active}
-              onChange={(e) => setActive(e.target.checked)}
-              disabled={saving}
-            />
-            <span>Active</span>
-          </label>
-          <label className="checkrow">
-            <input
-              type="checkbox"
-              checked={showOnDonation}
-              onChange={(e) => setShowOnDonation(e.target.checked)}
-              disabled={saving}
-            />
-            <span>Show on Donation page</span>
-          </label>
-        </div>
-      </div>
-
-      {/* Images */}
-      <div className="card">
-        <div className="card-head">
-          <strong>Images</strong>
-          <span className="muted">PNG/JPG/WebP, ≤ 2 MB each</span>
-        </div>
-
-        {/* Bulk picker */}
-        <div className="bulk-row">
-          <input
-            ref={bulkPickRef}
-            type="file"
-            className="visually-hidden"
-            accept="image/png,image/jpeg,image/jpg,image/webp"
-            multiple
-            onChange={onBulkPick}
-            disabled={saving}
-          />
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={() => bulkPickRef.current?.click()}
-            disabled={saving}
-          >
-            Add up to 4 images at once
+            Cancel
           </button>
-          <span className="muted">
-            First image becomes the cover, next three fill the gallery.
-          </span>
+          <button 
+            type="submit" 
+            className="btn btn-primary"
+            disabled={saving}
+          >
+            {saving ? "Saving..." : "Create Disaster"}
+          </button>
         </div>
-
-        {/* Four equal boxes - only gallery */}
-        <div className="img-grid">
-          {galPrev.map((p, i) => (
-            <div key={i} className="img-slot">
-              {p ? (
-                <img src={p} alt={`Gallery ${i + 1}`} />
-              ) : (
-                <div className="img-empty">Gallery {i + 1}</div>
-              )}
-              <button
-                type="button"
-                className="slot-btn"
-                onClick={() => pickSlot(i)}
-                disabled={saving}
-              >
-                {p ? "Replace" : "Choose image"}
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Bottom actions */}
-      <div className="nd-actions">
-        <button 
-          type="button" 
-          className="btn btn-ghost" 
-          onClick={goBack}
-          disabled={saving}
-        >
-          Cancel
-        </button>
-        <button 
-          type="submit" 
-          className="btn btn-primary"
-          disabled={saving}
-        >
-          {saving ? "Saving..." : "Create Disaster"}
-        </button>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }

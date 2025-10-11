@@ -714,8 +714,48 @@ export default function Donation() {
               className="distribution-plan-btn"
               onClick={() => setShowPlan(true)}
               type="button"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '14px 28px',
+                borderRadius: '12px',
+                border: 'none',
+                fontWeight: '700',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                color: 'white',
+                boxShadow: '0 8px 16px rgba(16, 185, 129, 0.3)',
+                fontSize: '16px',
+                position: 'relative',
+                overflow: 'hidden',
+                textTransform: 'none',
+                letterSpacing: '0.5px'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 12px 24px rgba(16, 185, 129, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 8px 16px rgba(16, 185, 129, 0.3)';
+              }}
+              onFocus={(e) => {
+                e.target.style.outline = 'none';
+                e.target.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 12px 24px rgba(16, 185, 129, 0.4)';
+              }}
+              onBlur={(e) => {
+                e.target.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 8px 16px rgba(16, 185, 129, 0.3)';
+              }}
             >
-              Distribution plan
+              📋 Distribution plan
             </button>
           </div>
         </div>
@@ -902,8 +942,56 @@ export default function Donation() {
               <div className="donation-row">
                 <h3>Donation Centers</h3>
                 <div className="donation-row-actions">
-                  <button className="donation-pill outline accent" onClick={() => setShowPlan(true)} type="button">
-                    Distribution plan
+                  <button 
+                    className="donation-pill outline accent" 
+                    onClick={() => setShowPlan(true)} 
+                    type="button"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '12px 24px',
+                      borderRadius: '10px',
+                      border: '2px solid #10b981',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%)',
+                      color: '#10b981',
+                      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2)',
+                      fontSize: '14px',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      textTransform: 'none',
+                      letterSpacing: '0.3px'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                      e.target.style.color = 'white';
+                      e.target.style.transform = 'translateY(-1px)';
+                      e.target.style.boxShadow = '0 8px 20px rgba(16, 185, 129, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%)';
+                      e.target.style.color = '#10b981';
+                      e.target.style.transform = 'translateY(0)';
+                      e.target.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.2)';
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.outline = 'none';
+                      e.target.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                      e.target.style.color = 'white';
+                      e.target.style.transform = 'translateY(-1px)';
+                      e.target.style.boxShadow = '0 8px 20px rgba(16, 185, 129, 0.3)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%)';
+                      e.target.style.color = '#10b981';
+                      e.target.style.transform = 'translateY(0)';
+                      e.target.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.2)';
+                    }}
+                  >
+                    📋 Distribution plan
                   </button>
                   <button
                     className="donation-link-btn"

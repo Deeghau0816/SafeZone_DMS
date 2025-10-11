@@ -312,34 +312,35 @@ export default function Volunteer() {
 
   /* -------------------------------- Render -------------------------------- */
   return (
-    <form className="vl-wrap" onSubmit={submit}>
+    <div className="volunteer-component">
+      <form className="vol-wrap" onSubmit={submit}>
       {/* Header */}
-      <header className="vl-hero">
-        <div className="left">
-          <h1 className="vl-title">{isEditing ? "Edit Volunteer" : "Volunteer"}</h1>
-          <p className="vl-sub">
+      <header className="vol-hero">
+        <div className="vol-left">
+          <h1 className="vol-title">{isEditing ? "Edit Volunteer" : "Volunteer"}</h1>
+          <p className="vol-sub">
             {isEditing
               ? "Update volunteer information and assignment details."
               : "Join our field teams and help keep families safe."}
           </p>
         </div>
-        <div className="right">
-          <button type="button" className="btn btn-ghost" onClick={handleCancel} disabled={loading}>
+        <div className="vol-right">
+          <button type="button" className="vol-btn vol-btn-ghost" onClick={handleCancel} disabled={loading}>
             Cancel
           </button>
         </div>
       </header>
 
-      {msg && <div className={`vl-msg ${msg.startsWith("Error:") ? "error" : "success"}`}>{msg}</div>}
+      {msg && <div className={`vol-msg ${msg.startsWith("Error:") ? "vol-error" : "vol-success"}`}>{msg}</div>}
 
       {/* ===== Volunteer type (moved to top) ===== */}
-      <section className="vl-panel" style={{ marginTop: 0 }}>
-        <div className="field">
+      <section className="vol-panel" style={{ marginTop: 0 }}>
+        <div className="vol-field">
           <label>Volunteer type</label>
-          <div className="seg" role="group" aria-label="Volunteer type">
+          <div className="vol-seg" role="group" aria-label="Volunteer type">
             <button
               type="button"
-              className={`seg-btn ${volType === "individual" ? "on" : ""}`}
+              className={`vol-seg-btn ${volType === "individual" ? "vol-on" : ""}`}
               aria-pressed={volType === "individual"}
               disabled={loading}
               onClick={() => {
@@ -352,7 +353,7 @@ export default function Volunteer() {
 
             <button
               type="button"
-              className={`seg-btn ${volType === "team" ? "on" : ""}`}
+              className={`vol-seg-btn ${volType === "team" ? "vol-on" : ""}`}
               aria-pressed={volType === "team"}
               disabled={loading}
               onClick={() => {
@@ -374,13 +375,13 @@ export default function Volunteer() {
       </section>
 
       {/* About you */}
-      <section className="vl-panel">
-        <h3 className="section-title">About you</h3>
-        <div className="grid2">
-          <div className="field">
+      <section className="vol-panel">
+        <h3 className="vol-section-title">About you</h3>
+        <div className="vol-grid2">
+          <div className="vol-field">
             <label>Full name *</label>
             <input
-              className="input"
+              className="vol-input"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="e.g., Tharindu Perera"
@@ -388,10 +389,10 @@ export default function Volunteer() {
               disabled={loading}
             />
           </div>
-          <div className="field">
+          <div className="vol-field">
             <label>Phone *</label>
             <input
-              className="input"
+              className="vol-input"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+94 XX XXX XXXX"
@@ -399,10 +400,10 @@ export default function Volunteer() {
               disabled={loading}
             />
           </div>
-          <div className="field">
+          <div className="vol-field">
             <label>Email</label>
             <input
-              className="input"
+              className="vol-input"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -410,10 +411,10 @@ export default function Volunteer() {
               disabled={loading}
             />
           </div>
-          <div className="field">
+          <div className="vol-field">
             <label>WhatsApp (optional)</label>
             <input
-              className="input"
+              className="vol-input"
               value={whatsapp}
               onChange={(e) => setWhatsapp(e.target.value)}
               placeholder="+94 XX XXX XXXX"
@@ -423,22 +424,22 @@ export default function Volunteer() {
         </div>
 
         {/* Location */}
-        <div className="grid2">
-          <div className="field">
+        <div className="vol-grid2">
+          <div className="vol-field">
             <label>Living Area</label>
             <input
-              className="input"
+              className="vol-input"
               value={livingArea}
               onChange={(e) => setLivingArea(e.target.value)}
               placeholder="e.g., Ratnapura, Galle"
               disabled={loading}
             />
           </div>
-          <div className="field">
+          <div className="vol-field">
             <label>Group (optional)</label>
             <input
               ref={groupRef}
-              className="input"
+              className="vol-input"
               value={group}
               onChange={(e) => setGroup(e.target.value)}
               placeholder="e.g., Red Cross, Local Community Group"
@@ -448,16 +449,16 @@ export default function Volunteer() {
         </div>
 
         {/* Roles */}
-        <div className="field">
+        <div className="vol-field">
           <label>Role / skill *</label>
-          <div className="tagpick">
+          <div className="vol-tagpick">
             {ROLE_OPTIONS.map((r) => {
               const on = roles.includes(r);
               return (
                 <button
                   key={r}
                   type="button"
-                  className={`chip ${on ? "on" : ""}`}
+                  className={`vol-chip ${on ? "vol-on" : ""}`}
                   onClick={() => toggleRole(r)}
                   aria-pressed={on}
                   disabled={loading}
@@ -467,27 +468,27 @@ export default function Volunteer() {
               );
             })}
             <input
-              className="input chip-input"
+              className="vol-input vol-chip-input"
               placeholder="Other (type & press Enter)"
               onKeyDown={addCustomRole}
               disabled={loading}
             />
           </div>
-          {roles.length === 0 && <div className="hint">Pick at least one.</div>}
-          {roles.length > 0 && <div className="hint">Selected: {roles.join(", ")}</div>}
+          {roles.length === 0 && <div className="vol-hint">Pick at least one.</div>}
+          {roles.length > 0 && <div className="vol-hint">Selected: {roles.join(", ")}</div>}
         </div>
 
         {/* Languages */}
-        <div className="field">
+        <div className="vol-field">
           <label>Languages you can speak</label>
-          <div className="tagpick">
+          <div className="vol-tagpick">
             {LANGUAGE_OPTIONS.map((l) => {
               const on = languages.includes(l);
               return (
                 <button
                   key={l}
                   type="button"
-                  className={`chip ${on ? "on" : ""}`}
+                  className={`vol-chip ${on ? "vol-on" : ""}`}
                   onClick={() => toggleLang(l)}
                   aria-pressed={on}
                   disabled={loading}
@@ -497,25 +498,25 @@ export default function Volunteer() {
               );
             })}
             <input
-              className="input chip-input"
+              className="vol-input vol-chip-input"
               placeholder="Other language (type & press Enter)"
               onKeyDown={addCustomLang}
               disabled={loading}
             />
           </div>
-          {languages.length > 0 && <div className="hint">Selected: {languages.join(", ")}</div>}
+          {languages.length > 0 && <div className="vol-hint">Selected: {languages.join(", ")}</div>}
         </div>
       </section>
 
       {/* Availability & assignment */}
-      <section className="vl-panel">
-        <h3 className="section-title">Availability & assignment</h3>
+      <section className="vol-panel">
+        <h3 className="vol-section-title">Availability & assignment</h3>
 
-        <div className="grid2">
-          <div className="field">
+        <div className="vol-grid2">
+          <div className="vol-field">
             <label>Available date *</label>
             <input
-              className="input"
+              className="vol-input"
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
@@ -525,9 +526,9 @@ export default function Volunteer() {
             />
           </div>
 
-          <div className="field">
+          <div className="vol-field">
             <label>Available time *</label>
-            <div className="tagpick" role="group" aria-label="Available time window(s)">
+            <div className="vol-tagpick" role="group" aria-label="Available time window(s)">
               {TIME_SLOTS.map((slot) => {
                 const on = timeSlots.includes(slot);
                 const label = slot === "daytime" ? "Daytime" : "Night";
@@ -535,7 +536,7 @@ export default function Volunteer() {
                   <button
                     key={slot}
                     type="button"
-                    className={`chip ${on ? "on" : ""}`}
+                    className={`vol-chip ${on ? "vol-on" : ""}`}
                     onClick={() => toggleTime(slot)}
                     aria-pressed={on}
                     disabled={loading}
@@ -546,7 +547,7 @@ export default function Volunteer() {
               })}
               <button
                 type="button"
-                className={`chip solid ${timeSlots.length === TIME_SLOTS.length ? "on" : ""}`}
+                className={`vol-chip vol-solid ${timeSlots.length === TIME_SLOTS.length ? "vol-on" : ""}`}
                 onClick={selectFullDay}
                 aria-pressed={timeSlots.length === TIME_SLOTS.length}
                 title="Select both (24h)"
@@ -555,18 +556,18 @@ export default function Volunteer() {
                 Both (24h)
               </button>
             </div>
-            {timeSlots.length === 0 && <div className="hint">Pick Daytime and/or Night.</div>}
+            {timeSlots.length === 0 && <div className="vol-hint">Pick Daytime and/or Night.</div>}
           </div>
         </div>
 
-        <div className="grid2">
-          <div className="field">
+        <div className="vol-grid2">
+          <div className="vol-field">
             <label>Operation *</label>
 
             {/* Searchable suggestions */}
             <input
               list="op-suggestions"
-              className="input"
+              className="vol-input"
               placeholder={operationsLoading ? "Loading operations..." : "Type to search operations…"}
               value={operationSearch}
               onChange={(e) => onOperationSearchChange(e.target.value)}
@@ -581,16 +582,16 @@ export default function Volunteer() {
 
             {/* Fallback precise select */}
             {operationsLoading ? (
-              <div className="input" style={{ display: "flex", alignItems: "center", color: "#666" }}>
+              <div className="vol-input" style={{ display: "flex", alignItems: "center", color: "#666" }}>
                 Loading…
               </div>
             ) : operations.length === 0 ? (
-              <div className="input" style={{ display: "flex", alignItems: "center", color: "#666" }}>
+              <div className="vol-input" style={{ display: "flex", alignItems: "center", color: "#666" }}>
                 No operations available
               </div>
             ) : (
               <select
-                className="input"
+                className="vol-input"
                 value={operationId}
                 onChange={(e) => setOperationId(e.target.value)}
                 disabled={loading}
@@ -608,10 +609,10 @@ export default function Volunteer() {
           </div>
 
           {isTeam ? (
-            <div className="field">
+            <div className="vol-field">
               <label>Members to assign *</label>
               <input
-                className="input"
+                className="vol-input"
                 type="number"
                 min="2"
                 step="1"
@@ -621,23 +622,23 @@ export default function Volunteer() {
                 required
                 disabled={loading}
               />
-              <div id="team-members-hint" className="hint">
+              <div id="team-members-hint" className="vol-hint">
                 Minimum 2 members required
                 {typeof remainingSlots === "number" ? ` • Remaining slots: ${remainingSlots}` : ""}.
               </div>
             </div>
           ) : (
-            <div className="field">
+            <div className="vol-field">
               <label>Members to assign</label>
-              <div className="chip solid">Individual — counted as 1</div>
+              <div className="vol-chip vol-solid">Individual — counted as 1</div>
             </div>
           )}
         </div>
 
-        <div className="field">
+        <div className="vol-field">
           <label>Notes</label>
           <textarea
-            className="input"
+            className="vol-input"
             rows={3}
             placeholder="Anything we should know (health, travel, etc.)…"
             value={notes}
@@ -648,14 +649,15 @@ export default function Volunteer() {
       </section>
 
       {/* Bottom actions */}
-      <div className="vl-actions">
-        <button type="button" className="btn btn-ghost" onClick={handleCancel} disabled={loading}>
+      <div className="vol-actions">
+        <button type="button" className="vol-btn vol-btn-ghost" onClick={handleCancel} disabled={loading}>
           Cancel
         </button>
-        <button type="submit" className="btn btn-primary" disabled={loading || operationsLoading}>
+        <button type="submit" className="vol-btn vol-btn-primary" disabled={loading || operationsLoading}>
           {loading ? (isEditing ? "Updating..." : "Submitting...") : (isEditing ? "Update" : "Submit")}
         </button>
       </div>
-    </form>
+      </form>
+    </div>
   );
 }

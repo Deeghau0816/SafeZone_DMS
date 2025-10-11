@@ -15,6 +15,24 @@
   --dd-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
+/* Scoped CSS for NgoPastForm - Only affects files with ngopast-component class */
+.ngopast-component {
+  /* CSS Variables scoped to ngopast component */
+  --ngo-primary: #3b82f6;
+  --ngo-primary-hover: #2563eb;
+  --ngo-danger: #ef4444;
+  --ngo-success: #10b981;
+  --ngo-warning: #f59e0b;
+  --ngo-info: #06b6d4;
+  --ngo-muted: #6b7280;
+  --ngo-border: #e5e7eb;
+  --ngo-bg: #ffffff;
+  --ngo-bg-secondary: #f9fafb;
+  --ngo-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --ngo-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --ngo-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
 /* NGO Past Container */
 .donation-dashboard-component .dd-ngopast-container {
   max-width: 1200px;
@@ -375,5 +393,494 @@
   .donation-dashboard-component .dd-record-image-wrapper {
     min-width: 100px;
     max-width: 150px;
+  }
+}
+
+/* ========== NGOPAST COMPONENT SCOPED STYLES ========== */
+
+/* NgoPast Component Layout */
+.ngopast-component .ngo-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.ngopast-component .ngo-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* NgoPast Header */
+.ngopast-component .ngo-header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.ngopast-component .ngo-header::before {
+  content: '';
+  position: absolute;
+  top: '0';
+  right: '0';
+  width: '200px';
+  height: '200px';
+  background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%)';
+  border-radius: '50%';
+  transform: 'translate(50px, -50px)';
+  z-index: 1;
+}
+
+.ngopast-component .ngo-title {
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+  margin-top: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.ngopast-component .ngo-subtitle {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+}
+
+/* NgoPast Form Cards */
+.ngopast-component .ngo-form-card,
+.ngopast-component .ngo-records-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.ngopast-component .ngo-form-card::before,
+.ngopast-component .ngo-records-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+  border-radius: 50%;
+  transform: translate(-30px, -30px);
+  z-index: 1;
+}
+
+.ngopast-component .ngo-form-header,
+.ngopast-component .ngo-records-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.ngopast-component .ngo-icon {
+  font-size: 24px;
+}
+
+.ngopast-component .ngo-form-title,
+.ngopast-component .ngo-records-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.ngopast-component .ngo-form-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* NgoPast Form Elements */
+.ngopast-component .ngo-input-group {
+  margin-bottom: 20px;
+}
+
+.ngopast-component .ngo-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.ngopast-component .ngo-textarea,
+.ngopast-component .ngo-edit-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #374151;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  resize: vertical;
+  min-height: 100px;
+}
+
+.ngopast-component .ngo-textarea:focus,
+.ngopast-component .ngo-edit-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+  transform: translateY(-1px);
+}
+
+/* NgoPast Upload Section */
+.ngopast-component .ngo-upload-section {
+  margin-bottom: 20px;
+}
+
+.ngopast-component .ngo-upload-area {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.ngopast-component .ngo-file-input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.ngopast-component .ngo-upload-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  border: 2px dashed #e5e7eb;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.ngopast-component .ngo-upload-box:hover {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, #f0f9ff 0%, #dbeafe 100%);
+  transform: translateY(-2px);
+}
+
+.ngopast-component .ngo-upload-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.ngopast-component .ngo-upload-text {
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* NgoPast Image Grid */
+.ngopast-component .ngo-image-grid,
+.ngopast-component .ngo-images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.ngopast-component .ngo-image-preview,
+.ngopast-component .ngo-image-wrapper {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.ngopast-component .ngo-image-preview:hover,
+.ngopast-component .ngo-image-wrapper:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.ngopast-component .ngo-preview-img,
+.ngopast-component .ngo-record-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+}
+
+.ngopast-component .ngo-remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.ngopast-component .ngo-remove-btn:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: scale(1.1);
+}
+
+/* NgoPast Image Overlay */
+.ngopast-component .ngo-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ngopast-component .ngo-image-wrapper:hover .ngo-image-overlay {
+  opacity: 1;
+}
+
+.ngopast-component .ngo-replace-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.ngopast-component .ngo-replace-btn:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+  transform: translateY(-1px);
+}
+
+/* NgoPast Add More */
+.ngopast-component .ngo-add-more {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ngopast-component .ngo-add-more-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  border: 2px dashed #e5e7eb;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ngopast-component .ngo-add-more-box:hover {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, #f0f9ff 0%, #dbeafe 100%);
+  color: #3b82f6;
+  transform: translateY(-2px);
+}
+
+/* NgoPast Submit Button */
+.ngopast-component .ngo-submit-btn {
+  width: 100%;
+  padding: 16px 24px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.ngopast-component .ngo-submit-btn:hover:not(.disabled) {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(16, 185, 129, 0.4);
+}
+
+.ngopast-component .ngo-submit-btn.disabled {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+}
+
+/* NgoPast Records List */
+.ngopast-component .ngo-records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.ngopast-component .ngo-record-item {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ngopast-component .ngo-record-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.ngopast-component .ngo-record-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+}
+
+.ngopast-component .ngo-record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.ngopast-component .ngo-record-date {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ngopast-component .ngo-record-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.ngopast-component .ngo-record-actions button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.ngopast-component .ngo-record-actions button:first-child {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+}
+
+.ngopast-component .ngo-record-actions button:last-child {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.ngopast-component .ngo-record-actions button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* NgoPast Error */
+.ngopast-component .ngo-error {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 2px solid #fecaca;
+  border-radius: 12px;
+  color: #991b1b;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 16px rgba(220, 38, 38, 0.1);
+}
+
+/* Responsive Design for NgoPast Component */
+@media (max-width: 768px) {
+  .ngopast-component .ngo-container {
+    padding: 15px;
+  }
+  
+  .ngopast-component .ngo-title {
+    font-size: 24px;
+  }
+  
+  .ngopast-component .ngo-form-card,
+  .ngopast-component .ngo-records-card {
+    padding: 20px;
+  }
+  
+  .ngopast-component .ngo-image-grid,
+  .ngopast-component .ngo-images-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+  }
+  
+  .ngopast-component .ngo-record-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .ngopast-component .ngo-record-actions {
+    align-self: flex-end;
   }
 }

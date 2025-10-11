@@ -232,173 +232,670 @@ export default function EditVolunteerPage() {
 
   if (loading) {
     return (
-      <div className="dd-vols-wrap">
-        <div className="dd-vols-header"><h1>Edit Volunteer</h1></div>
-        <div className="panel soft" style={{ textAlign: "center", padding: 40 }}>
-          <div className="loading-pulse">Loading volunteer data...</div>
+      <div style={{
+        padding: '24px',
+        maxWidth: '100%',
+        margin: '0 auto',
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '32px',
+          padding: '24px',
+          background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+          borderRadius: '20px',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.2)'
+        }}>
+          <h1 style={{ 
+            margin: 0, 
+            fontSize: '32px',
+            fontWeight: '800',
+            background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>Edit Volunteer</h1>
+        </div>
+        <div style={{
+          textAlign: "center", 
+          padding: '60px 40px',
+          background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+          borderRadius: '20px',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.2)'
+        }}>
+          <div style={{
+            fontSize: '18px',
+            color: '#6b7280',
+            fontWeight: '600'
+          }}>Loading volunteer data...</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="dd-vols-wrap">
+    <div style={{
+      padding: '24px',
+      maxWidth: '100%',
+      margin: '0 auto',
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    }}>
+      <style>
+        {`
+          @keyframes horizontalLine {
+            0% { transform: scaleX(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: scaleX(1); opacity: 1; }
+          }
+          @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+          }
+          @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+          }
+        `}
+      </style>
       {/* Header */}
-      <div className="dd-vols-header">
-        <div>
-          <h1>Edit Volunteer</h1>
-          <div className="muted">Update volunteer information</div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '32px',
+        padding: '24px',
+        background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+        borderRadius: '20px',
+        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{ position: 'relative', zIndex: 2 }}>
+          <h1 style={{ 
+            margin: 0, 
+            fontSize: '32px',
+            fontWeight: '800',
+            background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            marginBottom: '8px'
+          }}>Edit Volunteer</h1>
+          <div style={{ 
+            color: '#6b7280', 
+            fontSize: '16px'
+          }}>Update volunteer information</div>
         </div>
-        <div className="row gap8">
-          <button className="ngo-btn" onClick={handleCancel} disabled={saving}>
-            Cancel
+        <div style={{
+          position: 'absolute',
+          top: '0',
+          right: '0',
+          width: '200px',
+          height: '200px',
+          background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%)',
+          borderRadius: '50%',
+          transform: 'translate(50px, -50px)',
+          zIndex: 1
+        }}></div>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', position: 'relative', zIndex: 2 }}>
+          <button 
+            onClick={handleCancel} 
+            disabled={saving}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '12px 24px',
+              borderRadius: '12px',
+              border: '2px solid #e5e7eb',
+              background: 'white',
+              color: '#6b7280',
+              cursor: saving ? 'not-allowed' : 'pointer',
+              transition: 'all 0.3s ease',
+              fontWeight: '600',
+              fontSize: '16px',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+            onMouseEnter={(e) => {
+              if (!saving) {
+                e.target.style.background = 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)';
+                e.target.style.borderColor = '#6b7280';
+                e.target.style.color = '#374151';
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 8px 16px rgba(107, 114, 128, 0.2)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!saving) {
+                e.target.style.background = 'white';
+                e.target.style.borderColor = '#e5e7eb';
+                e.target.style.color = '#6b7280';
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = 'none';
+              }
+            }}
+          >
+            <span style={{ position: 'relative', zIndex: 2 }}>Cancel</span>
+            <div style={{
+              position: 'absolute',
+              bottom: '0',
+              left: '0',
+              right: '0',
+              height: '3px',
+              background: 'linear-gradient(90deg, #6b7280, #374151)',
+              transform: 'scaleX(0)',
+              transition: 'transform 0.3s ease'
+            }}></div>
           </button>
           <button
-            className="ngo-btn ngo-btn-primary"
             onClick={handleSubmit}
             disabled={saving}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '12px 24px',
+              borderRadius: '12px',
+              border: 'none',
+              fontWeight: '700',
+              cursor: saving ? 'not-allowed' : 'pointer',
+              transition: 'all 0.3s ease',
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              color: 'white',
+              boxShadow: '0 8px 16px rgba(16, 185, 129, 0.3)',
+              fontSize: '16px',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+            onMouseEnter={(e) => {
+              if (!saving) {
+                e.target.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 12px 24px rgba(16, 185, 129, 0.4)';
+                e.target.style.animation = 'pulse 1.5s infinite';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!saving) {
+                e.target.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 8px 16px rgba(16, 185, 129, 0.3)';
+                e.target.style.animation = 'none';
+              }
+            }}
           >
-            {saving ? "Saving..." : "Save Changes"}
+            <span style={{ position: 'relative', zIndex: 2 }}>
+              {saving ? "Saving..." : "Save Changes"}
+            </span>
+            <div style={{
+              position: 'absolute',
+              bottom: '0',
+              left: '0',
+              right: '0',
+              height: '3px',
+              background: 'linear-gradient(90deg, #f59e0b, #10b981, #3b82f6)',
+              transform: 'scaleX(0)',
+              transition: 'transform 0.3s ease'
+            }}></div>
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="alert alert-error" style={{ marginBottom: 16 }}>
+        <div style={{
+          marginBottom: '24px',
+          padding: '16px 20px',
+          background: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)',
+          border: '2px solid #fecaca',
+          borderRadius: '12px',
+          color: '#dc2626',
+          fontSize: '16px',
+          fontWeight: '600',
+          boxShadow: '0 8px 16px rgba(220, 38, 38, 0.1)'
+        }}>
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
         {/* Assignment Status */}
-        <div className="panel soft" style={{ marginBottom: 20 }}>
-          <h3 style={{ marginBottom: 16, fontSize: 18, fontWeight: 700 }}>
-            Assignment Status
+        <div style={{
+          marginBottom: '24px',
+          padding: '24px',
+          background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+          borderRadius: '20px',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            width: '100px',
+            height: '100px',
+            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%)',
+            borderRadius: '50%',
+            transform: 'translate(-30px, -30px)',
+            zIndex: 1
+          }}></div>
+          <h3 style={{ 
+            marginBottom: '20px', 
+            fontSize: '20px', 
+            fontWeight: '700',
+            color: '#1f2937',
+            position: 'relative',
+            zIndex: 2
+          }}>
+            📋 Assignment Status
           </h3>
 
-          <div className="ngo-formgrid">
-            <label>
-              Status *
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '20px',
+            position: 'relative',
+            zIndex: 2
+          }}>
+            <div>
+              <label style={{
+                display: 'block',
+                marginBottom: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: '#374151'
+              }}>
+                Status *
+              </label>
               <select
-                className="ngo-select"
                 value={formData.assignmentStatus}
                 onChange={(e) => handleAssignmentStatusChange(e.target.value)}
                 disabled={saving}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  border: '2px solid #e5e7eb',
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                  fontSize: '14px',
+                  color: '#374151',
+                  cursor: saving ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#3b82f6';
+                  e.target.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#e5e7eb';
+                  e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+                }}
               >
                 <option value="not_assigned">Not Assigned</option>
                 <option value="assigned">Assigned</option>
               </select>
-            </label>
+            </div>
 
             {formData.assignmentStatus === "assigned" && (
               <>
-                <label>
-                  Assignment Date *
+                <div>
+                  <label style={{
+                    display: 'block',
+                    marginBottom: '8px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#374151'
+                  }}>
+                    Assignment Date *
+                  </label>
                   <input
                     type="date"
-                    className="ngo-input"
                     value={formData.assignedDate}
                     onChange={(e) => handleChange("assignedDate", e.target.value)}
                     required
                     disabled={saving}
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      borderRadius: '12px',
+                      border: '2px solid #e5e7eb',
+                      background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                      fontSize: '14px',
+                      color: '#374151',
+                      transition: 'all 0.3s ease',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#3b82f6';
+                      e.target.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.2)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#e5e7eb';
+                      e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+                    }}
                   />
-                </label>
+                </div>
 
-                <label>
-                  Assigned By
+                <div>
+                  <label style={{
+                    display: 'block',
+                    marginBottom: '8px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#374151'
+                  }}>
+                    Assigned By
+                  </label>
                   <input
                     type="text"
-                    className="ngo-input"
                     value={formData.assignedBy}
                     onChange={(e) => handleChange("assignedBy", e.target.value)}
                     placeholder="Enter name of person who made the assignment"
                     disabled={saving}
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      borderRadius: '12px',
+                      border: '2px solid #e5e7eb',
+                      background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                      fontSize: '14px',
+                      color: '#374151',
+                      transition: 'all 0.3s ease',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#3b82f6';
+                      e.target.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.2)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#e5e7eb';
+                      e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+                    }}
                   />
-                </label>
+                </div>
 
-                <label style={{ gridColumn: "1 / -1" }}>
-                  Assignment Notes
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <label style={{
+                    display: 'block',
+                    marginBottom: '8px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#374151'
+                  }}>
+                    Assignment Notes
+                  </label>
                   <textarea
-                    className="ngo-input"
-                    style={{ minHeight: 60, marginTop: 8 }}
                     value={formData.assignmentNotes}
-                    onChange={(e) =>
-                      handleChange("assignmentNotes", e.target.value)
-                    }
+                    onChange={(e) => handleChange("assignmentNotes", e.target.value)}
                     placeholder="Add any notes about this assignment..."
                     disabled={saving}
+                    style={{
+                      width: '100%',
+                      minHeight: '80px',
+                      padding: '12px 16px',
+                      borderRadius: '12px',
+                      border: '2px solid #e5e7eb',
+                      background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                      fontSize: '14px',
+                      color: '#374151',
+                      transition: 'all 0.3s ease',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+                      resize: 'vertical'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#3b82f6';
+                      e.target.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.2)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#e5e7eb';
+                      e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+                    }}
                   />
-                </label>
+                </div>
               </>
             )}
           </div>
         </div>
 
         {/* Basic Information */}
-        <div className="panel soft" style={{ marginBottom: 20 }}>
-          <h3 style={{ marginBottom: 16, fontSize: 18, fontWeight: 700 }}>
-            Basic Information
+        <div style={{
+          marginBottom: '24px',
+          padding: '24px',
+          background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+          borderRadius: '20px',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: '0',
+            right: '0',
+            width: '120px',
+            height: '120px',
+            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%)',
+            borderRadius: '50%',
+            transform: 'translate(30px, -30px)',
+            zIndex: 1
+          }}></div>
+          <h3 style={{ 
+            marginBottom: '20px', 
+            fontSize: '20px', 
+            fontWeight: '700',
+            color: '#1f2937',
+            position: 'relative',
+            zIndex: 2
+          }}>
+            👤 Basic Information
           </h3>
 
-          <div className="ngo-formgrid">
-            <label>
-              Full Name *
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '20px',
+            position: 'relative',
+            zIndex: 2
+          }}>
+            <div>
+              <label style={{
+                display: 'block',
+                marginBottom: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: '#374151'
+              }}>
+                Full Name *
+              </label>
               <input
                 type="text"
-                className="ngo-input"
                 value={formData.fullName}
                 onChange={(e) => handleChange("fullName", e.target.value)}
                 required
                 disabled={saving}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  border: '2px solid #e5e7eb',
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                  fontSize: '14px',
+                  color: '#374151',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#3b82f6';
+                  e.target.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#e5e7eb';
+                  e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+                }}
               />
-            </label>
+            </div>
 
-            <label>
-              Phone Number *
+            <div>
+              <label style={{
+                display: 'block',
+                marginBottom: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: '#374151'
+              }}>
+                Phone Number *
+              </label>
               <input
                 type="tel"
-                className="ngo-input"
                 value={formData.phone}
                 onChange={(e) => handleChange("phone", e.target.value)}
                 required
                 disabled={saving}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  border: '2px solid #e5e7eb',
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                  fontSize: '14px',
+                  color: '#374151',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#3b82f6';
+                  e.target.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#e5e7eb';
+                  e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+                }}
               />
-            </label>
+            </div>
 
-            <label>
-              WhatsApp Number
+            <div>
+              <label style={{
+                display: 'block',
+                marginBottom: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: '#374151'
+              }}>
+                WhatsApp Number
+              </label>
               <input
                 type="tel"
-                className="ngo-input"
                 value={formData.whatsapp}
                 onChange={(e) => handleChange("whatsapp", e.target.value)}
                 disabled={saving}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  border: '2px solid #e5e7eb',
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                  fontSize: '14px',
+                  color: '#374151',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#3b82f6';
+                  e.target.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#e5e7eb';
+                  e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+                }}
               />
-            </label>
+            </div>
 
-            <label>
-              Email
+            <div>
+              <label style={{
+                display: 'block',
+                marginBottom: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: '#374151'
+              }}>
+                Email
+              </label>
               <input
                 type="email"
-                className="ngo-input"
                 value={formData.email}
                 onChange={(e) => handleChange("email", e.target.value)}
                 disabled={saving}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  border: '2px solid #e5e7eb',
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                  fontSize: '14px',
+                  color: '#374151',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#3b82f6';
+                  e.target.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#e5e7eb';
+                  e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+                }}
               />
-            </label>
+            </div>
 
-            <label>
-              Volunteer Type
+            <div>
+              <label style={{
+                display: 'block',
+                marginBottom: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: '#374151'
+              }}>
+                Volunteer Type
+              </label>
               <select
-                className="ngo-select"
                 value={formData.volunteerType}
                 onChange={(e) => handleChange("volunteerType", e.target.value)}
                 disabled={saving}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  border: '2px solid #e5e7eb',
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                  fontSize: '14px',
+                  color: '#374151',
+                  cursor: saving ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#3b82f6';
+                  e.target.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#e5e7eb';
+                  e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+                }}
               >
                 <option value="individual">Individual</option>
                 <option value="team">Team</option>
               </select>
-            </label>
+            </div>
 
             {formData.volunteerType === "team" && (
               <label>
@@ -504,103 +1001,440 @@ export default function EditVolunteerPage() {
           </div>
 
           {/* Roles */}
-          <div style={{ marginBottom: 20 }}>
-            <div className="strong small muted" style={{ marginBottom: 8 }}>
-              Roles & Skills
+          <div style={{ marginBottom: '24px' }}>
+            <div style={{ 
+              marginBottom: '12px',
+              fontSize: '14px',
+              fontWeight: '600',
+              color: '#374151'
+            }}>
+              🎯 Roles & Skills
             </div>
-            <div className="dd-vols-roles">
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
               {ROLE_OPTIONS.map((role) => (
                 <button
                   key={role}
                   type="button"
-                  className={`dd-vols-btn ${
-                    formData.roles.includes(role) ? "dd-vols-btn-primary" : ""
-                  }`}
                   onClick={() => toggleChip(role, "roles")}
                   disabled={saving}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '10px 20px',
+                    borderRadius: '20px',
+                    border: '2px solid',
+                    fontWeight: '600',
+                    cursor: saving ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.3s ease',
+                    fontSize: '14px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    ...(formData.roles.includes(role) ? {
+                      background: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
+                      color: 'white',
+                      borderColor: '#3b82f6',
+                      boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+                    } : {
+                      background: 'white',
+                      color: '#6b7280',
+                      borderColor: '#e5e7eb'
+                    })
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!saving) {
+                      if (formData.roles.includes(role)) {
+                        e.target.style.background = 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)';
+                        e.target.style.transform = 'translateY(-2px)';
+                        e.target.style.boxShadow = '0 8px 16px rgba(59, 130, 246, 0.4)';
+                      } else {
+                        e.target.style.background = 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)';
+                        e.target.style.borderColor = '#3b82f6';
+                        e.target.style.color = '#3b82f6';
+                        e.target.style.transform = 'translateY(-1px)';
+                      }
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!saving) {
+                      if (formData.roles.includes(role)) {
+                        e.target.style.background = 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)';
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
+                      } else {
+                        e.target.style.background = 'white';
+                        e.target.style.borderColor = '#e5e7eb';
+                        e.target.style.color = '#6b7280';
+                        e.target.style.transform = 'translateY(0)';
+                      }
+                    }
+                  }}
                 >
-                  {role}
+                  <span style={{ position: 'relative', zIndex: 2 }}>{role}</span>
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '0',
+                    left: '0',
+                    right: '0',
+                    height: '2px',
+                    background: 'linear-gradient(90deg, #10b981, #3b82f6, #8b5cf6)',
+                    transform: formData.roles.includes(role) ? 'scaleX(1)' : 'scaleX(0)',
+                    transition: 'transform 0.3s ease'
+                  }}></div>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Languages */}
-          <div style={{ marginBottom: 20 }}>
-            <div className="strong small muted" style={{ marginBottom: 8 }}>
-              Languages
+          <div style={{ marginBottom: '24px' }}>
+            <div style={{ 
+              marginBottom: '12px',
+              fontSize: '14px',
+              fontWeight: '600',
+              color: '#374151'
+            }}>
+              🌐 Languages
             </div>
-            <div className="dd-vols-roles">
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
               {LANGUAGE_OPTIONS.map((lang) => (
                 <button
                   key={lang}
                   type="button"
-                  className={`dd-vols-btn ${
-                    formData.languages.includes(lang)
-                      ? "dd-vols-btn-primary"
-                      : ""
-                  }`}
                   onClick={() => toggleChip(lang, "languages")}
                   disabled={saving}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '10px 20px',
+                    borderRadius: '20px',
+                    border: '2px solid',
+                    fontWeight: '600',
+                    cursor: saving ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.3s ease',
+                    fontSize: '14px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    ...(formData.languages.includes(lang) ? {
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                      color: 'white',
+                      borderColor: '#10b981',
+                      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
+                    } : {
+                      background: 'white',
+                      color: '#6b7280',
+                      borderColor: '#e5e7eb'
+                    })
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!saving) {
+                      if (formData.languages.includes(lang)) {
+                        e.target.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+                        e.target.style.transform = 'translateY(-2px)';
+                        e.target.style.boxShadow = '0 8px 16px rgba(16, 185, 129, 0.4)';
+                      } else {
+                        e.target.style.background = 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)';
+                        e.target.style.borderColor = '#10b981';
+                        e.target.style.color = '#10b981';
+                        e.target.style.transform = 'translateY(-1px)';
+                      }
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!saving) {
+                      if (formData.languages.includes(lang)) {
+                        e.target.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
+                      } else {
+                        e.target.style.background = 'white';
+                        e.target.style.borderColor = '#e5e7eb';
+                        e.target.style.color = '#6b7280';
+                        e.target.style.transform = 'translateY(0)';
+                      }
+                    }
+                  }}
                 >
-                  {lang}
+                  <span style={{ position: 'relative', zIndex: 2 }}>{lang}</span>
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '0',
+                    left: '0',
+                    right: '0',
+                    height: '2px',
+                    background: 'linear-gradient(90deg, #f59e0b, #10b981, #3b82f6)',
+                    transform: formData.languages.includes(lang) ? 'scaleX(1)' : 'scaleX(0)',
+                    transition: 'transform 0.3s ease'
+                  }}></div>
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Location (city removed) */}
-        <div className="panel soft" style={{ marginBottom: 20 }}>
-          <h3 style={{ marginBottom: 16, fontSize: 18, fontWeight: 700 }}>
-            Location
+        {/* Location */}
+        <div style={{
+          marginBottom: '24px',
+          padding: '24px',
+          background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+          borderRadius: '20px',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            width: '80px',
+            height: '80px',
+            background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%)',
+            borderRadius: '50%',
+            transform: 'translate(-20px, -20px)',
+            zIndex: 1
+          }}></div>
+          <h3 style={{ 
+            marginBottom: '20px', 
+            fontSize: '20px', 
+            fontWeight: '700',
+            color: '#1f2937',
+            position: 'relative',
+            zIndex: 2
+          }}>
+            📍 Location
           </h3>
 
-          <div className="ngo-formgrid">
-            <label>
-              Living Area
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '20px',
+            position: 'relative',
+            zIndex: 2
+          }}>
+            <div>
+              <label style={{
+                display: 'block',
+                marginBottom: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: '#374151'
+              }}>
+                Living Area
+              </label>
               <input
                 type="text"
-                className="ngo-input"
                 value={formData.livingArea}
                 onChange={(e) => handleChange("livingArea", e.target.value)}
                 disabled={saving}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  border: '2px solid #e5e7eb',
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                  fontSize: '14px',
+                  color: '#374151',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#3b82f6';
+                  e.target.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#e5e7eb';
+                  e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+                }}
               />
-            </label>
+            </div>
           </div>
         </div>
 
         {/* Notes */}
-        <div className="panel soft" style={{ marginBottom: 20 }}>
-          <h3 style={{ marginBottom: 16, fontSize: 18, fontWeight: 700 }}>
-            Additional Notes
+        <div style={{
+          marginBottom: '24px',
+          padding: '24px',
+          background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+          borderRadius: '20px',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: '0',
+            right: '0',
+            width: '100px',
+            height: '100px',
+            background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%)',
+            borderRadius: '50%',
+            transform: 'translate(30px, -30px)',
+            zIndex: 1
+          }}></div>
+          <h3 style={{ 
+            marginBottom: '20px', 
+            fontSize: '20px', 
+            fontWeight: '700',
+            color: '#1f2937',
+            position: 'relative',
+            zIndex: 2
+          }}>
+            📝 Additional Notes
           </h3>
-          <label style={{ display: "block" }}>
-            Notes
+          <div style={{ position: 'relative', zIndex: 2 }}>
+            <label style={{
+              display: 'block',
+              marginBottom: '8px',
+              fontSize: '14px',
+              fontWeight: '600',
+              color: '#374151'
+            }}>
+              Notes
+            </label>
             <textarea
-              className="ngo-input"
-              style={{ minHeight: 80, marginTop: 8 }}
               value={formData.notes}
               onChange={(e) => handleChange("notes", e.target.value)}
               disabled={saving}
+              style={{
+                width: '100%',
+                minHeight: '100px',
+                padding: '12px 16px',
+                borderRadius: '12px',
+                border: '2px solid #e5e7eb',
+                background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                fontSize: '14px',
+                color: '#374151',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+                resize: 'vertical'
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = '#3b82f6';
+                e.target.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.2)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = '#e5e7eb';
+                e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+              }}
             />
-          </label>
+          </div>
         </div>
 
-        <div
-          className="row gap12"
-          style={{ justifyContent: "flex-end", marginTop: 24 }}
-        >
+        <div style={{
+          display: 'flex',
+          gap: '12px',
+          justifyContent: 'flex-end',
+          marginTop: '32px',
+          padding: '24px',
+          background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+          borderRadius: '20px',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.2)'
+        }}>
           <button
             type="button"
-            className="ngo-btn"
             onClick={handleCancel}
             disabled={saving}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '12px 24px',
+              borderRadius: '12px',
+              border: '2px solid #e5e7eb',
+              background: 'white',
+              color: '#6b7280',
+              cursor: saving ? 'not-allowed' : 'pointer',
+              transition: 'all 0.3s ease',
+              fontWeight: '600',
+              fontSize: '16px',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+            onMouseEnter={(e) => {
+              if (!saving) {
+                e.target.style.background = 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)';
+                e.target.style.borderColor = '#6b7280';
+                e.target.style.color = '#374151';
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 8px 16px rgba(107, 114, 128, 0.2)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!saving) {
+                e.target.style.background = 'white';
+                e.target.style.borderColor = '#e5e7eb';
+                e.target.style.color = '#6b7280';
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = 'none';
+              }
+            }}
           >
-            Cancel
+            <span style={{ position: 'relative', zIndex: 2 }}>Cancel</span>
+            <div style={{
+              position: 'absolute',
+              bottom: '0',
+              left: '0',
+              right: '0',
+              height: '3px',
+              background: 'linear-gradient(90deg, #6b7280, #374151)',
+              transform: 'scaleX(0)',
+              transition: 'transform 0.3s ease'
+            }}></div>
           </button>
-          <button type="submit" className="ngo-btn ngo-btn-primary" disabled={saving}>
-            {saving ? "Saving Changes..." : "Save Changes"}
+          <button 
+            type="submit" 
+            disabled={saving}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '12px 24px',
+              borderRadius: '12px',
+              border: 'none',
+              fontWeight: '700',
+              cursor: saving ? 'not-allowed' : 'pointer',
+              transition: 'all 0.3s ease',
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              color: 'white',
+              boxShadow: '0 8px 16px rgba(16, 185, 129, 0.3)',
+              fontSize: '16px',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+            onMouseEnter={(e) => {
+              if (!saving) {
+                e.target.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 12px 24px rgba(16, 185, 129, 0.4)';
+                e.target.style.animation = 'pulse 1.5s infinite';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!saving) {
+                e.target.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 8px 16px rgba(16, 185, 129, 0.3)';
+                e.target.style.animation = 'none';
+              }
+            }}
+          >
+            <span style={{ position: 'relative', zIndex: 2 }}>
+              {saving ? "Saving Changes..." : "Save Changes"}
+            </span>
+            <div style={{
+              position: 'absolute',
+              bottom: '0',
+              left: '0',
+              right: '0',
+              height: '3px',
+              background: 'linear-gradient(90deg, #f59e0b, #10b981, #3b82f6)',
+              transform: 'scaleX(0)',
+              transition: 'transform 0.3s ease'
+            }}></div>
           </button>
         </div>
       </form>

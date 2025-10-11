@@ -272,8 +272,9 @@ export default function NgoPastForm() {
 
   // -------- RENDER --------
   return (
-    <div className="ngo-container">
-      <div className="ngo-wrapper">
+    <div className="ngopast-component">
+      <div className="ngo-container">
+        <div className="ngo-wrapper">
         <div className="ngo-header" style={{ position: "relative" }}>
           <div style={{ position: "absolute", right: 0, top: 0, display: "flex", gap: 8 }}>
             <button onClick={handleExportCsv} style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #cbd5e0", background: "#fff", cursor: "pointer" }}>⬇️ Export CSV</button>
@@ -457,6 +458,7 @@ export default function NgoPastForm() {
           ) : (
             <div>No records yet.</div>
           )}
+        </div>
         </div>
       </div>
     </div>

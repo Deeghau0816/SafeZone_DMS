@@ -176,38 +176,38 @@ function OperationTimeline({ op, onChange }) {
   };
 
   return (
-    <div className="timeline-card">
-      <div className="timeline-head">
+    <div className="dist-timeline-card">
+      <div className="dist-timeline-head">
         <div>
-          <div className="timeline-title">Timeline</div>
-          <div className="timeline-sub">
+          <div className="dist-timeline-title">Timeline</div>
+          <div className="dist-timeline-sub">
             Active operation:{" "}
-            <span className="timeline-op">{op?.operationName || "—"}</span>
+            <span className="dist-timeline-op">{op?.operationName || "—"}</span>
           </div>
         </div>
       </div>
 
-      <div className="timeline-list">
+      <div className="dist-timeline-list">
         {TL_ORDER.map((key, idx) => (
-          <div key={key} className="timeline-step">
+          <div key={key} className="dist-timeline-step">
             <button
-              className={`timeline-dot ${tlDotClass(tl[key])}`}
+              className={`dist-timeline-dot ${tlDotClass(tl[key])}`}
               title={TL_LABELS[key]}
               aria-pressed={tl[key] === "done"}
               onClick={() => toggle(key)}
             />
-            {idx < TL_ORDER.length - 1 && <div className="timeline-line" />}
-            <div className="timeline-label">{TL_LABELS[key]}</div>
+            {idx < TL_ORDER.length - 1 && <div className="dist-timeline-line" />}
+            <div className="dist-timeline-label">{TL_LABELS[key]}</div>
           </div>
         ))}
       </div>
 
       {saving && (
-        <div className="timeline-saving">
-          <span className="spinner" /> Saving…
+        <div className="dist-timeline-saving">
+          <span className="dist-spinner" /> Saving…
         </div>
       )}
-      {err && <div className="timeline-error">⚠ {err}</div>}
+      {err && <div className="dist-timeline-error">⚠ {err}</div>}
     </div>
   );
 }
@@ -217,12 +217,12 @@ function OperationTimeline({ op, onChange }) {
    ========================================================================= */
 function MapCard({ location }) {
   return (
-    <div className="timeline-card" style={{ height: "100%" }}>
-      <div className="timeline-head">
+    <div className="dist-timeline-card" style={{ height: "100%" }}>
+      <div className="dist-timeline-head">
         <div>
-          <div className="timeline-title">Distribution area Map</div>
-          <div className="timeline-sub">
-            Location: <span className="timeline-op">{location || "—"}</span>
+          <div className="dist-timeline-title">Distribution area Map</div>
+          <div className="dist-timeline-sub">
+            Location: <span className="dist-timeline-op">{location || "—"}</span>
           </div>
         </div>
       </div>
@@ -244,7 +244,7 @@ function MapCard({ location }) {
           />
         </div>
       ) : (
-        <div className="adp-empty-panel">No location set for this operation.</div>
+        <div className="dist-empty-panel">No location set for this operation.</div>
       )}
     </div>
   );
@@ -263,60 +263,60 @@ function VolunteerManagementCard({ activeOperation, assignedVols, loadingVols, v
     : activeOperationVolunteers.slice(0, 5);
 
   return (
-    <div className="vm-timeline-card">
-      <div className="vm-timeline-head">
+    <div className="dist-vm-timeline-card">
+      <div className="dist-vm-timeline-head">
         <div>
-          <div className="vm-timeline-title">Volunteers</div>
-          <div className="vm-timeline-sub">
-            Active operation: <span className="vm-timeline-op">{activeOperation?.operationName || "—"}</span>
+          <div className="dist-vm-timeline-title">Volunteers</div>
+          <div className="dist-vm-timeline-sub">
+            Active operation: <span className="dist-vm-timeline-op">{activeOperation?.operationName || "—"}</span>
           </div>
         </div>
       </div>
 
       {/* ✅ GRID: left = list, right = image */}
-      <div className="vm-card-body">
+      <div className="dist-vm-card-body">
         {/* LEFT — list */}
-        <div className="vm-volunteer-list-container">
+        <div className="dist-vm-volunteer-list-container">
           {loadingVols ? (
-            <div className="vm-volunteer-loading">
-              <div className="vm-loading-spinner" />
+            <div className="dist-vm-volunteer-loading">
+              <div className="dist-vm-loading-spinner" />
               <span>Loading volunteers...</span>
             </div>
           ) : activeOperationVolunteers.length === 0 ? (
-            <div className="vm-volunteer-empty-state">
-              <div className="vm-empty-icon">👥</div>
+            <div className="dist-vm-volunteer-empty-state">
+              <div className="dist-vm-empty-icon">👥</div>
               <h4>No volunteers assigned</h4>
               <p>This operation doesn't have any assigned volunteers yet.</p>
             </div>
           ) : (
             <>
-              <div className="vm-volunteer-count-display">
+              <div className="dist-vm-volunteer-count-display">
                 {activeOperationVolunteers.length} VOLUNTEERS ASSIGNED
               </div>
 
-              <div className="vm-volunteer-names-list">
+              <div className="dist-vm-volunteer-names-list">
                 {visibleVolunteers.map((volunteer, index) => {
                   const name = volunteer?.fullName || "—";
                   const volunteerType = volunteer?.volunteerType || "individual";
                   return (
-                    <div key={volunteer?._id || index} className="vm-volunteer-name-item">
-                      <div className="vm-volunteer-name-avatar">{name.charAt(0)}</div>
-                      <div className="vm-volunteer-name-details">
-                        <div className="vm-volunteer-name-text">{name}</div>
-                        <div className="vm-volunteer-name-type">
+                    <div key={volunteer?._id || index} className="dist-vm-volunteer-name-item">
+                      <div className="dist-vm-volunteer-name-avatar">{name.charAt(0)}</div>
+                      <div className="dist-vm-volunteer-name-details">
+                        <div className="dist-vm-volunteer-name-text">{name}</div>
+                        <div className="dist-vm-volunteer-name-type">
                           {volunteerType === "team" ? "Team Lead" : "Individual"}
                         </div>
                       </div>
-                      <div className="vm-volunteer-status-dot" />
+                      <div className="dist-vm-volunteer-status-dot" />
                     </div>
                   );
                 })}
               </div>
 
               {activeOperationVolunteers.length > 5 && (
-                <div className="vm-volunteer-see-more">
+                <div className="dist-vm-volunteer-see-more">
                   <br />
-                  <button className="vm-see-more-btn" onClick={() => setShowAll(!showAll)}>
+                  <button className="dist-vm-see-more-btn" onClick={() => setShowAll(!showAll)}>
                     {showAll ? "See Less" : `See More (${activeOperationVolunteers.length - 5})`}
                   </button>
                 </div>
@@ -326,9 +326,9 @@ function VolunteerManagementCard({ activeOperation, assignedVols, loadingVols, v
         </div>
 
         {/* RIGHT — image */}
-        <div className="vm-photo-wrap">
+        <div className="dist-vm-photo-wrap">
           <img
-            className="vm-side-photo"
+            className="dist-vm-side-photo"
             src={VOL_PHOTO_URL}
             alt="Volunteers"
             loading="lazy"
@@ -618,12 +618,13 @@ const activeOperations = useMemo(
 
   /* ------------------ UI ------------------ */
   return (
-    <div className="distribution-panel">
+    <div className="distribution-component">
+      <div className="dist-panel">
       {/* Header */}
-      <div className="distribution-header">
-        <div className="distribution-title-section">
-          <h1 className="adp-disaster-title">Distribution Operations</h1>
-          <p className="distribution-subtitle">
+      <div className="dist-header">
+        <div className="dist-title-section">
+          <h1 className="dist-title">Distribution Operations</h1>
+          <p className="dist-subtitle">
             Manage field operations and volunteer needs
           </p>
         </div>
@@ -631,14 +632,14 @@ const activeOperations = useMemo(
         {/* Action buttons side by side */}
         <div style={{ display: "flex", gap: "10px" }}>
           <button
-            className="distribution-add-btn"
+            className="dist-add-btn"
             onClick={() => setShowCreate(true)}
           >
-            <span className="add-icon">+</span> Add Operation
+            <span className="dist-add-icon">+</span> Add Operation
           </button>
 
           <button
-            className="distribution-report-btn"
+            className="dist-report-btn"
             onClick={handleGenerateReport}
             disabled={operations.length === 0}
             style={{
@@ -673,45 +674,45 @@ const activeOperations = useMemo(
 
       {/* Error */}
       {err && (
-        <div className="distribution-error">
-          <div className="error-content">
-            <span className="error-icon">⚠</span>
+        <div className="dist-error">
+          <div className="dist-error-content">
+            <span className="dist-error-icon">⚠</span>
             {err}
           </div>
         </div>
       )}
 
       {/* ---------- Operations Table (first) ---------- */}
-      <div className="distribution-content">
+      <div className="dist-content">
         {loadingOps ? (
-          <div className="distribution-loading">
-            <div className="loading-spinner" />
+          <div className="dist-loading">
+            <div className="dist-loading-spinner" />
             <span>Loading operations...</span>
           </div>
         ) : operations.length === 0 ? (
-          <div className="distribution-empty">
-            <div className="empty-icon">📋</div>
-            <h3 className="empty-title">No Operations Found</h3>
-            <p className="empty-subtitle">
+          <div className="dist-empty">
+            <div className="dist-empty-icon">📋</div>
+            <h3 className="dist-empty-title">No Operations Found</h3>
+            <p className="dist-empty-subtitle">
               Get started by creating your first distribution operation
             </p>
-            <button className="empty-cta-btn" onClick={() => setShowCreate(true)}>
+            <button className="dist-empty-cta-btn" onClick={() => setShowCreate(true)}>
               Create Operation
             </button>
           </div>
         ) : (
-          <div className="distribution-table-container">
-            <table className="distribution-table">
-              <thead className="table-header">
+          <div className="dist-table-container">
+            <table className="dist-table">
+              <thead className="dist-table-header">
                 <tr>
-                  <th className="table-header-cell">Operation Name</th>
-                  <th className="table-header-cell">Location</th>
-                  <th className="table-header-cell">Required Volunteers</th>
-                  <th className="table-header-cell">Status</th>
-                  <th className="table-header-cell">Actions</th>
+                  <th className="dist-table-header-cell">Operation Name</th>
+                  <th className="dist-table-header-cell">Location</th>
+                  <th className="dist-table-header-cell">Required Volunteers</th>
+                  <th className="dist-table-header-cell">Status</th>
+                  <th className="dist-table-header-cell">Actions</th>
                 </tr>
               </thead>
-              <tbody className="table-body">
+              <tbody className="dist-table-body">
                 {operations.map((op) => {
                   const assignedCount =
                     assignedCountByOperationId.get(String(op._id)) || 0;
@@ -719,11 +720,11 @@ const activeOperations = useMemo(
                   const remaining = Math.max(totalNeeded - assignedCount, 0);
 
                   return (
-                    <tr key={op._id} className="table-row">
-                      <td className="table-cell">
-                        <div className="operation-name">
-                          <div className="name-text">{op.operationName}</div>
-                          <div className="operation-meta">
+                    <tr key={op._id} className="dist-table-row">
+                      <td className="dist-table-cell">
+                        <div className="dist-operation-name">
+                          <div className="dist-name-text">{op.operationName}</div>
+                          <div className="dist-operation-meta">
                             Created:{" "}
                             {op.createdAt
                               ? new Date(op.createdAt).toLocaleDateString()
@@ -731,49 +732,49 @@ const activeOperations = useMemo(
                           </div>
                         </div>
                       </td>
-                      <td className="table-cell">
-                        <div className="location-info">
-                          <div className="location-text">
+                      <td className="dist-table-cell">
+                        <div className="dist-location-info">
+                          <div className="dist-location-text">
   {extractAreaNameFromUrl(op.location) || "—"}
 </div>
 
                         </div>
                       </td>
-                      <td className="table-cell">
-                        <div className="volunteer-count">
-                          <span className="count-badge">{remaining}</span>
-                          <span className="count-text">
+                      <td className="dist-table-cell">
+                        <div className="dist-volunteer-count">
+                          <span className="dist-count-badge">{remaining}</span>
+                          <span className="dist-count-text">
                             remaining{" "}
-                            <span className="muted small">
+                            <span className="dist-muted dist-small">
                               (of {totalNeeded} — {assignedCount} assigned)
                             </span>
                           </span>
                         </div>
                       </td>
-                      <td className="table-cell">
+                      <td className="dist-table-cell">
                         <span
-                          className={`status-badge status-${(
+                          className={`dist-status-badge dist-status-${(
                             op.status || "pending"
                           ).toLowerCase()}`}
                         >
                           {op.status || "Pending"}
                         </span>
                       </td>
-                      <td className="table-cell">
-                        <div className="action-buttons">
+                      <td className="dist-table-cell">
+                        <div className="dist-action-buttons">
                           <button
-                            className="action-btn edit-btn"
+                            className="dist-action-btn dist-edit-btn"
                             onClick={() => handleEdit(op)}
                           >
-                            <span className="btn-icon">✏️</span> Edit
+                            <span className="dist-btn-icon">✏️</span> Edit
                           </button>
                           <button
-                            className="action-btn delete-btn"
+                            className="dist-action-btn dist-delete-btn"
                             onClick={() =>
                               handleDelete(op._id, op.operationName)
                             }
                           >
-                            <span className="btn-icon">🗑️</span> Delete
+                            <span className="dist-btn-icon">🗑️</span> Delete
                           </button>
                         </div>
                       </td>
@@ -788,26 +789,26 @@ const activeOperations = useMemo(
       {/* ======= Operation Overview (second) ======= */}
       {!loadingOps && operations.length > 0 && (
         <div style={{ marginBottom: 24 }}>
-          <h2 className="distribution-subtitle" style={{ marginBottom: 20 }}>
+          <h2 className="dist-subtitle" style={{ marginBottom: 20 }}>
             Operation Overview
           </h2>
 
-          <div className="simple-operation-grid">
+          <div className="dist-simple-operation-grid">
             {operations.map((op) => {
               const id = String(op._id);
               const assignedCount = assignedCountByOperationId.get(id) || 0;
 
               return (
-                <div key={id} className="simple-operation-card">
-                  <h3 className="simple-operation-name">{op.operationName}</h3>
+                <div key={id} className="dist-simple-operation-card">
+                  <h3 className="dist-simple-operation-name">{op.operationName}</h3>
                   {op.location && (
-                   <p className="simple-operation-location">
+                   <p className="dist-simple-operation-location">
   {extractAreaNameFromUrl(op.location)}
 </p>
 
                   )}
                   <button
-                    className="simple-view-btn"
+                    className="dist-simple-view-btn"
                     onClick={() => toggleExpanded(id)}
                   >
                     View Volunteers ({assignedCount})
@@ -851,25 +852,25 @@ const activeOperations = useMemo(
         {/* ---------- Volunteer Details Modal ---------- */}
         {expanded.size > 0 && (
           <div
-            className="volunteer-modal-overlay"
+            className="dist-volunteer-modal-overlay"
             onClick={(e) => {
               if (e.target === e.currentTarget) {
                 setExpanded(new Set());
               }
             }}
           >
-            <div className="volunteer-modal-container">
-              <div className="volunteer-modal-header">
-                <h2 className="volunteer-modal-title">Assigned Volunteers</h2>
+            <div className="dist-volunteer-modal-container">
+              <div className="dist-volunteer-modal-header">
+                <h2 className="dist-volunteer-modal-title">Assigned Volunteers</h2>
                 <button
-                  className="volunteer-modal-close"
+                  className="dist-volunteer-modal-close"
                   onClick={() => setExpanded(new Set())}
                 >
                   ✕
                 </button>
               </div>
 
-              <div className="volunteer-modal-content">
+              <div className="dist-volunteer-modal-content">
                 {Array.from(expanded).map((opId) => {
                   const operation = operations.find(
                     (op) => String(op._id) === opId
@@ -879,20 +880,20 @@ const activeOperations = useMemo(
                   if (!operation) return null;
 
                   return (
-                    <div key={opId} className="volunteer-operation-section">
-                      <div className="volunteer-operation-header">
+                    <div key={opId} className="dist-volunteer-operation-section">
+                      <div className="dist-volunteer-operation-header">
                         <div>
-                          <h3 className="volunteer-operation-name">
+                          <h3 className="dist-volunteer-operation-name">
                             {operation.operationName}
                           </h3>
                           {operation.location && (
-                            <p className="volunteer-operation-location">
+                            <p className="dist-volunteer-operation-location">
                               {operation.location}
                             </p>
                           )}
                         </div>
                         <span
-                          className={`status-badge status-${(
+                          className={`dist-status-badge dist-status-${(
                             operation.status || "pending"
                           ).toLowerCase()}`}
                         >
@@ -901,20 +902,20 @@ const activeOperations = useMemo(
                       </div>
 
                       {loadingVols ? (
-                        <div className="volunteer-loading">
-                          <div className="loading-spinner" />
+                        <div className="dist-volunteer-loading">
+                          <div className="dist-loading-spinner" />
                           <span>Loading volunteers...</span>
                         </div>
                       ) : opVols.length === 0 ? (
-                        <div className="volunteer-empty-state">
-                          <div className="empty-icon">👥</div>
+                        <div className="dist-volunteer-empty-state">
+                          <div className="dist-empty-icon">👥</div>
                           <h4>No volunteers assigned</h4>
                           <p>
                             This operation doesn't have any assigned volunteers yet.
                           </p>
                         </div>
                       ) : (
-                        <div className="volunteer-cards-grid">
+                        <div className="dist-volunteer-cards-grid">
                           {opVols.map((volunteer) => {
                             const team =
                               volunteer?.group ||
@@ -932,12 +933,12 @@ const activeOperations = useMemo(
                               volunteer?.volunteerType || "individual";
 
                             return (
-                              <div key={volunteer?._id} className="volunteer-card">
-                                <div className="volunteer-card-header">
-                                  <div className="volunteer-info">
-                                    <h4 className="volunteer-name">{name}</h4>
+                              <div key={volunteer?._id} className="dist-volunteer-card">
+                                <div className="dist-volunteer-card-header">
+                                  <div className="dist-volunteer-info">
+                                    <h4 className="dist-volunteer-name">{name}</h4>
                                     <span
-                                      className={`volunteer-type-badge ${volunteerType}`}
+                                      className={`dist-volunteer-type-badge ${volunteerType}`}
                                     >
                                       {volunteerType === "team"
                                         ? "Team Lead"
@@ -946,22 +947,22 @@ const activeOperations = useMemo(
                                   </div>
                                 </div>
 
-                                <div className="volunteer-card-body">
-                                  <div className="volunteer-detail">
-                                    <span className="detail-label">
+                                <div className="dist-volunteer-card-body">
+                                  <div className="dist-volunteer-detail">
+                                    <span className="dist-detail-label">
                                       Team/Group:
                                     </span>
-                                    <span className="detail-value">{team}</span>
+                                    <span className="dist-detail-value">{team}</span>
                                   </div>
 
                                   {contact && (
-                                    <div className="volunteer-detail">
-                                      <span className="detail-label">
+                                    <div className="dist-volunteer-detail">
+                                      <span className="dist-detail-label">
                                         Contact:
                                       </span>
                                       <a
                                         href={`tel:${contact.replace(/\s+/g, "")}`}
-                                        className="contact-link"
+                                        className="dist-contact-link"
                                       >
                                         {contact}
                                       </a>
@@ -969,11 +970,11 @@ const activeOperations = useMemo(
                                   )}
 
                                   {volunteer?.assignedDate && (
-                                    <div className="volunteer-detail">
-                                      <span className="detail-label">
+                                    <div className="dist-volunteer-detail">
+                                      <span className="dist-detail-label">
                                         Assigned:
                                       </span>
-                                      <span className="detail-value">
+                                      <span className="dist-detail-value">
                                         {new Date(
                                           volunteer.assignedDate
                                         ).toLocaleDateString()}
@@ -983,10 +984,10 @@ const activeOperations = useMemo(
                                 </div>
 
                                 {contact && (
-                                  <div className="volunteer-card-actions">
+                                  <div className="dist-volunteer-card-actions">
                                     <a
                                       href={`tel:${contact.replace(/\s+/g, "")}`}
-                                      className="contact-btn"
+                                      className="dist-contact-btn"
                                     >
                                       📞 Call
                                     </a>
@@ -997,7 +998,7 @@ const activeOperations = useMemo(
                                       )}`}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="whatsapp-btn"
+                                      className="dist-whatsapp-btn"
                                     >
                                       💬 WhatsApp
                                     </a>
@@ -1032,17 +1033,67 @@ const activeOperations = useMemo(
       )}
 
       {/* NEW: Distribution Quantity Button at bottom */}
-    <div className="distribution-quantity-section">
+    <div className="dist-quantity-section">
   <button
-    className="distribution-quantity-btn"
+    className="dist-quantity-btn"
     onClick={() => setShowQuantityForm(true)}
+    style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '12px 24px',
+      borderRadius: '12px',
+      border: 'none',
+      fontWeight: '700',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      background: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)',
+      color: 'white',
+      boxShadow: '0 8px 16px rgba(30, 64, 175, 0.3)',
+      fontSize: '16px'
+    }}
+    onMouseEnter={(e) => {
+      e.target.style.background = 'linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%)';
+      e.target.style.transform = 'translateY(-2px)';
+      e.target.style.boxShadow = '0 12px 24px rgba(30, 64, 175, 0.4)';
+    }}
+    onMouseLeave={(e) => {
+      e.target.style.background = 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)';
+      e.target.style.transform = 'translateY(0)';
+      e.target.style.boxShadow = '0 8px 16px rgba(30, 64, 175, 0.3)';
+    }}
   >
     📊 Today Distribution quantity
   </button>
 
  <button
-  className="distribution-quantity-btn"
+  className="dist-quantity-btn"
   onClick={() => navigate("/dashboard/distribution-quantity-chart")}
+  style={{
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '12px 24px',
+    borderRadius: '12px',
+    border: 'none',
+    fontWeight: '700',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    background: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)',
+    color: 'white',
+    boxShadow: '0 8px 16px rgba(30, 64, 175, 0.3)',
+    fontSize: '16px'
+  }}
+  onMouseEnter={(e) => {
+    e.target.style.background = 'linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%)';
+    e.target.style.transform = 'translateY(-2px)';
+    e.target.style.boxShadow = '0 12px 24px rgba(30, 64, 175, 0.4)';
+  }}
+  onMouseLeave={(e) => {
+    e.target.style.background = 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)';
+    e.target.style.transform = 'translateY(0)';
+    e.target.style.boxShadow = '0 8px 16px rgba(30, 64, 175, 0.3)';
+  }}
 >
   📈 See Distribution Quantity Records
 </button>
@@ -1054,6 +1105,7 @@ const activeOperations = useMemo(
     onClose={() => setShowQuantityForm(false)}
   />
 )}
+      </div>
     </div>
     
   );
