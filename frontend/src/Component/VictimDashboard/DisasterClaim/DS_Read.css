@@ -343,9 +343,104 @@ iframe {
   background-color: #22c55e;
 }
 
+.status-dot.approved {
+  background-color: #10b981;
+}
+
+.status-dot.rejected {
+  background-color: #ef4444;
+}
+
+.status-dot.investigation {
+  background-color: #8b5cf6;
+}
+
+.status-dot.documentation {
+  background-color: #f97316;
+}
+
+.status-dot.assessment {
+  background-color: #06b6d4;
+}
+
 .status-text {
   font-size: 0.75rem;
   color: var(--subtext-color);
+  font-weight: 500;
+}
+
+/* Status text colors to match status dots */
+.status-indicator:has(.status-dot.approved) .status-text {
+  color: #059669;
+}
+
+.status-indicator:has(.status-dot.rejected) .status-text {
+  color: #dc2626;
+}
+
+.status-indicator:has(.status-dot.investigation) .status-text {
+  color: #7c3aed;
+}
+
+.status-indicator:has(.status-dot.documentation) .status-text {
+  color: #ea580c;
+}
+
+.status-indicator:has(.status-dot.assessment) .status-text {
+  color: #0891b2;
+}
+
+.status-indicator:has(.status-dot.pending) .status-text {
+  color: #d97706;
+}
+
+/* Status details for processed claims */
+.status-details {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.7rem;
+}
+
+.priority-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.priority-low {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.priority-medium {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.priority-high {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.priority-urgent {
+  background-color: #fecaca;
+  color: #991b1b;
+  animation: pulse 2s infinite;
+}
+
+.compensation-amount {
+  color: #059669;
+  font-weight: 600;
+}
+
+.action-date {
+  color: #6b7280;
+  font-size: 0.65rem;
 }
 
 /* ===== Empty State ===== */
