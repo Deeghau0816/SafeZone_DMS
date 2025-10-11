@@ -272,7 +272,7 @@ export default function DonationsPanel() {
           backgroundClip: 'text'
         }}> Donations Panel</h1>
         <div className="row gap8" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <button className="ngo-btn" onClick={() => navigate("/dashboard/donations/top")} style={{
+          <button className="ngo-btn" onClick={() => navigate("/dashboard/top-donors")} style={{
             padding: '10px 16px',
             backgroundColor: '#ffffff',
             color: '#374151',
