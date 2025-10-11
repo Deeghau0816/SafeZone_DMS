@@ -13,6 +13,54 @@ const API = {
 // localStorage key for tracking reviewed claims
 const REVIEWED_KEY = "damage_reviewed_ids_v1";
 
+// Get claim status from localStorage
+function getClaimStatus(claimId) {
+  try {
+    const claimStatuses = JSON.parse(localStorage.getItem('claimStatuses') || '{}');
+    return claimStatuses[claimId] || null;
+  } catch (error) {
+    console.warn("Error reading claim statuses:", error);
+    return null;
+  }
+}
+
+// Get status display information
+function getStatusInfo(claim, reviewed) {
+  const claimStatus = getClaimStatus(claim._id);
+  
+  if (claimStatus) {
+    return {
+      status: claimStatus.status,
+      text: claimStatus.status,
+      class: getStatusClass(claimStatus.status),
+      details: claimStatus,
+      hasAction: true
+    };
+  }
+  
+  return {
+    status: reviewed ? 'reviewed' : 'pending',
+    text: reviewed ? "Action Taken" : "Pending Review",
+    class: reviewed ? 'reviewed' : 'pending',
+    details: null,
+    hasAction: false
+  };
+}
+
+// Get CSS class for status
+function getStatusClass(status) {
+  if (!status) return 'pending';
+  
+  const statusLower = status.toLowerCase();
+  if (statusLower.includes('approved') || statusLower.includes('compensation approved')) return 'approved';
+  if (statusLower.includes('rejected')) return 'rejected';
+  if (statusLower.includes('investigation')) return 'investigation';
+  if (statusLower.includes('documentation')) return 'documentation';
+  if (statusLower.includes('assessment')) return 'assessment';
+  
+  return 'reviewed';
+}
+
 // Utility function to format dates
 const fmt = (d) =>
   d ? new Date(d).toLocaleString(undefined, { hour12: true }) : "—";
@@ -199,17 +247,6 @@ export default function ReadClaim() {
   const [deleting, setDeleting] = useState(null); // ID of claim being deleted
   const [taking, setTaking] = useState(null); // ID of claim action being taken
   const [reviewedIds, setReviewedIds] = useState(() => readReviewedIds()); // Set of reviewed claim IDs
-  
-  // Take Action Form Modal State
-  const [showActionForm, setShowActionForm] = useState(false);
-  const [selectedClaim, setSelectedClaim] = useState(null);
-  const [actionForm, setActionForm] = useState({
-    actionType: '',
-    subject: '',
-    message: '',
-    priority: 'medium',
-    notes: ''
-  });
 
   // Function to load claims data from the API
   const load = async () => {
@@ -229,10 +266,11 @@ export default function ReadClaim() {
           ? res.data.data
           : [];
 
-      // Merge server's reviewed flag with localStorage-reviewed IDs
+      // Merge server's reviewed flag with localStorage-reviewed IDs and claim statuses
+      const claimStatuses = JSON.parse(localStorage.getItem('claimStatuses') || '{}');
       const merged = data.map((d) => ({
         ...d,
-        reviewed: !!d.reviewed || reviewedIds.has(String(d._id)),
+        reviewed: !!d.reviewed || reviewedIds.has(String(d._id)) || !!claimStatuses[d._id],
       }));
       setRows(merged);
     } catch (e) {
@@ -307,78 +345,18 @@ export default function ReadClaim() {
     }
   };
 
-  // Function to mark action as taken on a claim
-  // Open the Take Action form modal
+  // Function to redirect to Take Action page
   const onActionTaken = (id) => {
     if (!id) return;
     
     const claim = rows.find(r => r._id === id);
     if (!claim) return;
     
-    setSelectedClaim(claim);
-    setActionForm({
-      actionType: '',
-      subject: `Action Required: Damage Claim - ${claim.name}`,
-      message: `Dear ${claim.name},\n\nWe have reviewed your damage claim submitted on ${new Date(claim.reportedAt || claim.createdAt).toLocaleDateString()}.\n\nClaim Details:\n- Damage Type: ${claim.damageType}\n- Estimated Loss: ${claim.estimatedLoss}\n- Location: ${claim.currentLocation}\n\nAction taken: [Please specify the action taken]\n\nNext steps: [Please specify next steps]\n\nIf you have any questions, please don't hesitate to contact us.\n\nBest regards,\nDisaster Management Team`,
-      priority: 'medium',
-      notes: ''
-    });
-    setShowActionForm(true);
-  };
-
-  // Handle form submission
-  const handleActionSubmit = (e) => {
-    e.preventDefault();
+    // Store claim data in localStorage for the action page
+    localStorage.setItem('selectedClaim', JSON.stringify(claim));
     
-    if (!actionForm.actionType || !actionForm.subject.trim() || !actionForm.message.trim()) {
-      alert('Please fill in all required fields');
-      return;
-    }
-
-    // Create email URL for manual sending
-    const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(selectedClaim.email)}&su=${encodeURIComponent(actionForm.subject)}&body=${encodeURIComponent(actionForm.message)}`;
-    
-    // Open Gmail in new tab
-    window.open(emailUrl, '_blank');
-    
-    // Mark action as taken
-    setTaking(selectedClaim._id);
-    
-    // Update rows in UI
-    setRows((rs) => rs.map((r) => (r._id === selectedClaim._id ? { ...r, reviewed: true } : r)));
-    
-    // Persist to localStorage
-    const s = readReviewedIds();
-    s.add(String(selectedClaim._id));
-    writeReviewedIds(s);
-    setReviewedIds(new Set(s));
-    
-    // Clear states
-    setTaking(null);
-    setShowActionForm(false);
-    setSelectedClaim(null);
-    setActionForm({
-      actionType: '',
-      subject: '',
-      message: '',
-      priority: 'medium',
-      notes: ''
-    });
-    
-    alert('Action form completed! Gmail opened with the email ready to send.');
-  };
-
-  // Close action form modal
-  const closeActionForm = () => {
-    setShowActionForm(false);
-    setSelectedClaim(null);
-    setActionForm({
-      actionType: '',
-      subject: '',
-      message: '',
-      priority: 'medium',
-      notes: ''
-    });
+    // Navigate to the take action page
+    navigate(`/victim/claim/action/${id}`);
   };
 
   return (
@@ -518,10 +496,34 @@ export default function ReadClaim() {
                 <td className="actions-column">
                   <div className="action-group">
                     <div className="status-indicator">
-                      <span className={`status-dot ${r.reviewed ? 'reviewed' : 'pending'}`}></span>
-                      <span className="status-text">
-                        {r.reviewed ? "Action Taken" : "Pending Review"}
-                      </span>
+                      {(() => {
+                        const statusInfo = getStatusInfo(r, r.reviewed);
+                        return (
+                          <>
+                            <span className={`status-dot ${statusInfo.class}`}></span>
+                            <span className="status-text">
+                              {statusInfo.text}
+                            </span>
+                            {statusInfo.hasAction && statusInfo.details && (
+                              <div className="status-details">
+                                {statusInfo.details.priority && (
+                                  <span className={`priority-badge priority-${statusInfo.details.priority}`}>
+                                    {statusInfo.details.priority.toUpperCase()}
+                                  </span>
+                                )}
+                                {statusInfo.details.compensationAmount && (
+                                  <span className="compensation-amount">
+                                    💰 {statusInfo.details.compensationAmount}
+                                  </span>
+                                )}
+                                <span className="action-date">
+                                  {new Date(statusInfo.details.actionDate).toLocaleDateString()}
+                                </span>
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
                     </div>
                     <div className="action-buttons">
                       {/* Show Take Action button only for unreviewed claims */}
@@ -554,214 +556,6 @@ export default function ReadClaim() {
       {/* Empty state message when no records found */}
       {filtered.length === 0 && !loading && (
         <div className="empty">No records</div>
-      )}
-
-      {/* Take Action Form Modal */}
-      {showActionForm && selectedClaim && (
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "rgba(0, 0, 0, 0.7)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000,
-          padding: "20px"
-        }}>
-          <div style={{
-            background: "white",
-            padding: "30px",
-            borderRadius: "12px",
-            boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
-            maxWidth: "600px",
-            width: "100%",
-            maxHeight: "90vh",
-            overflow: "auto"
-          }}>
-            <h3 style={{ margin: "0 0 20px 0", color: "#333", fontSize: "1.5rem" }}>
-              Take Action on Claim
-            </h3>
-            
-            <div style={{ 
-              background: "#f8f9fa", 
-              padding: "15px", 
-              borderRadius: "8px", 
-              marginBottom: "20px",
-              border: "1px solid #e9ecef"
-            }}>
-              <h4 style={{ margin: "0 0 10px 0", color: "#495057" }}>Claim Details:</h4>
-              <p style={{ margin: "5px 0", fontSize: "14px" }}>
-                <strong>Name:</strong> {selectedClaim.name}
-              </p>
-              <p style={{ margin: "5px 0", fontSize: "14px" }}>
-                <strong>Email:</strong> {selectedClaim.email}
-              </p>
-              <p style={{ margin: "5px 0", fontSize: "14px" }}>
-                <strong>Damage Type:</strong> {selectedClaim.damageType}
-              </p>
-              <p style={{ margin: "5px 0", fontSize: "14px" }}>
-                <strong>Estimated Loss:</strong> {selectedClaim.estimatedLoss}
-              </p>
-            </div>
-
-            <form onSubmit={handleActionSubmit}>
-              <div style={{ marginBottom: "20px" }}>
-                <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", color: "#333" }}>
-                  Action Type: <span style={{ color: "#e74c3c" }}>*</span>
-                </label>
-                <select
-                  value={actionForm.actionType}
-                  onChange={(e) => setActionForm({ ...actionForm, actionType: e.target.value })}
-                  required
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    border: "2px solid #e9ecef",
-                    borderRadius: "8px",
-                    fontSize: "14px",
-                    fontFamily: "inherit",
-                    backgroundColor: "#fff"
-                  }}
-                >
-                  <option value="">Select action type...</option>
-                  <option value="approved">Approve Claim</option>
-                  <option value="rejected">Reject Claim</option>
-                  <option value="investigation">Requires Investigation</option>
-                  <option value="documentation">Additional Documentation Needed</option>
-                  <option value="assessment">Schedule Assessment</option>
-                  <option value="compensation">Process Compensation</option>
-                </select>
-              </div>
-
-              <div style={{ marginBottom: "20px" }}>
-                <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", color: "#333" }}>
-                  Priority Level:
-                </label>
-                <select
-                  value={actionForm.priority}
-                  onChange={(e) => setActionForm({ ...actionForm, priority: e.target.value })}
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    border: "2px solid #e9ecef",
-                    borderRadius: "8px",
-                    fontSize: "14px",
-                    fontFamily: "inherit",
-                    backgroundColor: "#fff"
-                  }}
-                >
-                  <option value="low">Low Priority</option>
-                  <option value="medium">Medium Priority</option>
-                  <option value="high">High Priority</option>
-                  <option value="urgent">Urgent</option>
-                </select>
-              </div>
-
-              <div style={{ marginBottom: "20px" }}>
-                <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", color: "#333" }}>
-                  Email Subject: <span style={{ color: "#e74c3c" }}>*</span>
-                </label>
-                <input
-                  type="text"
-                  value={actionForm.subject}
-                  onChange={(e) => setActionForm({ ...actionForm, subject: e.target.value })}
-                  required
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    border: "2px solid #e9ecef",
-                    borderRadius: "8px",
-                    fontSize: "14px",
-                    fontFamily: "inherit"
-                  }}
-                />
-              </div>
-
-              <div style={{ marginBottom: "20px" }}>
-                <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", color: "#333" }}>
-                  Email Message: <span style={{ color: "#e74c3c" }}>*</span>
-                </label>
-                <textarea
-                  value={actionForm.message}
-                  onChange={(e) => setActionForm({ ...actionForm, message: e.target.value })}
-                  required
-                  rows={8}
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    border: "2px solid #e9ecef",
-                    borderRadius: "8px",
-                    fontSize: "14px",
-                    resize: "vertical",
-                    fontFamily: "inherit"
-                  }}
-                />
-              </div>
-
-              <div style={{ marginBottom: "25px" }}>
-                <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", color: "#333" }}>
-                  Internal Notes: (Optional)
-                </label>
-                <textarea
-                  value={actionForm.notes}
-                  onChange={(e) => setActionForm({ ...actionForm, notes: e.target.value })}
-                  rows={3}
-                  placeholder="Add any internal notes about this action..."
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    border: "2px solid #e9ecef",
-                    borderRadius: "8px",
-                    fontSize: "14px",
-                    resize: "vertical",
-                    fontFamily: "inherit"
-                  }}
-                />
-              </div>
-
-              <div style={{
-                display: "flex",
-                gap: "12px",
-                justifyContent: "flex-end"
-              }}>
-                <button
-                  type="button"
-                  onClick={closeActionForm}
-                  style={{
-                    background: "#6c757d",
-                    color: "white",
-                    border: "none",
-                    padding: "12px 24px",
-                    borderRadius: "8px",
-                    cursor: "pointer",
-                    fontSize: "14px",
-                    fontWeight: "600"
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  style={{
-                    background: "#f97316",
-                    color: "white",
-                    border: "none",
-                    padding: "12px 24px",
-                    borderRadius: "8px",
-                    cursor: "pointer",
-                    fontSize: "14px",
-                    fontWeight: "600"
-                  }}
-                >
-                  Send Email & Complete Action
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
       )}
     </main>
   );

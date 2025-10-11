@@ -48,6 +48,7 @@ import RequestAid from "./Component/VictimDashboard/RequestAid/RequestAid";
 import ReadAid from "./Component/VictimDashboard/RequestAid/Read";
 import Claim from "./Component/VictimDashboard/DisasterClaim/Claim";
 import ReadClaim from "./Component/VictimDashboard/DisasterClaim/Read";
+import TakeAction from "./Component/VictimDashboard/DisasterClaim/TakeAction";
 import ReportsHub from "./Component/VictimDashboard/ReportsHub/ReportsHub";
 import Records from "./Component/VictimDashboard/Records/Records";
 import DMODashboard from "./Components/DMODashboard/DMODashboard";
@@ -136,6 +137,7 @@ export default function App() {
         <Route path="/victim/aid/records" element={<ReadAid />} />
         <Route path="/victim/claim" element={<Claim />} />
         <Route path="/victim/claim/records" element={<ReadClaim />} />
+        <Route path="/victim/claim/action/:id" element={<TakeAction />} />
         <Route path="/victim/reports" element={<ReportsHub />} />
         <Route path="/victim/records" element={<Records />} />
 
