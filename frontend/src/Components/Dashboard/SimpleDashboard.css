@@ -207,24 +207,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Contacts Section */
-.contacts-section {
-  text-align: center;
-}
-
-.contacts-section h2 {
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 1rem;
-  font-weight: 700;
-}
-
-.contacts-section p {
-  color: #666;
-  margin-bottom: 2rem;
-  font-size: 1.1rem;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .dashboard-content {

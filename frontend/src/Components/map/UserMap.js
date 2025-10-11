@@ -23,6 +23,8 @@ function UserMap() {
   const [showDirections, setShowDirections] = useState(false);
   const [directions, setDirections] = useState(null);
   const [selectedShelterId, setSelectedShelterId] = useState(null);
+  const [nearbySheltersWithDistance, setNearbySheltersWithDistance] = useState([]);
+  const [loadingDistances, setLoadingDistances] = useState(false);
 
 
   const navigate = useNavigate(); 
@@ -202,6 +204,97 @@ function UserMap() {
     return distance;
   };
 
+  // Calculate road distance using Mapbox Directions API
+  const getRoadDistance = async (userLat, userLng, shelterLat, shelterLng) => {
+    try {
+      const accessToken = "pk.eyJ1IjoibmF2b2RhMTIzIiwiYSI6ImNtZTdhMDdsaTAyY3QycXBtNWQwdHpxc2IifQ.jNfJr5DmTfwet02F2tQC1w";
+      const start = `${userLng},${userLat}`;
+      const end = `${shelterLng},${shelterLat}`;
+      
+      const response = await fetch(
+        `https://api.mapbox.com/directions/v5/mapbox/driving/${start};${end}?geometries=geojson&access_token=${accessToken}`
+      );
+      
+      const data = await response.json();
+      
+      if (data.routes && data.routes.length > 0) {
+        const distanceInMeters = data.routes[0].distance;
+        const durationInSeconds = data.routes[0].duration;
+        return {
+          distance: distanceInMeters / 1000, // Convert to kilometers
+          duration: Math.round(durationInSeconds / 60), // Convert to minutes
+          geometry: data.routes[0].geometry
+        };
+      }
+      return null;
+    } catch (error) {
+      console.error("Error calculating road distance:", error);
+      return null;
+    }
+  };
+
+  // Calculate distances to all nearby shelters
+  const calculateShelterDistances = async () => {
+    if (!userLocation || shelters.length === 0) return;
+    
+    setLoadingDistances(true);
+    
+    try {
+      // Filter shelters within reasonable radius (50km) first using Haversine
+      const nearbyShelters = shelters.filter(shelter => {
+        const straightLineDistance = calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          shelter.latitude,
+          shelter.longitude
+        );
+        return straightLineDistance <= 50; // 50km radius
+      });
+
+      // Calculate road distances for nearby shelters
+      const sheltersWithRoadDistance = await Promise.all(
+        nearbyShelters.slice(0, 10).map(async (shelter) => { // Limit to 10 for performance
+          const roadInfo = await getRoadDistance(
+            userLocation.latitude,
+            userLocation.longitude,
+            shelter.latitude,
+            shelter.longitude
+          );
+          
+          const straightLineDistance = calculateDistance(
+            userLocation.latitude,
+            userLocation.longitude,
+            shelter.latitude,
+            shelter.longitude
+          );
+
+          return {
+            ...shelter,
+            straightLineDistance,
+            roadDistance: roadInfo?.distance || straightLineDistance,
+            travelTime: roadInfo?.duration || Math.round(straightLineDistance * 2), // Estimate if API fails
+            geometry: roadInfo?.geometry
+          };
+        })
+      );
+
+      // Sort by road distance
+      const sortedShelters = sheltersWithRoadDistance.sort((a, b) => a.roadDistance - b.roadDistance);
+      
+      setNearbySheltersWithDistance(sortedShelters);
+      
+      // Set nearest shelter
+      if (sortedShelters.length > 0) {
+        setNearestShelter(sortedShelters[0]);
+      }
+      
+    } catch (error) {
+      console.error("Error calculating shelter distances:", error);
+    } finally {
+      setLoadingDistances(false);
+    }
+  };
+
   // Find nearest shelter to user location
   const findNearestShelter = () => {
     if (!userLocation || shelters.length === 0) return null;
@@ -229,8 +322,7 @@ function UserMap() {
   // Update nearest shelter when user location or shelters change
   useEffect(() => {
     if (userLocation && shelters.length > 0) {
-      const nearest = findNearestShelter();
-      setNearestShelter(nearest);
+      calculateShelterDistances();
     }
   }, [userLocation, shelters]);
 
@@ -277,6 +369,35 @@ function UserMap() {
       
       // Open in new tab
       window.open(googleMapsUrl, '_blank');
+      
+      // Also show route on map if available
+      if (nearestShelter.geometry) {
+        setDirections(nearestShelter.geometry);
+        setShowDirections(true);
+      }
+    }
+  };
+
+  // Show route to specific shelter
+  const showRouteToShelter = async (shelter) => {
+    if (!userLocation) return;
+    
+    if (shelter.geometry) {
+      setDirections(shelter.geometry);
+      setShowDirections(true);
+    } else {
+      // Calculate route if not already available
+      const roadInfo = await getRoadDistance(
+        userLocation.latitude,
+        userLocation.longitude,
+        shelter.latitude,
+        shelter.longitude
+      );
+      
+      if (roadInfo && roadInfo.geometry) {
+        setDirections(roadInfo.geometry);
+        setShowDirections(true);
+      }
     }
   };
 
@@ -284,6 +405,15 @@ function UserMap() {
 
   return (
     <div>
+      <style>
+        {`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}
+      </style>
+      
       {/* Map */}
       <div style={{ position: "relative", width: 1850, height:800  }}>
 
@@ -507,68 +637,279 @@ function UserMap() {
         <div style={{
           position: "absolute",
           bottom: "10px",
-          right: "10px",
-          background: "white",
-          padding: "10px",
-          borderRadius: "8px",
-          boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+          left: "10px",
+          background: "rgba(255, 255, 255, 0.95)",
+          backdropFilter: "blur(10px)",
+          padding: "16px",
+          borderRadius: "12px",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
           zIndex: 1000,
-          minWidth: "250px"
+          minWidth: "340px",
+          maxHeight: "450px",
+          overflowY: "auto",
+          border: "1px solid rgba(255, 255, 255, 0.2)"
         }}>
-          <h3 style={{ margin: "0 0 10px 0", color: "green" }}>Emergency Shelters</h3>
+          <div style={{ 
+            display: "flex", 
+            alignItems: "center", 
+            marginBottom: "16px",
+            paddingBottom: "12px",
+            borderBottom: "2px solid #e5e7eb"
+          }}>
+            <span style={{ fontSize: "20px", marginRight: "10px" }}>🏠</span>
+            <h3 style={{ 
+              margin: "0", 
+              color: "#059669", 
+              fontSize: "18px",
+              fontWeight: "700"
+            }}>
+              Emergency Shelters
+            </h3>
+          </div>
           
-          {nearestShelter && (
-            <div style={{ marginBottom: "10px", padding: "8px", background: "#f0f8f0", borderRadius: "4px" }}>
-              <p style={{ margin: "0 0 5px 0", fontWeight: "bold" }}>Nearest Shelter:</p>
-              <p style={{ margin: "0 0 5px 0" }}>{nearestShelter.name}</p>
-              <p style={{ margin: "0 0 5px 0", fontSize: "12px", color: "#666" }}>
-                Distance: {nearestShelter.distance.toFixed(2)} km
-              </p>
+          {loadingDistances && (
+            <div style={{ 
+              marginBottom: "16px", 
+              padding: "14px", 
+              background: "linear-gradient(135deg, #f3f4f6 0%, #f9fafb 100%)", 
+              borderRadius: "10px", 
+              textAlign: "center",
+              border: "1px solid #e5e7eb"
+            }}>
+              <div style={{ 
+                display: "flex", 
+                alignItems: "center", 
+                justifyContent: "center",
+                marginBottom: "8px"
+              }}>
+                <div style={{
+                  width: "20px",
+                  height: "20px",
+                  border: "2px solid #e5e7eb",
+                  borderTop: "2px solid #3b82f6",
+                  borderRadius: "50%",
+                  animation: "spin 1s linear infinite",
+                  marginRight: "10px"
+                }}></div>
+                <span style={{ 
+                  fontSize: "14px", 
+                  fontWeight: "500", 
+                  color: "#374151" 
+                }}>
+                  Calculating road distances...
+                </span>
+              </div>
+              <div style={{ 
+                fontSize: "12px", 
+                color: "#6b7280" 
+              }}>
+                Please wait while we find the best routes
+              </div>
+            </div>
+          )}
+          
+          {nearestShelter && !loadingDistances && (
+            <div style={{ 
+              marginBottom: "16px", 
+              padding: "14px", 
+              background: "linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%)", 
+              borderRadius: "10px", 
+              border: "2px solid #10b981",
+              boxShadow: "0 4px 12px rgba(16, 185, 129, 0.15)"
+            }}>
+              <div style={{ 
+                display: "flex", 
+                alignItems: "center", 
+                marginBottom: "8px" 
+              }}>
+                <span style={{ fontSize: "18px", marginRight: "8px" }}>🎯</span>
+                <p style={{ 
+                  margin: "0", 
+                  fontWeight: "bold", 
+                  color: "#059669", 
+                  fontSize: "15px" 
+                }}>
+                  Nearest Emergency Shelter
+                </p>
+              </div>
+              
+              <h4 style={{ 
+                margin: "0 0 10px 0", 
+                fontWeight: "700", 
+                color: "#1f2937", 
+                fontSize: "16px",
+                lineHeight: "1.2"
+              }}>
+                {nearestShelter.name}
+              </h4>
+              
+              <div style={{ fontSize: "13px", color: "#374151", lineHeight: "1.4" }}>
+                <div style={{ display: "flex", alignItems: "center", marginBottom: "4px" }}>
+                  <span style={{ marginRight: "8px" }}>🚗</span>
+                  <span style={{ fontWeight: "500" }}>Road Distance:</span>
+                  <span style={{ marginLeft: "6px", color: "#059669", fontWeight: "600" }}>
+                    {nearestShelter.roadDistance.toFixed(2)} km
+                  </span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <span style={{ marginRight: "8px" }}>⏱️</span>
+                  <span style={{ fontWeight: "500" }}>Travel Time:</span>
+                  <span style={{ marginLeft: "6px", color: "#dc2626", fontWeight: "600" }}>
+                    ~{nearestShelter.travelTime} min
+                  </span>
+                </div>
+              </div>
+              
               <button
                 onClick={handleGetDirections}
                 style={{
-                  background: "green",
+                  background: "linear-gradient(135deg, #059669 0%, #10b981 100%)",
                   color: "white",
                   border: "none",
-                  padding: "6px 12px",
-                  borderRadius: "4px",
+                  padding: "10px 16px",
+                  borderRadius: "8px",
                   cursor: "pointer",
-                  fontSize: "12px"
+                  fontSize: "13px",
+                  fontWeight: "600",
+                  marginTop: "12px",
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.2s ease",
+                  boxShadow: "0 2px 8px rgba(5, 150, 105, 0.3)"
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.transform = "translateY(-1px)";
+                  e.target.style.boxShadow = "0 4px 12px rgba(5, 150, 105, 0.4)";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.transform = "translateY(0)";
+                  e.target.style.boxShadow = "0 2px 8px rgba(5, 150, 105, 0.3)";
                 }}
               >
-                <DirectionsIcon style={{ fontSize: "16px", marginRight: "4px" }} />
-                Open in Google Maps
+                <DirectionsIcon style={{ fontSize: "18px", marginRight: "6px" }} />
+                Get Directions (Google Maps)
               </button>
             </div>
           )}
 
-          {shelters.length > 0 && (
-            <div>
-              <p style={{ margin: "0 0 5px 0", fontSize: "12px" }}>
-                Total Shelters: {shelters.length}
-              </p>
-              <button
-                onClick={() => setShowDirections(!showDirections)}
-                style={{
-                  background: showDirections ? "red" : "blue",
-                  color: "white",
-                  border: "none",
-                  padding: "6px 12px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "12px"
-                }}
-              >
-                {showDirections ? "Hide Directions" : "Show All Routes"}
-              </button>
+          {nearbySheltersWithDistance.length > 1 && !loadingDistances && (
+            <div style={{ marginBottom: "16px" }}>
+              <div style={{ 
+                display: "flex", 
+                alignItems: "center", 
+                marginBottom: "12px" 
+              }}>
+                <span style={{ fontSize: "16px", marginRight: "8px" }}>📋</span>
+                <p style={{ 
+                  margin: "0", 
+                  fontWeight: "bold", 
+                  fontSize: "15px", 
+                  color: "#1f2937" 
+                }}>
+                  Other Nearby Shelters
+                </p>
+              </div>
+              
+              <div style={{ 
+                maxHeight: "220px", 
+                overflowY: "auto",
+                paddingRight: "4px"
+              }}>
+                {nearbySheltersWithDistance.slice(1, 6).map((shelter, index) => (
+                  <div 
+                    key={shelter._id} 
+                    style={{ 
+                      padding: "12px", 
+                      background: index === 0 ? "linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%)" : "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", 
+                      borderRadius: "8px", 
+                      marginBottom: "8px",
+                      border: index === 0 ? "1px solid #f59e0b" : "1px solid #e2e8f0",
+                      cursor: "pointer",
+                      transition: "all 0.2s ease",
+                      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)"
+                    }}
+                    onClick={() => handleShelterClick(shelter._id)}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.transform = "translateY(-1px)";
+                      e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.12)";
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.05)";
+                    }}
+                  >
+                    <div style={{ 
+                      display: "flex", 
+                      alignItems: "center", 
+                      marginBottom: "6px" 
+                    }}>
+                      <span style={{ 
+                        fontSize: "14px", 
+                        marginRight: "8px",
+                        fontWeight: "600"
+                      }}>
+                        {index === 0 ? "�" : index === 1 ? "�" : `${index + 2}.`}
+                      </span>
+                      <span style={{ 
+                        fontWeight: "600", 
+                        fontSize: "14px", 
+                        color: "#1f2937",
+                        flex: "1"
+                      }}>
+                        {shelter.name}
+                      </span>
+                    </div>
+                    
+                    <div style={{ 
+                      display: "flex", 
+                      alignItems: "center", 
+                      justifyContent: "space-between",
+                      marginBottom: "4px"
+                    }}>
+                      <div style={{ fontSize: "12px", color: "#374151" }}>
+                        🚗 <span style={{ fontWeight: "500" }}>{shelter.roadDistance.toFixed(2)} km</span>
+                      </div>
+                      <div style={{ fontSize: "12px", color: "#dc2626" }}>
+                        ⏱️ <span style={{ fontWeight: "500" }}>{shelter.travelTime} min</span>
+                      </div>
+                    </div>
+                    
+                    {shelter.capacity && (
+                      <div style={{ 
+                        fontSize: "11px", 
+                        color: "#6b7280",
+                        display: "flex",
+                        alignItems: "center"
+                      }}>
+                        <span style={{ marginRight: "4px" }}>👥</span>
+                        <span>Capacity: {shelter.capacity} people</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
-          {!nearestShelter && shelters.length === 0 && (
-            <p style={{ margin: "0", fontSize: "12px", color: "#666" }}>
-              No shelters available
+          {!nearestShelter && !loadingDistances && shelters.length === 0 && (
+            <p style={{ margin: "0", fontSize: "12px", color: "#dc2626" }}>
+              ❌ No shelters available
             </p>
           )}
+
+          {!userLocation && (
+            <p style={{ margin: "0", fontSize: "12px", color: "#f59e0b" }}>
+              📍 Please enable location access to find nearby shelters
+            </p>
+          )}
+          
+          <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: "8px", marginTop: "12px" }}>
+            <div style={{ fontSize: "11px", color: "#6b7280" }}>
+              Total Shelters: {shelters.length} | Showing: {nearbySheltersWithDistance.length}
+            </div>
+          </div>
         </div>
 
         {/* Directions Display */}

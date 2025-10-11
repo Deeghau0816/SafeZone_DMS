@@ -53,14 +53,14 @@ export default function Nav() {
 
         <nav className="links" aria-label="Primary">
           <Link
-            className={`link ${pathname.includes("/toAlerts") ? "active" : ""}`}
-            to="/AdminHome/toAlerts"
+            className={`link ${pathname === "/AdminHome" || pathname === "/AdminHome/" ? "active" : ""}`}
+            to="/AdminHome"
           >
             All Alerts
           </Link>
           <Link
-            className={`link ${pathname.includes("/AlertAdd") ? "active" : ""}`}
-            to="/AdminHome/AlertAdd"
+            className={`link ${pathname === "/response" ? "active" : ""}`}
+            to="/response"
           >
             DMO Dashboard
           </Link>
@@ -121,7 +121,31 @@ export default function Nav() {
                     onClick={() => setMenu(false)}
                     role="menuitem"
                   >
-                    Dashboard
+                    Admin Dashboard
+                  </Link>
+                  <Link
+                    className="mitem"
+                    to="/admin-dashboard"
+                    onClick={() => setMenu(false)}
+                    role="menuitem"
+                  >
+                    Simple Dashboard
+                  </Link>
+                  <Link
+                    className="mitem"
+                    to="/dmo"
+                    onClick={() => setMenu(false)}
+                    role="menuitem"
+                  >
+                    DMO Dashboard
+                  </Link>
+                  <Link
+                    className="mitem"
+                    to="/response"
+                    onClick={() => setMenu(false)}
+                    role="menuitem"
+                  >
+                    Response Dashboard
                   </Link>
                   <Link
                     className="mitem"
