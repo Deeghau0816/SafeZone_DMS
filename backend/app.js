@@ -24,13 +24,13 @@ const { listAids } = require("./Controllers/AidController");
 const damageCtrl = require("./Controllers/DamageController");
 
 /* Legacy/external groups */
-const adminAuthRoutes    = require("./Router/AdminRoute");
-const alertRoutes        = require("./Router/AlertRoute");
-const userRoutes         = require("./Router/RegRoute"); // may contain verify/resend routes
-const testRoutes         = require("./Router/testRoute");
+const adminAuthRoutes = require("./Router/AdminRoute");
+const alertRoutes     = require("./Router/AlertRoute");
+const userRoutes      = require("./Router/RegRoute"); // may contain verify/resend routes
+const testRoutes      = require("./Router/testRoute");
 
 /* Reports API */
-const reportsRoutes      = require("./Router/ReportRoute");
+const reportsRoutes   = require("./Router/ReportRoute");
 
 /* Country-wide broadcast cron */
 const { startSriLankaBroadcastCron } = require("./Jobs/weatherSriLankaBroadcastCron");
@@ -128,8 +128,10 @@ app.get("/health", (_req, res) => {
 });
 
 /* ---------------- Gate requests if DB is down ----------- */
+/* Allow health, static uploads, and test/tool routes to bypass gate */
+const BYPASS_DB_GATE = [/^\/health$/, /^\/uploads\//, /^\/tools(\/|$)/, /^\/test(\/|$)/];
 app.use((req, res, next) => {
-  if (req.path === "/health" || req.path.startsWith("/uploads")) return next();
+  if (BYPASS_DB_GATE.some(rx => rx.test(req.path))) return next();
   if (!isConnected) {
     return res.status(503).json({
       ok: false,
@@ -175,14 +177,16 @@ app.use("/requests", requestsRoutes);
 app.use("/teamLocations", teamLocationRoutes);
 
 // Aliases
-app.get("/aids",           listAids);
-app.get("/damages",        damageCtrl.listDamages);
+app.get("/aids",    listAids);
+app.get("/damages", damageCtrl.listDamages);
 
 // ---------------- Reports -------------------------------
 app.use("/reports", reportsRoutes);
 
 // ---------------- Legacy / tools ------------------------
-app.use("/tools",   testRoutes); // debug helpers
+// Mount at BOTH /tools and /test so either base path works
+app.use("/tools", testRoutes);
+app.use("/test",  testRoutes);
 
 // Unified session probe for both admin and user
 app.get("/auth/me", (req, res) => {
@@ -196,9 +200,9 @@ app.get("/auth/me", (req, res) => {
 });
 
 // API groups
-app.use("/admin",   adminAuthRoutes);
-app.use("/alerts",  alertRoutes);
-app.use("/users",   userRoutes); // verification endpoints under /users/* will be blocked by kill-switch above
+app.use("/admin",  adminAuthRoutes);
+app.use("/alerts", alertRoutes);
+app.use("/users",  userRoutes); // verification endpoints under /users/* will be blocked by kill-switch above
 
 // Root
 app.get("/", (_req, res) => res.json({ ok: true, msg: "API up" }));
@@ -330,26 +334,26 @@ process.on("uncaughtException", (err) => {
 
 // ---------------- Personal Routes Integration -----------------
 try {
-  const volunteerRoutes = require("./Router/VolunteerRoutes");
-  const operationRoutes = require("./Router/OperationRoutes");
+  const volunteerRoutes          = require("./Router/VolunteerRoutes");
+  const operationRoutes          = require("./Router/OperationRoutes");
   const distributionRecordRoutes = require("./Router/DistributionrecordRoutes");
-  const targetInventoryRoutes = require("./Router/TargetinventoryRoutes");
-  const centersRoutes = require("./Router/CentersRoutes");
-  const inventoryRoutes = require("./Router/InventoryRoutes");
-  const donationRoutes = require("./Router/DonationRoutes");
-  const activeDisasterRoutes = require("./Router/ActiveDisasterRoutes");
-  const ngopastRoutes = require("./Router/NgopastRoutes");
+  const targetInventoryRoutes    = require("./Router/TargetinventoryRoutes");
+  const centersRoutes            = require("./Router/CentersRoutes");
+  const inventoryRoutes          = require("./Router/InventoryRoutes");
+  const donationRoutes           = require("./Router/DonationRoutes");
+  const activeDisasterRoutes     = require("./Router/ActiveDisasterRoutes");
+  const ngopastRoutes            = require("./Router/NgopastRoutes");
 
-  app.use("/api/volunteer", volunteerRoutes);
-  app.use("/api/volunteers", volunteerRoutes);
-  app.use("/api/operations", operationRoutes);
-  app.use("/api", distributionRecordRoutes);
+  app.use("/api/volunteer",       volunteerRoutes);
+  app.use("/api/volunteers",      volunteerRoutes);
+  app.use("/api/operations",      operationRoutes);
+  app.use("/api",                 distributionRecordRoutes);
   app.use("/api/targetinventories", targetInventoryRoutes);
-  app.use("/api", centersRoutes);
-  app.use("/api/inventory", inventoryRoutes);
-  app.use("/api/donations", donationRoutes);
+  app.use("/api",                 centersRoutes);
+  app.use("/api/inventory",       inventoryRoutes);
+  app.use("/api/donations",       donationRoutes);
   app.use("/api/activedisasters", activeDisasterRoutes);
-  app.use("/api/ngopast", ngopastRoutes);
+  app.use("/api/ngopast",         ngopastRoutes);
 
   console.log("✅ Personal routes loaded successfully");
 } catch (error) {
@@ -373,7 +377,7 @@ app.post("/api/uploads/deposit-proof", (req, res) => {
       if (err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE") {
         return res.status(400).json({ message: "File too large. Maximum size is 2MB." });
       }
-    return res.status(500).json({ message: err.message || "File upload failed" });
+      return res.status(500).json({ message: err.message || "File upload failed" });
     }
     res.status(200).json({ message: "File uploaded successfully", filePath: `/uploads/${req.file.filename}` });
   });

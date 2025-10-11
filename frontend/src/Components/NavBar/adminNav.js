@@ -56,31 +56,13 @@ export default function Nav() {
             className={`link ${pathname === "/AdminHome" || pathname === "/AdminHome/" ? "active" : ""}`}
             to="/AdminHome"
           >
-            Admin Dashboard
-          </Link>
-          <Link
-            className={`link ${pathname === "/admin-dashboard" ? "active" : ""}`}
-            to="/admin-dashboard"
-          >
-            Disaster Dashboard
-          </Link>
-          <Link
-            className={`link ${pathname === "/dmo" ? "active" : ""}`}
-            to="/dmo"
-          >
-            DMO Dashboard
+            All Alerts
           </Link>
           <Link
             className={`link ${pathname === "/response" ? "active" : ""}`}
             to="/response"
           >
-            Response Dashboard
-          </Link>
-          <Link
-            className={`link ${pathname.includes("/toAlerts") ? "active" : ""}`}
-            to="/AdminHome/toAlerts"
-          >
-            Alerts
+            DMO Dashboard
           </Link>
           <Link
             className={`link ${pathname.includes("/AdminRegitration") ? "active" : ""}`}
