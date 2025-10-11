@@ -13,17 +13,18 @@ const CENTERS_API = `${API_BASE}/api/collectingcenters`;
 const INVENTORY_API = `${API_BASE}/api/inventory`;
 const DISTRIBUTION_API = `${API_BASE}/api/distributionrecords`;
 const NGO_PAST_API = `${API_BASE}/api/ngopast`; // Add NGO past records API
+const TARGET_INVENTORY_API = `${API_BASE}/api/targetinventories`; // Add target inventory API
 
 const toAbs = (u) => (!u ? "" : /^https?:/i.test(u) ? u : `${API_BASE}${u}`);
 
-// Item mapping (keys + labels + units + targets)
+// Item mapping (keys + labels + units) - targets will come from API
 const ITEM_OPTIONS = [
-  { value: "dry_rations", label: "Dry rations", unit: "packs", target: 1000 },
-  { value: "water", label: "Water", unit: "liters", target: 800 },
-  { value: "bedding", label: "Bedding", unit: "sets", target: 200 },
-  { value: "medical", label: "Medical kits", unit: "kits", target: 150 },
-  { value: "clothing", label: "Clothing", unit: "sets", target: 300 },
-  { value: "hygiene", label: "Hygiene packs", unit: "packs", target: 250 },
+  { value: "dry_rations", label: "Dry rations", unit: "packs" },
+  { value: "water", label: "Water", unit: "liters" },
+  { value: "bedding", label: "Bedding", unit: "sets" },
+  { value: "medical", label: "Medical kits", unit: "kits" },
+  { value: "clothing", label: "Clothing", unit: "sets" },
+  { value: "hygiene", label: "Hygiene packs", unit: "packs" },
 ];
 
 /* ---------- Needs bar row ---------- */
@@ -161,6 +162,11 @@ export default function Donation() {
   const [ngoRecords, setNgoRecords] = useState([]);
   const [ngoRecordsLoading, setNgoRecordsLoading] = useState(true);
   const [ngoRecordsError, setNgoRecordsError] = useState("");
+
+  // Target Inventory state
+  const [targetInventory, setTargetInventory] = useState({});
+  const [targetInventoryLoading, setTargetInventoryLoading] = useState(true);
+  const [targetInventoryError, setTargetInventoryError] = useState("");
 
   // header bubbles
   const bubbles = useMemo(() => ["/aa.png", "/as.png", "/ad.png"], []);
@@ -378,36 +384,79 @@ export default function Donation() {
     }
   }, []);
 
+  /* ---------- Fetch Target Inventory from API ---------- */
+  const fetchTargetInventory = useCallback(async () => {
+    try {
+      setTargetInventoryLoading(true);
+      setTargetInventoryError("");
+      const response = await fetch(TARGET_INVENTORY_API);
+      if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      
+      const data = await response.json();
+      console.log("Target inventory data received:", data);
+      
+      // Remove system fields and set targets
+      const { _id, __v, createdAt, updatedAt, ...cleanTargets } = data || {};
+      setTargetInventory(cleanTargets);
+    } catch (err) {
+      console.error("Failed to fetch target inventory:", err);
+      setTargetInventoryError(err.message || "Failed to load target inventory");
+      // Set default targets if loading fails
+      const defaultTargets = {
+        dry_rations: 100,
+        water: 100,
+        bedding: 50,
+        medical: 50,
+        clothing: 50,
+        hygiene: 100,
+      };
+      setTargetInventory(defaultTargets);
+    } finally {
+      setTargetInventoryLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchDisasters();
     fetchCenters();
     fetchInventory();
     fetchDistributionRecords();
     fetchNgoRecords(); // Add NGO records fetch
-  }, [fetchDisasters, fetchCenters, fetchInventory, fetchDistributionRecords, fetchNgoRecords]);
+    fetchTargetInventory(); // Add target inventory fetch
+  }, [fetchDisasters, fetchCenters, fetchInventory, fetchDistributionRecords, fetchNgoRecords, fetchTargetInventory]);
 
   // Calculate inventory analytics
   const inventoryAnalytics = useMemo(() => {
+    console.log("Calculating inventory analytics with data:", inventoryData);
+    console.log("Target inventory:", targetInventory);
+    
     const analytics = ITEM_OPTIONS.map((type) => {
       const total = inventoryData
         .filter((item) => item.item === type.value)
         .reduce((sum, item) => sum + (item.quantity || 0), 0);
       
-      const coverage = type.target > 0 ? Math.min((total / type.target) * 100, 100) : 100;
-      const need = Math.max(type.target - total, 0);
+      // Get target from API data
+      const target = targetInventory[type.value] || 0;
+      
+      // Calculate coverage as percentage of target met
+      const coverage = target > 0 ? Math.min((total / target) * 100, 100) : 100;
+      const need = Math.max(target - total, 0);
+      
+      console.log(`${type.label}: have=${total}, target=${target}, coverage=${coverage.toFixed(1)}%`);
       
       return {
         ...type,
         have: total,
         need,
-        coverage,
+        target: target,
+        coverage: coverage,
         color: getCoverageColor(coverage),
       };
     });
 
-    // Sort by coverage (most needed first)
+    // Sort by coverage (most needed first) - items with lower coverage are most needed
     return analytics.sort((a, b) => a.coverage - b.coverage);
-  }, [inventoryData]);
+  }, [inventoryData, targetInventory]);
 
   const todayProgress =
     todayFamilies > 0
@@ -622,9 +671,10 @@ export default function Donation() {
                 {selectedDisaster ? selectedDisaster.city : "All locations"}
               </span>
               {inventoryError && <div style={{color: '#ef4444', fontSize: '12px', marginTop: '4px'}}>{inventoryError}</div>}
+              {targetInventoryError && <div style={{color: '#ef4444', fontSize: '12px', marginTop: '4px'}}>{targetInventoryError}</div>}
             </div>
           
-          {inventoryLoading ? (
+          {inventoryLoading || targetInventoryLoading ? (
             <div style={{padding: '20px', textAlign: 'center', color: '#6b7280'}}>
               Loading inventory data...
             </div>

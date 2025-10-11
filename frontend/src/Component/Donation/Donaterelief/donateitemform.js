@@ -23,19 +23,31 @@ export default function DonateItemForm({ onClose, onSuccess }) {
   });
   const [centers, setCenters] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [centersLoading, setCentersLoading] = useState(true);
   const [error, setError] = useState("");
 
   /** ---------- Load Centers ---------- */
   useEffect(() => {
     const loadCenters = async () => {
       try {
+        console.log("Loading centers from:", `${API_BASE}/api/collectingcenters`);
+        setCentersLoading(true);
         const res = await fetch(`${API_BASE}/api/collectingcenters`);
+        console.log("Centers API response status:", res.status);
+        
         if (res.ok) {
           const data = await res.json();
+          console.log("Centers data received:", data);
           setCenters(data || []);
+        } else {
+          console.error("Failed to load centers - HTTP error:", res.status);
+          setError(`Failed to load centers: ${res.status}`);
         }
       } catch (e) {
         console.error("Failed to load centers:", e);
+        setError(`Failed to load centers: ${e.message}`);
+      } finally {
+        setCentersLoading(false);
       }
     };
     loadCenters();
@@ -348,6 +360,7 @@ export default function DonateItemForm({ onClose, onSuccess }) {
               value={formData.branch}
               onChange={handleChange}
               required
+              disabled={centersLoading}
               style={{
                 width: '100%',
                 padding: '16px',
@@ -355,26 +368,63 @@ export default function DonateItemForm({ onClose, onSuccess }) {
                 borderRadius: '12px',
                 fontSize: '1rem',
                 fontWeight: '500',
-                background: '#ffffff',
+                background: centersLoading ? '#f8fafc' : '#ffffff',
                 transition: 'all 0.3s ease',
-                outline: 'none'
+                outline: 'none',
+                opacity: centersLoading ? 0.7 : 1
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#667eea';
-                e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                if (!centersLoading) {
+                  e.target.style.borderColor = '#667eea';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                }
               }}
               onBlur={(e) => {
                 e.target.style.borderColor = '#e2e8f0';
                 e.target.style.boxShadow = 'none';
               }}
             >
-              <option value="">Select center</option>
+              <option value="">
+                {centersLoading ? 'Loading centers...' : 'Select center'}
+              </option>
               {centers.map((c) => (
                 <option key={c._id} value={c.name}>
                   {c.name}
                 </option>
               ))}
             </select>
+            {centersLoading && (
+              <div style={{
+                marginTop: '8px',
+                fontSize: '0.875rem',
+                color: '#6b7280',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <div style={{
+                  width: '16px',
+                  height: '16px',
+                  border: '2px solid #e5e7eb',
+                  borderTop: '2px solid #3b82f6',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite'
+                }}></div>
+                Loading collection centers...
+              </div>
+            )}
+            {!centersLoading && centers.length === 0 && (
+              <div style={{
+                marginTop: '8px',
+                fontSize: '0.875rem',
+                color: '#ef4444',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                ⚠️ No collection centers found. Please add centers first.
+              </div>
+            )}
           </div>
 
           {/* Date */}
