@@ -53,16 +53,34 @@ export default function Nav() {
 
         <nav className="links" aria-label="Primary">
           <Link
+            className={`link ${pathname === "/AdminHome" || pathname === "/AdminHome/" ? "active" : ""}`}
+            to="/AdminHome"
+          >
+            Admin Dashboard
+          </Link>
+          <Link
+            className={`link ${pathname === "/admin-dashboard" ? "active" : ""}`}
+            to="/admin-dashboard"
+          >
+            Disaster Dashboard
+          </Link>
+          <Link
+            className={`link ${pathname === "/dmo" ? "active" : ""}`}
+            to="/dmo"
+          >
+            DMO Dashboard
+          </Link>
+          <Link
+            className={`link ${pathname === "/response" ? "active" : ""}`}
+            to="/response"
+          >
+            Response Dashboard
+          </Link>
+          <Link
             className={`link ${pathname.includes("/toAlerts") ? "active" : ""}`}
             to="/AdminHome/toAlerts"
           >
             Alerts
-          </Link>
-          <Link
-            className={`link ${pathname.includes("/AlertAdd") ? "active" : ""}`}
-            to="/AdminHome/AlertAdd"
-          >
-            DMS dashboard
           </Link>
           <Link
             className={`link ${pathname.includes("/AdminRegitration") ? "active" : ""}`}
@@ -121,7 +139,31 @@ export default function Nav() {
                     onClick={() => setMenu(false)}
                     role="menuitem"
                   >
-                    Dashboard
+                    Admin Dashboard
+                  </Link>
+                  <Link
+                    className="mitem"
+                    to="/admin-dashboard"
+                    onClick={() => setMenu(false)}
+                    role="menuitem"
+                  >
+                    Simple Dashboard
+                  </Link>
+                  <Link
+                    className="mitem"
+                    to="/dmo"
+                    onClick={() => setMenu(false)}
+                    role="menuitem"
+                  >
+                    DMO Dashboard
+                  </Link>
+                  <Link
+                    className="mitem"
+                    to="/response"
+                    onClick={() => setMenu(false)}
+                    role="menuitem"
+                  >
+                    Response Dashboard
                   </Link>
                   <Link
                     className="mitem"
