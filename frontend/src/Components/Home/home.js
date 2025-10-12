@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, AlertTriangle, Users, Home, BarChart3, MapPin, Shield } from 'lucide-react';
+import { Search, AlertTriangle, Users, Home, BarChart3, MapPin, Shield, Bell } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import UserMap from '../map/UserMap';
 import NearbyDisasters from '../map/NearbyDisasters';
@@ -155,14 +155,14 @@ const SafeZoneHomePage = () => {
 
            {/* Add Alerts*/}
           <div className="action-card">
-            <Users size={48} style={{ color: '#9b59b6', marginBottom: '1rem' }} />
-            <h3>Support Disaster</h3>
-            <p>Join our community of support disaster and make a difference in disaster preparedness and response.</p>
+            <Bell size={48} style={{ color: '#58cc71ff', marginBottom: '1rem' }} />
+            <h3>Alerts</h3>
+            <p>Get real-time disaster alerts and emergency notifications to stay informed about critical events in your area.</p>
             <button 
-              onClick={() => navigate('/donation')}
-              style={{ backgroundColor: '#9b59b6' }}
+              onClick={() => navigate('/useralerts')}
+              style={{ backgroundColor: '#58cc71ff' }}
             >
-              Get Involved
+              View Alerts
             </button>
           </div>
 
